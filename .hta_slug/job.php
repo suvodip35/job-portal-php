@@ -206,16 +206,26 @@ $shareText = urlencode("Check out this job opportunity: " . $job['job_title'] . 
         </div>
         <?php endif; ?>
 
-        <?php if (!empty($job['apply_url'])): ?>
-        <div class="mt-8">
-          <a href="<?= e($job['apply_url']) ?>" target="_blank" rel="noopener" class="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
-            Apply Now
-            <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-            </svg>
-          </a>
+        
+        <div class="mt-8 flex justify-between">
+          <?php if (!empty($job['apply_url'])): ?>
+            <a href="<?= e($job['apply_url']) ?>" target="_blank" rel="noopener" class="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+              Apply Now
+              <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+              </svg>
+            </a>
+          <?php endif; ?>
+          <?php if (!empty($job['document_link'])): ?>
+            <a href="<?= e($job['document_link']) ?>" target="_blank" rel="noopener" class="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+              Documentation
+              <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+              </svg>
+            </a>
+          <?php endif; ?>
         </div>
-        <?php endif; ?>
+        
       </div>
     </article>
 
