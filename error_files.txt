@@ -1,2 +1,10 @@
 [2025-08-26 10:29:43] ERROR: [2] Cannot modify header information - headers already sent by (output started at /home/suvo/web/jnp.ns77.siliconpin.com/public_html/save-subscription.php:36) in /home/suvo/web/jnp.ns77.siliconpin.com/public_html/save-subscription.php on line 62
 [2025-08-26 10:29:43] ERROR: [2] http_response_code(): Cannot set response code - headers already sent (output started at /home/suvo/web/jnp.ns77.siliconpin.com/public_html/save-subscription.php:36) in /home/suvo/web/jnp.ns77.siliconpin.com/public_html/save-subscription.php on line 68
+[2025-08-29 12:08:08] ERROR: [2] Undefined variable $payload in /home/suvo/web/jnp.ns77.siliconpin.com/public_html/save-subscription.php on line 79
+[2025-08-29 12:08:08] ERROR: [2] Trying to access array offset on null in /home/suvo/web/jnp.ns77.siliconpin.com/public_html/save-subscription.php on line 79
+[2025-08-29 12:08:08] ERROR: [2] Undefined variable $payload in /home/suvo/web/jnp.ns77.siliconpin.com/public_html/save-subscription.php on line 80
+[2025-08-29 12:08:08] ERROR: [2] Trying to access array offset on null in /home/suvo/web/jnp.ns77.siliconpin.com/public_html/save-subscription.php on line 80
+[2025-08-29 12:08:08] ERROR: [2] Trying to access array offset on null in /home/suvo/web/jnp.ns77.siliconpin.com/public_html/save-subscription.php on line 80
+[2025-08-29 12:08:08] ERROR: [2] Undefined variable $payload in /home/suvo/web/jnp.ns77.siliconpin.com/public_html/save-subscription.php on line 81
+[2025-08-29 12:08:08] ERROR: [2] Trying to access array offset on null in /home/suvo/web/jnp.ns77.siliconpin.com/public_html/save-subscription.php on line 81
+[2025-08-29 12:08:08] ERROR: [2] Trying to access array offset on null in /home/suvo/web/jnp.ns77.siliconpin.com/public_html/save-subscription.php on line 81

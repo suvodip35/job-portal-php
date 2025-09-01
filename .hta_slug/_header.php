@@ -1,46 +1,50 @@
 <?php
-// error handler function
-function setupErrorLogger($logFile = __DIR__ . '/error_files.txt') {
-    // Set timezone for accurate timestamps
-    date_default_timezone_set('Asia/Kolkata');
+  // error handler function
+  function setupErrorLogger($logFile = __DIR__ . '/error_files.txt') {
+      // Set timezone for accurate timestamps
+      date_default_timezone_set('Asia/Kolkata');
 
-    // Custom error handler
-    set_error_handler(function ($errno, $errstr, $errfile, $errline) use ($logFile) {
-        $date = date('Y-m-d H:i:s');
-        $message = "[$date] ERROR: [$errno] $errstr in $errfile on line $errline" . PHP_EOL;
-        file_put_contents($logFile, $message, FILE_APPEND);
-        return true; // prevent default PHP error handler
-    });
+      // Custom error handler
+      set_error_handler(function ($errno, $errstr, $errfile, $errline) use ($logFile) {
+          $date = date('Y-m-d H:i:s');
+          $message = "[$date] ERROR: [$errno] $errstr in $errfile on line $errline" . PHP_EOL;
+          file_put_contents($logFile, $message, FILE_APPEND);
+          return true; // prevent default PHP error handler
+      });
 
-    // Fatal error handler
-    register_shutdown_function(function () use ($logFile) {
-        $error = error_get_last();
-        if ($error !== null) {
-            $date = date('Y-m-d H:i:s');
-            $message = "[$date] FATAL: {$error['message']} in {$error['file']} on line {$error['line']}" . PHP_EOL;
-            file_put_contents($logFile, $message, FILE_APPEND);
-        }
-    });
+      // Fatal error handler
+      register_shutdown_function(function () use ($logFile) {
+          $error = error_get_last();
+          if ($error !== null) {
+              $date = date('Y-m-d H:i:s');
+              $message = "[$date] FATAL: {$error['message']} in {$error['file']} on line {$error['line']}" . PHP_EOL;
+              file_put_contents($logFile, $message, FILE_APPEND);
+          }
+      });
 
-    // Exception handler
-    set_exception_handler(function ($exception) use ($logFile) {
-        $date = date('Y-m-d H:i:s');
-        $message = "[$date] EXCEPTION: {$exception->getMessage()} in {$exception->getFile()} on line {$exception->getLine()}" . PHP_EOL;
-        file_put_contents($logFile, $message, FILE_APPEND);
-    });
-}
+      // Exception handler
+      set_exception_handler(function ($exception) use ($logFile) {
+          $date = date('Y-m-d H:i:s');
+          $message = "[$date] EXCEPTION: {$exception->getMessage()} in {$exception->getFile()} on line {$exception->getLine()}" . PHP_EOL;
+          file_put_contents($logFile, $message, FILE_APPEND);
+      });
+  }
 
-// Call the function at the very top of header
-setupErrorLogger();
-?>
+  // Call the function at the very top of header
+  setupErrorLogger();
 
-<?php
-require_once __DIR__ . '/../.hta_config/functions.php';
-$siteTitle = $siteTitle ?? APP_NAME;
-$metaDesc = $metaDesc ?? 'Latest job notifications, mock tests and exam resources.';
+  require_once __DIR__ . '/../.hta_config/functions.php';
+  require_once __DIR__ . '/../.hta_config/config.php';
 
-define("PUBLIC_VAPID_KEY", "BNCdSNWUm6dVr6aRDexQcKQ_UuTEeZCpbY89lztrDcPtzFiN3MFWKbZtp1HT1IaoGEHTZrDpba71xCw74phxqBU");
-define("PRIVATE_VAPID_KEY", "E_rtiwrFGQCxhXLUvvnPM2NVBdegcy1-ZDDbOAdRdak");
+  // Use job-specific values if available, otherwise fallback to defaults
+  $siteTitle      = $siteTitle      ?? APP_NAME;
+  $metaDesc       = $metaDesc       ?? 'Latest job notifications, mock tests and exam resources.';
+  $pageTitle      = $pageTitle      ?? $siteTitle;
+  $pageDescription= $pageDescription?? $metaDesc;
+  $keywords       = $keywords       ?? "Government JOBS, ITI JOBS, Railway Jobs, Engineer";
+  $author         = $author         ?? "J_N_P";
+  $ogImage        = !empty($job['thumbnail']) ? $job['thumbnail'] : "/assets/logo.png";
+  $canonicalUrl   = $canonicalUrl   ?? BASE_URL;
 
 ?>
 
@@ -49,14 +53,33 @@ define("PRIVATE_VAPID_KEY", "E_rtiwrFGQCxhXLUvvnPM2NVBdegcy1-ZDDbOAdRdak");
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title><?= e($siteTitle) ?></title>
-  <meta name="description" content="<?= e($metaDesc) ?>">
   <link rel="icon" href="<?= BASE_URL ?>assets/favicon.ico">
+
+  <!-- Basic Meta Tags -->
+  <title><?php echo htmlspecialchars($pageTitle); ?></title>
+  <meta name="description" content="<?php echo htmlspecialchars($pageDescription); ?>">
+  <meta name="keywords" content="<?php echo htmlspecialchars($keywords); ?>">
+  <meta name="author" content="<?php echo htmlspecialchars($author); ?>">
+  
+  <!-- Open Graph Meta Tags (Facebook) -->
+  <meta property="og:title" content="<?php echo htmlspecialchars($pageTitle); ?>">
+  <meta property="og:description" content="<?php echo htmlspecialchars($pageDescription); ?>">
+  <meta property="og:image" content="<?php echo $ogImage; ?>">
+  <meta property="og:url" content="<?php echo htmlspecialchars($canonicalUrl); ?>">
+  <meta property="og:type" content="website">
+  
+  <!-- Twitter Card Meta Tags -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="<?php echo htmlspecialchars($pageTitle); ?>">
+  <meta name="twitter:description" content="<?php echo htmlspecialchars($pageDescription); ?>">
+  <meta name="twitter:image" content="<?php echo $ogImage; ?>">
+  
+  <!-- Canonical URL -->
+  <link rel="canonical" href="<?php echo htmlspecialchars($canonicalUrl); ?>">
   <!-- Tailwind CDN for quick production-ready UI; for full production consider building Tailwind -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Font Awesome for icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <!-- Theme: apply saved preference -->
   <script>
     try {
@@ -67,6 +90,7 @@ define("PRIVATE_VAPID_KEY", "E_rtiwrFGQCxhXLUvvnPM2NVBdegcy1-ZDDbOAdRdak");
 </head>
 <body class="bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 antialiased">
 <!-- Main Navigation -->
+ 
 <nav class="bg-gray-100 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
   <div class="max-w-6xl mx-auto px-4">
     <div class="flex justify-between items-center h-16">
@@ -94,8 +118,8 @@ define("PRIVATE_VAPID_KEY", "E_rtiwrFGQCxhXLUvvnPM2NVBdegcy1-ZDDbOAdRdak");
         </button> -->
 
         <button id="subscribePushBtn" class="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 transition">Get Job Alerts</button>
-
-        <a href="<?= BASE_URL ?>admin/login" class="px-3 py-1 border rounded hover:bg-gray-200 dark:hover:bg-gray-700 transition">Admin</a>
+        
+        <a href="/admin/dashboard" class="px-3 py-1 border rounded hover:bg-gray-200 dark:hover:bg-gray-700 transition">Admin</a>
       </div>
       
       <!-- Mobile Menu Button -->
@@ -122,44 +146,16 @@ define("PRIVATE_VAPID_KEY", "E_rtiwrFGQCxhXLUvvnPM2NVBdegcy1-ZDDbOAdRdak");
       <!-- <a href="<?= BASE_URL ?>mock_tests" class="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-200 dark:hover:bg-gray-700">Mock Tests</a> -->
       <!-- <a href="<?= BASE_URL ?>sitemap" class="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-200 dark:hover:bg-gray-700">Sitemap</a> -->
       <button id="mobileSubscribePushBtn" class="w-full text-left px-3 py-2 rounded-md text-base font-medium hover:bg-gray-200 dark:hover:bg-gray-700">Get Job Alerts</button>
-      <a href="<?= BASE_URL ?>/admin/login" class="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-200 dark:hover:bg-gray-700">Admin</a>
+      <a href="/admin/dashboard" class="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-200 dark:hover:bg-gray-700">Admin</a>
     </div>
   </div>
 </nav>
 
-<!-- Fixed Bottom Navigation for Mobile -->
-<div class="md:hidden fixed bottom-0 left-0 right-0 bg-gray-100 dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 z-50">
-  <div class="flex justify-around">
-    <a href="<?= BASE_URL ?>" class="flex flex-col items-center p-2 text-xs hover:text-blue-600 dark:hover:text-blue-400">
-      <i class="fas fa-home text-lg mb-1"></i>
-      <span>Home</span>
-    </a>
-    <a href="#" class="flex flex-col items-center p-2 text-xs hover:text-blue-600 dark:hover:text-blue-400">
-      <i class="fas fa-file-alt text-lg mb-1"></i>
-      <span>Tests</span>
-    </a>
-
-    <a href="/saved-jobs" class="flex flex-col items-center p-2 text-xs hover:text-blue-600 dark:hover:text-blue-400">
-      <i class="fas fa-bookmark text-lg mb-1"></i>
-      <span>Saved</span>
-    </a>
-    
-    <!-- <button id="bottomThemeToggle" class="flex flex-col items-center p-2 text-xs hover:text-blue-600 dark:hover:text-blue-400">
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m8.66-9H21M3 12H2m15.36 6.36l-.71.71M6.34 5.34l-.71.71M18.36 5.64l-.71-.71M6.34 18.66l-.71-.71" />
-      </svg>
-      <span>Theme</span>
-    </button> -->
-    <button id="bottomSubscribePushBtn" class="flex flex-col items-center p-2 text-xs hover:text-blue-600 dark:hover:text-blue-400">
-      <i class="fas fa-bell text-lg mb-1"></i>
-      <span>Alerts</span>
-    </button>
-  </div>
-</div>
 
 <main class="max-w-6xl mx-auto px-4 py-6 md:pb-6 pb-20"> <!-- Added padding-bottom for mobile -->
 <script type="module" src="app.js"></script>
 <script>
+  console.log('Test Image', '<?php echo "Image Link" . $ogImage; ?>');
   // Mobile menu toggle
   const mobileMenuButton = document.getElementById('mobileMenuButton');
   const mobileMenu = document.getElementById('mobileMenu');
@@ -190,61 +186,6 @@ define("PRIVATE_VAPID_KEY", "E_rtiwrFGQCxhXLUvvnPM2NVBdegcy1-ZDDbOAdRdak");
   document.getElementById('themeToggle')?.addEventListener('click', toggleTheme);
   document.getElementById('bottomThemeToggle')?.addEventListener('click', toggleTheme);
   
-async function handleSubscribe() {
-  if (!("serviceWorker" in navigator)) {
-    alert("Service Worker not supported in this browser.");
-    return;
-  }
 
-  try {
-    const reg = await navigator.serviceWorker.register("/sw.js");
-    console.log("Service Worker registered", reg);
 
-    const permission = await Notification.requestPermission();
-    if (permission !== "granted") {
-      alert("Notifications permission denied.");
-      return;
-    }
-
-    // Public VAPID key (PHP backend generate kore dibe)
-    const vapidKey = "<?= PUBLIC_VAPID_KEY ?>";
-
-    const sub = await reg.pushManager.subscribe({
-      userVisibleOnly: true,
-      applicationServerKey: urlBase64ToUint8Array(vapidKey)
-    });
-
-    // Send subscription to server
-    await fetch("/save-subscription.php", {
-      method: "POST",
-      body: JSON.stringify(sub),
-      headers: {
-        "Content-Type": "application/json"
-      }
-    });
-console.log('front data', sub)
-    alert("You are subscribed to Job Alerts!");
-  } catch (err) {
-    console.error("Subscription failed", err);
-  }
-}
-
-// Helper: convert base64 public key to Uint8Array
-function urlBase64ToUint8Array(base64String) {
-  const padding = "=".repeat((4 - base64String.length % 4) % 4);
-  const base64 = (base64String + padding).replace(/-/g, "+").replace(/_/g, "/");
-
-  const rawData = window.atob(base64);
-  const outputArray = new Uint8Array(rawData.length);
-
-  for (let i = 0; i < rawData.length; ++i) {
-    outputArray[i] = rawData.charCodeAt(i);
-  }
-  return outputArray;
-}
-
-// Button click events
-document.getElementById("subscribePushBtn")?.addEventListener("click", handleSubscribe);
-document.getElementById("mobileSubscribePushBtn")?.addEventListener("click", handleSubscribe);
-document.getElementById("bottomSubscribePushBtn")?.addEventListener("click", handleSubscribe);
 </script>

@@ -55,7 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $base_slug = slugify($title);
         $slug = unique_slug($pdo, 'jobs', 'job_title_slug', $base_slug);
         $stmt = $pdo->prepare("INSERT INTO jobs (category_slug, job_title, job_title_slug, meta_title, meta_description, company_name, location, description, requirements, job_type, apply_url, last_date, status, min_salary, max_salary, document_link, created_by, thumbnail) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
-        $stmt->execute([$category_slug, $title, $slug, $meta_title, $meta_desc, $company, $location, $description, $requirements, $job_type, $apply_url, $last_date, $status, $min_salary, $max_salary, $document_link, $createdBy ?? null, $thumbnail]);
+        $stmt->execute([$category_slug, $title, $slug, $meta_title, $meta_desc, $company, $location, $description, $requirements, $job_type, $apply_url, $last_date, $status, $min_salary, $max_salary, $document_link, $createdBy, $thumbnail]);
         $success = 'Job added successfully.';
     }
 }

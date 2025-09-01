@@ -46,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $location = trim($_POST['location'] ?? '');
     $description = $_POST['description'] ?? '';
     $requirements = $_POST['requirements'] ?? '';
-    $category_id = (int)($_POST['category_id'] ?? 0);
+    $category_slug = (int)($_POST['category_slug'] ?? 0);
     $job_type = $_POST['job_type'] ?? 'full-time';
     $meta_title = trim($_POST['meta_title'] ?? '');
     $meta_desc = trim($_POST['meta_description'] ?? '');
@@ -67,11 +67,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
         // Prepare update query with or without thumbnail
         if ($thumbnail) {
-            $u = $pdo->prepare("UPDATE jobs SET category_id=?, job_title=?, job_title_slug=?, meta_title=?, meta_description=?, company_name=?, location=?, description=?, requirements=?, job_type=?, apply_url=?, last_date=?, status=?, min_salary=?, max_salary=?, document_link=?, thumbnail=?, updated_at=NOW() WHERE job_id=?");
-            $u->execute([$category_id, $title, $slug, $meta_title, $meta_desc, $company, $location, $description, $requirements, $job_type, $apply_url, $last_date, $status, $min_salary, $max_salary, $document_link, $thumbnail, $id]);
+            $u = $pdo->prepare("UPDATE jobs SET category_slug=?, job_title=?, job_title_slug=?, meta_title=?, meta_description=?, company_name=?, location=?, description=?, requirements=?, job_type=?, apply_url=?, last_date=?, status=?, min_salary=?, max_salary=?, document_link=?, thumbnail=?, updated_at=NOW WHERE job_id=?");
+            $u->execute([$category_slug, $title, $slug, $meta_title, $meta_desc, $company, $location, $description, $requirements, $job_type, $apply_url, $last_date, $status, $min_salary, $max_salary, $document_link, $thumbnail, $id]);
         } else {
-            $u = $pdo->prepare("UPDATE jobs SET category_id=?, job_title=?, job_title_slug=?, meta_title=?, meta_description=?, company_name=?, location=?, description=?, requirements=?, job_type=?, apply_url=?, last_date=?, status=?, min_salary=?, max_salary=?, document_link=?, updated_at=NOW() WHERE job_id=?");
-            $u->execute([$category_id, $title, $slug, $meta_title, $meta_desc, $company, $location, $description, $requirements, $job_type, $apply_url, $last_date, $status, $min_salary, $max_salary, $document_link, $id]);
+            $u = $pdo->prepare("UPDATE jobs SET  category_slug=?, job_title=?, job_title_slug=?, meta_title=?, meta_description=?, company_name=?, location=?, description=?, requirements=?, job_type=?, apply_url=?, last_date=?, status=?, min_salary=?, max_salary=?, document_link=?, updated_at=NOW() WHERE job_id=?");
+
+            $u->execute([$category_slug, $title, $slug, $meta_title, $meta_desc, $company, $location, $description, $requirements, $job_type, $apply_url, $last_date, $status, $min_salary, $max_salary, $document_link, $id]);
         }
         
         $success = 'Job updated successfully.';

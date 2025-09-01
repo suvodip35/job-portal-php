@@ -1,4 +1,11 @@
 <?php
+$pageTitle = "JOB Notification Portal";
+$pageDescription = "JOB Notification Portal";
+$keywords = "Goverment JOBS, ITI JOBS, Railway Jobs, Engineer";
+$author = "J_N_P";
+$ogImage = "/assets/logo.png";
+$canonicalUrl = "/";
+
 require __DIR__ . '/../lib/parsedown-master/Parsedown.php';
 $Parsedown = new Parsedown();
 
@@ -156,8 +163,8 @@ $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
 $stmt->execute();
 $jobs = $stmt->fetchAll();
 
-$siteTitle = "Jobs — " . APP_NAME;
-$metaDesc  = "Latest Bank, Railway, ITI, Police, Army jobs. Powerful filters, mobile drawer, marquee updates.";
+// $siteTitle = "Jobs — " . APP_NAME;
+// $metaDesc  = "Latest Bank, Railway, ITI, Police, Army jobs. Powerful filters, mobile drawer, marquee updates.";
 ?>
 
 <!-- ===== Category Sub-Nav (sticky under main nav) ===== -->
@@ -375,7 +382,9 @@ $metaDesc  = "Latest Bank, Railway, ITI, Police, Army jobs. Powerful filters, mo
         <?php foreach ($jobs as $job): ?>
         <article class="group border rounded-2xl bg-white dark:bg-gray-800 shadow hover:shadow-2xl transition overflow-hidden w-full">
           <?php if (!empty($job['thumbnail'])): ?>
-          <img class="w-full h-40 object-cover" src="<?= e($job['thumbnail']) ?>" alt="<?= e($job['job_title']) ?>">
+          <div class="w-full aspect-[16/9] overflow-hidden rounded">
+            <img src="<?= e($job['thumbnail']) ?>" alt="<?= e($job['job_title']) ?>" class="w-full h-full object-cover" />
+          </div>
           <?php endif; ?>
           <div class="p-3">
             <div class="flex justify-between items-start gap-3">

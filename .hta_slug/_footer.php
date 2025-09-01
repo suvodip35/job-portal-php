@@ -1,4 +1,33 @@
 </main>
+<!-- Fixed Bottom Navigation for Mobile -->
+<div class="md:hidden fixed bottom-0 left-0 right-0 bg-gray-100 dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 z-50">
+  <div class="flex justify-around">
+    <a href="<?= BASE_URL ?>" class="flex flex-col items-center p-2 text-xs hover:text-blue-600 dark:hover:text-blue-400">
+      <i class="fas fa-home text-lg mb-1"></i>
+      <span>Home</span>
+    </a>
+    <a href="#" class="flex flex-col items-center p-2 text-xs hover:text-blue-600 dark:hover:text-blue-400">
+      <i class="fas fa-file-alt text-lg mb-1"></i>
+      <span>Tests</span>
+    </a>
+
+    <a href="/saved-jobs" class="flex flex-col items-center p-2 text-xs hover:text-blue-600 dark:hover:text-blue-400">
+      <i class="fas fa-bookmark text-lg mb-1"></i>
+      <span>Saved</span>
+    </a>
+    
+    <!-- <button id="bottomThemeToggle" class="flex flex-col items-center p-2 text-xs hover:text-blue-600 dark:hover:text-blue-400">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m8.66-9H21M3 12H2m15.36 6.36l-.71.71M6.34 5.34l-.71.71M18.36 5.64l-.71-.71M6.34 18.66l-.71-.71" />
+      </svg>
+      <span>Theme</span>
+    </button> -->
+    <button id="bottomSubscribePushBtn" class="flex flex-col items-center p-2 text-xs hover:text-blue-600 dark:hover:text-blue-400">
+      <i class="fas fa-bell text-lg mb-1"></i>
+      <span>Alerts</span>
+    </button>
+  </div>
+</div>
 <footer class="bg-gray-100 dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 mt-12">
   <div class="max-w-6xl mx-auto px-4 py-10">
     <div class="grid grid-cols-1 md:grid-cols-4 gap-8 text-sm">
@@ -59,6 +88,6 @@
 </footer>
 
 
-<script src="<?= BASE_URL ?>assets/script.js"></script>
+<!-- <script src="<?= BASE_URL ?>assets/script.js"></script> -->
 </body>
 </html>

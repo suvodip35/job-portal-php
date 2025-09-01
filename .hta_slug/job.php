@@ -19,6 +19,13 @@ if (!$job) {
     // exit;
 }
 
+// OVERRIDE THE META VARIABLES (these were declared in header.php)
+$pageTitle = $job['meta_title'] ?: $job['job_title'] . ' - ' . APP_NAME;
+$pageDescription = $job['meta_description'] ?: mb_substr(strip_tags($job['description']), 0, 160);
+$keywords = "Government JOBS, ITI JOBS, Railway Jobs, Engineer, " . $job['job_title'];
+$ogImage = $job['thumbnail'] ? $job['thumbnail'] : "/assets/logo.png";
+$canonicalUrl = BASE_URL . "job?slug=" . $slug;
+
 // Get related jobs (same category, excluding current job)
 $relatedJobs = [];
 if ($job['category_slug']) {
@@ -54,8 +61,15 @@ $schema = [
     ],
 ];
 
-$siteTitle = $job['meta_title'] ?: $job['job_title'] . ' - ' . APP_NAME;
-$metaDesc = $job['meta_description'] ?: mb_substr(strip_tags($job['description']), 0, 160);
+
+
+// var_dump($job['thumbnail']);
+// echo $job['thumbnail'];
+
+// echo "Image " . htmlspecialchars($job['thumbnail']);
+// // echo json_encode($job['thumbnail']);
+// // $siteTitle = $job['meta_title'] ?: $job['job_title'] . ' - ' . APP_NAME;
+// // $metaDesc = $job['meta_description'] ?: mb_substr(strip_tags($job['description']), 0, 160);
 
 // Generate current page URL for sharing
 $currentUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
@@ -102,8 +116,21 @@ $shareText = urlencode("Check out this job opportunity: " . $job['job_title'] . 
   <main class="lg:col-span-3">
     <article class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
       <?php if ($job['thumbnail']): ?>
-      <div class="w-full h-64 overflow-hidden">
-        <img src="<?= e($job['thumbnail']) ?>" alt="<?= e($job['job_title']) ?>" class="w-full h-full object-cover">
+      <div class="w-full h-80 overflow-hidden">
+        <div class="w-full aspect-[16/9] relative overflow-hidden rounded">
+          <!-- blurred background from same image -->
+          <div class="absolute inset-0">
+            <img src="<?= e($job['thumbnail']) ?>" 
+                alt="" 
+                class="w-full h-full object-cover blur-lg scale-110" />
+          </div>
+
+          <!-- main image (object-contain) -->
+          <img src="<?= e($job['thumbnail']) ?>" 
+              alt="<?= e($job['job_title']) ?>" 
+              class="relative w-full h-full object-contain" />
+        </div>
+
       </div>
       <?php endif; ?>
       
@@ -195,7 +222,8 @@ $shareText = urlencode("Check out this job opportunity: " . $job['job_title'] . 
           <?php endif; ?>
         </div>
         
-        <div class="mt-6 prose dark:prose-invert max-w-none text-justify leading-7"><?= $Parsedown->text($job['description']) ?></div>
+        <div id="markdownContent" class="job-description mt-6 prose dark:prose-invert max-w-none text-justify leading-7"><?= $Parsedown->text($job['description']) ?></div>
+
 
         <?php if (!empty($job['requirements'])): ?>
         <div class="mt-8">
@@ -315,7 +343,50 @@ function copyToClipboard(button, text) {
 }
 
 </script>
+<style>
+  #markdownContent > h2 {
+    font-size: 22px;
+    font-weight: bold;
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+.job-description table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+  border: 1px solid #d1d5db; /* Light mode border */
+}
 
+/* Light Mode */
+.job-description th {
+  font-weight: 600;
+  padding: 0.3rem 1rem;
+  border: 1px solid #d1d5db; /* Light border */
+  text-align: left;
+}
+
+.job-description td {
+  padding: 0.3rem 1rem;
+  border: 1px solid #d1d5db;
+}
+
+/* 🌙 Dark Mode */
+.dark .job-description table {
+  border: 1px solid #ffffffff; /* gray-700 */
+}
+
+#markdownContent > .dark .job-description th {
+  color: #f9fafb; /* White text */
+  border: 1px solid #374151;
+}
+
+#markdownContent > .dark .job-description td {
+  color: #e5e7eb; /* Light gray text */
+  border: 1px solid #374151;
+}
+
+
+</style>
 <?php 
   // require_once __DIR__ . '/includes/footer.php'; 
 ?>
