@@ -96,7 +96,7 @@
     <div class="flex justify-between items-center h-16">
       <!-- Logo and Desktop Search -->
       <div class="flex items-center">
-        <a href="/" class="text-xl font-semibold"><?= e(APP_NAME) ?></a>
+        <a href="/" class="text-xl font-semibold">From Campus</a>
         <form action="<?= BASE_URL ?>search" method="get" class="ml-6 hidden md:block">
           <input value="<?php if(isset($_GET['q'])){echo $_GET['q'];} ?>" type="search" name="q" placeholder="Search jobs or keywords..." class="px-3 py-1 rounded border focus:outline-none dark:bg-gray-900 dark:border-gray-700 w-64" />
         </form>
