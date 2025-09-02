@@ -36,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $location = trim($_POST['location'] ?? '');
     $description = $_POST['description'] ?? '';
     $requirements = $_POST['requirements'] ?? '';
-    $category_slug = (int)($_POST['category_slug'] ?? 0);
+    $category_slug = $_POST['category_slug'] ?? '';
     $job_type = $_POST['job_type'] ?? 'full-time';
     $meta_title = trim($_POST['meta_title'] ?? '');
     $meta_desc = trim($_POST['meta_description'] ?? '');
