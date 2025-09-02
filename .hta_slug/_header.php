@@ -77,9 +77,9 @@
   <!-- Canonical URL -->
   <link rel="canonical" href="<?php echo htmlspecialchars($canonicalUrl); ?>">
   <!-- Tailwind CDN for quick production-ready UI; for full production consider building Tailwind -->
-  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="/assets/cdn.tailwindcss.com"></script>
   <!-- Font Awesome for icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="stylesheet" href="/assets/font-awesome-all.min.css" />
   <!-- Theme: apply saved preference -->
   <script>
     try {
@@ -117,9 +117,9 @@
           </svg>
         </button> -->
 
-        <button id="subscribePushBtn" class="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 transition">Get Job Alerts</button>
+        <!-- <button id="subscribePushBtn" class="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 transition">Get Job Alerts</button> -->
         
-        <a href="/admin/dashboard" class="px-3 py-1 border rounded hover:bg-gray-200 dark:hover:bg-gray-700 transition">Admin</a>
+        <!-- <a href="/admin/dashboard" class="px-3 py-1 border rounded hover:bg-gray-200 dark:hover:bg-gray-700 transition">Admin</a> -->
       </div>
       
       <!-- Mobile Menu Button -->
@@ -145,8 +145,8 @@
       <a href="/contact" class="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-200 dark:hover:bg-gray-700">Contact</a>
       <!-- <a href="<?= BASE_URL ?>mock_tests" class="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-200 dark:hover:bg-gray-700">Mock Tests</a> -->
       <!-- <a href="<?= BASE_URL ?>sitemap" class="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-200 dark:hover:bg-gray-700">Sitemap</a> -->
-      <button id="mobileSubscribePushBtn" class="w-full text-left px-3 py-2 rounded-md text-base font-medium hover:bg-gray-200 dark:hover:bg-gray-700">Get Job Alerts</button>
-      <a href="/admin/dashboard" class="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-200 dark:hover:bg-gray-700">Admin</a>
+      <!-- <button id="mobileSubscribePushBtn" class="w-full text-left px-3 py-2 rounded-md text-base font-medium hover:bg-gray-200 dark:hover:bg-gray-700">Get Job Alerts</button> -->
+      <!-- <a href="/admin/dashboard" class="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-200 dark:hover:bg-gray-700">Admin</a> -->
     </div>
   </div>
 </nav>
