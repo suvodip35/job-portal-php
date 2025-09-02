@@ -1,0 +1,9 @@
+# Allow to all
+User-agent: *
+Disallow: /admin/
+Disallow: /login/
+Disallow: /config/
+Allow: /
+
+# Sitemap Location
+Sitemap: https://fromcampus.com/sitemap.xml
