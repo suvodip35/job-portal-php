@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '.hta_config/functions.php';
+require_once __DIR__ . '/.hta_config/functions.php';
 header('Content-Type: application/xml; charset=utf-8');
 
 $base = rtrim(BASE_URL, '/');
