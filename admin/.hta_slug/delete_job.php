@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/../../.hta_slug/_header.php';
 require_once __DIR__ . '/../functions.php';
 // require_admin();
 

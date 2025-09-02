@@ -1,5 +1,5 @@
 <?php
-echo 'ggggggggg';
+require_once __DIR__ . '/../../.hta_slug/_header.php';
 require('../.hta_config/conf.php');
 
 try {

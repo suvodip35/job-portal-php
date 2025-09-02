@@ -1,6 +1,6 @@
 <?php
     session_start();
-    require('../.hta_slug/_header.php');
+    // require('../.hta_slug/_header.php');
     // require('../.hta_slug/_nav.php');
     require_once('../.hta_config/var.php');
 
@@ -10,7 +10,7 @@ if (strpos($url[1], "?") !== false) {
     $slug=$url2[0];
 }   else  $slug=$url[2];
 
-require_once('../.hta_slug/_header.php');
+// require_once('../.hta_slug/_header.php');
 
 if($slug=="") require_once('.hta_slug/_home.php');
 elseif(file_exists(".hta_slug/".$slug.".php")) include ".hta_slug/".$slug.".php";

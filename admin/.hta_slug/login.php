@@ -1,4 +1,12 @@
 <?php
+  require_once __DIR__ . '/../../.hta_slug/_header.php';
+
+  if (isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] === true) {
+    echo "<script>window.location.href='/admin'</script>";
+    exit;
+}
+
+  
 // require_once __DIR__ . '/../functions.php';
 $err = '';
 
