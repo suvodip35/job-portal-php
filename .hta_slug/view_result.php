@@ -1,4 +1,5 @@
 <?php
+require_once('_header.php');
 require_once __DIR__ . '/functions.php';
 $attemptId = (int)($_GET['attempt'] ?? 0);
 $stmt = $pdo->prepare("SELECT ta.*, mt.total_marks, mt.title FROM test_attempts ta JOIN mock_tests mt ON ta.mock_test_id = mt.id WHERE ta.id = ?");

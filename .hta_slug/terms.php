@@ -1,4 +1,6 @@
-<?php require_once "_header.php"; ?>
+<?php 
+  require_once('_header.php');
+?>
 <main class="max-w-4xl mx-auto px-4 py-10">
   <h1 class="text-3xl font-bold mb-6">Terms & Conditions</h1>
   <div class="space-y-4 text-gray-700 dark:text-gray-300 leading-relaxed">

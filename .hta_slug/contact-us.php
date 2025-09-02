@@ -1,3 +1,6 @@
+<?php
+    require_once('_header.php');
+?>
 <div class="container flex-grow-1 d-flex align-items-center justify-content-center mt-4">
     <div class="card shadow-lg border-0 p-4 w-100" style="max-width: 500px;">
         <div class="card-body">

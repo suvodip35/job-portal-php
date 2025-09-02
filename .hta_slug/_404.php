@@ -1,1 +1,4 @@
-404 root
+
+<?php
+    require_once('_header.php');
+?>

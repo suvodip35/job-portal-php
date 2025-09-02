@@ -1,7 +1,4 @@
 <?php
-require __DIR__ . '/../lib/parsedown-master/Parsedown.php';
-$Parsedown = new Parsedown();
-// require_once __DIR__ . '/functions.php';
 $slug = $_GET['slug'] ?? '';
 if (!$slug) {
     header('Location: /');
@@ -60,6 +57,11 @@ $schema = [
         ]
     ],
 ];
+require_once('_header.php');
+require __DIR__ . '/../lib/parsedown-master/Parsedown.php';
+$Parsedown = new Parsedown();
+// require_once __DIR__ . '/functions.php';
+
 
 
 

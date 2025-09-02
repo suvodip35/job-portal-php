@@ -1,4 +1,5 @@
 <?php
+require_once('_header.php');
 require_once __DIR__ . '/functions.php';
 
 $slug = $_GET['slug'] ?? '';

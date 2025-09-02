@@ -1,4 +1,5 @@
 <?php
+require_once('_header.php');
 require __DIR__ . '/../lib/parsedown-master/Parsedown.php';
 $Parsedown = new Parsedown();
 

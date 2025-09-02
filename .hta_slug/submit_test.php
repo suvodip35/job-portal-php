@@ -1,4 +1,5 @@
 <?php
+require_once('_header.php');
 require_once __DIR__ . '/functions.php';
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     header('Location: mock_tests.php');

@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ . '/functions.php';
-require_once __DIR__ . '/includes/header.php';
+require_once('_header.php');
 
 $tests = $pdo->query("SELECT * FROM mock_tests WHERE visibility='published' ORDER BY created_at DESC")->fetchAll();
 ?>
