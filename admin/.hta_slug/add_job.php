@@ -64,8 +64,8 @@ $cats = $pdo->query("SELECT * FROM job_categories ORDER BY category_name ASC")->
 ?>
 
 <!-- Add EasyMDE CSS -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.css">
-<script src="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.js"></script>
+<link rel="stylesheet" href="/assets/easymde.min.css">
+<script src="/assets/easymde.min.js"></script>
 
 <h1 class="text-2xl font-bold mb-4 dark:text-white">Add Job</h1>
 <?php if ($err): ?><div class="p-2 bg-red-100 text-red-800 mb-3 rounded dark:bg-red-900 dark:text-red-200"><?= e($err) ?></div><?php endif; ?>
