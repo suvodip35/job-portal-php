@@ -153,7 +153,6 @@
 
 
 <main class="max-w-6xl mx-auto px-4 py-6 md:pb-6 pb-20"> <!-- Added padding-bottom for mobile -->
-<script type="module" src="app.js"></script>
 <script>
   console.log('Test Image', '<?php echo "Image Link" . $ogImage; ?>');
   // Mobile menu toggle
