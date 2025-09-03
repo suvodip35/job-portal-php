@@ -79,7 +79,9 @@
   <!-- Tailwind CDN for quick production-ready UI; for full production consider building Tailwind -->
   <script src="/assets/cdn.tailwindcss.com"></script>
   <!-- Font Awesome for icons -->
-  <link rel="stylesheet" href="/assets/font-awesome-all.min.css" />
+
+
+
   <!-- Theme: apply saved preference -->
   <script>
     try {

@@ -3,27 +3,27 @@
 <div class="md:hidden fixed bottom-0 left-0 right-0 bg-gray-100 dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 z-50">
   <div class="flex justify-around">
     <a href="<?= BASE_URL ?>" class="flex flex-col items-center p-2 text-xs hover:text-blue-600 dark:hover:text-blue-400">
-      <i class="fas fa-home text-lg mb-1"></i>
+      <svg class="w-5 h-5 mb-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+        <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path>
+      </svg>
       <span>Home</span>
     </a>
     <a href="#" class="flex flex-col items-center p-2 text-xs hover:text-blue-600 dark:hover:text-blue-400">
-      <i class="fas fa-file-alt text-lg mb-1"></i>
+      <svg class="w-5 h-5 mb-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+        <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd"></path>
+      </svg>
       <span>Tests</span>
     </a>
-
     <a href="/saved-jobs" class="flex flex-col items-center p-2 text-xs hover:text-blue-600 dark:hover:text-blue-400">
-      <i class="fas fa-bookmark text-lg mb-1"></i>
+      <svg class="w-5 h-5 mb-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+        <path fill-rule="evenodd" d="M3 5a2 2 0 012-2h10a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2V5zm11 1H6v8l4-2 4 2V6z" clip-rule="evenodd"></path>
+      </svg>
       <span>Saved</span>
     </a>
-    
-    <!-- <button id="bottomThemeToggle" class="flex flex-col items-center p-2 text-xs hover:text-blue-600 dark:hover:text-blue-400">
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m8.66-9H21M3 12H2m15.36 6.36l-.71.71M6.34 5.34l-.71.71M18.36 5.64l-.71-.71M6.34 18.66l-.71-.71" />
-      </svg>
-      <span>Theme</span>
-    </button> -->
     <button id="bottomSubscribePushBtn" class="flex flex-col items-center p-2 text-xs hover:text-blue-600 dark:hover:text-blue-400">
-      <i class="fas fa-bell text-lg mb-1"></i>
+      <svg class="w-5 h-5 mb-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+        <path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z"></path>
+      </svg>
       <span>Alerts</span>
     </button>
   </div>
