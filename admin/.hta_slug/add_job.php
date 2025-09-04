@@ -52,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $meta_title = trim($_POST['meta_title'] ?? '');
     $meta_desc = trim($_POST['meta_description'] ?? '');
     $apply_url = trim($_POST['apply_url'] ?? '');
-    $last_date = $_POST['last_date'] ?? null;
+    $last_date = !empty($_POST['last_date']) ? $_POST['last_date'] : null; // Allow empty last_date
     $status = $_POST['status'] ?? 'published';
     $min_salary = (int)($_POST['min_salary'] ?? 0);
     $max_salary = (int)($_POST['max_salary'] ?? 0);
@@ -179,7 +179,7 @@ $cats = $pdo->query("SELECT * FROM job_categories ORDER BY category_name ASC")->
                           <?= (isset($_POST['company_name']) && trim($_POST['company_name']) === '') ? 'border-red-500' : '' ?>"
                    value="<?= e($_POST['company_name'] ?? '') ?>" 
                    placeholder="Company name">
-            <?php if (isset($_POST['company_name']) && trim($_POST['company_name']) === ''): ?>
+            <?php if (isset($_POST['company_name']) && trim($_POST['company_name']) === '') : ?>
             <p class="mt-1 text-xs text-red-500 dark:text-red-400">Please provide a company name</p>
             <?php endif; ?>
         </div>
@@ -296,11 +296,12 @@ $cats = $pdo->query("SELECT * FROM job_categories ORDER BY category_name ASC")->
         </div>
         <div>
             <label class="block text-sm font-medium mb-1 dark:text-gray-300" for="last_date">
-                Application Deadline
+                Application Deadline (Optional)
             </label>
             <input type="date" name="last_date" id="last_date" 
                    class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white" 
                    value="<?= e($_POST['last_date'] ?? '') ?>">
+            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Leave empty if there's no specific deadline</p>
         </div>
     </div>
   </div>
@@ -471,7 +472,7 @@ $cats = $pdo->query("SELECT * FROM job_categories ORDER BY category_name ASC")->
   // Preview styling
   const style = document.createElement('style');
   style.textContent = `
-    .editor-preview mark { background-color: #ffeb3b; padding: 0.2em; color: #000; }
+    .editor-preview mark { background-color: #ffeb3b; padding: 0.2em; color: extreme; }
     .editor-preview u { text-decoration: underline; }
     .fa-highlight:before { content: "H"; font-weight: bold; padding: 0 3px; }
     .fa-underline:before { content: "U"; text-decoration: underline; }
