@@ -4,7 +4,7 @@ $pageTitle = "JOB Notification Portal";
 $pageDescription = "JOB Notification Portal";
 $keywords = "Goverment JOBS, ITI JOBS, Railway Jobs, Engineer";
 $author = "J_N_P";
-$ogImage = "/assets/logo.png";
+$ogImage = "/assets/logo/fc_logo.png";
 $canonicalUrl = "/";
 
 require __DIR__ . '/../lib/parsedown-master/Parsedown.php';
