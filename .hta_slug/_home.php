@@ -1,11 +1,13 @@
 <?php
-require_once('_header.php');
 $pageTitle = "JOB Notification Portal";
 $pageDescription = "JOB Notification Portal";
 $keywords = "Goverment JOBS, ITI JOBS, Railway Jobs, Engineer";
 $author = "J_N_P";
 $ogImage = "/assets/logo/fc_logo.png";
 $canonicalUrl = "/";
+
+require_once('_header.php');
+
 
 require __DIR__ . '/../lib/parsedown-master/Parsedown.php';
 $Parsedown = new Parsedown();
