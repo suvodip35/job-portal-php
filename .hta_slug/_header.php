@@ -53,7 +53,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <link rel="icon" href="<?= BASE_URL ?>assets/favicon.ico">
+  <link rel="icon" href="/favicon.ico" />
 
   <!-- Basic Meta Tags -->
   <title><?php echo htmlspecialchars($pageTitle); ?></title>
@@ -98,7 +98,11 @@
     <div class="flex justify-between items-center h-16">
       <!-- Logo and Desktop Search -->
       <div class="flex items-center">
-        <a href="/" class="text-xl font-semibold">From Campus</a>
+        <!-- <a href="/" class="text-xl font-semibold">From Campus</a> -->
+        <a href="/" class="text-xl font-semibold flex flex-col justify-center items-center" >
+          <img src="/assets/logo/fc_logo_crop.png" alt="FromCampus Logo" class="w-[40px] h-auto" />
+          <p class="text-xs"><?= e(APP_NAME) ?></p>
+        </a>
         <form action="<?= BASE_URL ?>search" method="get" class="ml-6 hidden md:block">
           <input value="<?php if(isset($_GET['q'])){echo $_GET['q'];} ?>" type="search" name="q" placeholder="Search jobs or keywords..." class="px-3 py-1 rounded border focus:outline-none dark:bg-gray-900 dark:border-gray-700 w-64" />
         </form>

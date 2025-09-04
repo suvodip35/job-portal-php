@@ -34,10 +34,12 @@
 
       <!-- Company Info -->
       <div>
-        <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-4"><?= e(APP_NAME) ?></h2>
-        <p class="text-gray-600 dark:text-gray-400">
-          <?= e(APP_NAME) ?> is your trusted portal for latest job notifications, mock tests, and career updates.
-        </p>
+        <!-- <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-4"><?= e(APP_NAME) ?></h2> -->
+        <a href="/" class="text-xl font-semibold flex flex-col justify-center items-center" >
+          <img src="/assets/logo/fc_logo_crop.png" alt="FromCampus Logo" class="w-[40px] h-auto" />
+          <p class="text-lg"><?= e(APP_NAME) ?></p>
+        </a>
+        <p class="text-gray-600 dark:text-gray-400"><?= e(APP_NAME) ?> is your trusted portal for latest job notifications, mock tests, and career updates.</p>
       </div>
 
       <!-- Quick Links -->
@@ -80,9 +82,9 @@
   </div>
 
   <div class="border-t border-gray-200 dark:border-gray-700 py-4">
-    <div class="max-w-6xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center text-xs text-gray-500 dark:text-gray-400">
+    <div class="max-w-6xl mx-auto px-4 flex flex-col md:flex-row justify-center items-center text-xs text-gray-500 dark:text-gray-400">
       <div>&copy; <?= date('Y') ?> <?= e(APP_NAME) ?>. All rights reserved.</div>
-      <div>Built with <span class="text-red-500">♥</span> PHP • Tailwind • SEO Friendly</div>
+      <!-- <div>Built with <span class="text-red-500">♥</span> PHP • Tailwind • SEO Friendly</div> -->
     </div>
   </div>
 </footer>
