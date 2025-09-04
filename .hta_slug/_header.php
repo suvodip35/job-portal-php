@@ -43,7 +43,7 @@
   $pageDescription= $pageDescription?? $metaDesc;
   $keywords       = $keywords       ?? "Government JOBS, ITI JOBS, Railway Jobs, Engineer";
   $author         = $author         ?? "J_N_P";
-  $ogImage        = !empty($job['thumbnail']) ? $job['thumbnail'] : "/assets/logo/fc_logo.png";
+  $ogImage        = !empty($job['thumbnail']) ? $job['thumbnail'] : "/assets/logo/FromCampus_Color_text.png";
   $canonicalUrl   = $canonicalUrl   ?? BASE_URL;
 
 ?>
