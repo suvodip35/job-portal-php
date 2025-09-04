@@ -34,7 +34,6 @@
 
       <!-- Company Info -->
       <div>
-        <!-- <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-4"><?= e(APP_NAME) ?></h2> -->
         <a href="/" class="text-xl font-semibold flex flex-col justify-center items-center" >
           <img src="/assets/logo/fc_logo_crop.png" alt="FromCampus Logo" class="w-[40px] h-auto" />
           <p class="text-lg"><?= e(APP_NAME) ?></p>
