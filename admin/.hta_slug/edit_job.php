@@ -81,7 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $meta_title = trim($_POST['meta_title'] ?? '');
     $meta_desc = trim($_POST['meta_description'] ?? '');
     $apply_url = trim($_POST['apply_url'] ?? '');
-    $last_date = $_POST['last_date'] ?? '';
+    $last_date = !empty($_POST['last_date']) ? $_POST['last_date'] : null; // Allow empty last_date
     $status = $_POST['status'] ?? 'published';
     $min_salary = (int)($_POST['min_salary'] ?? 0);
     $max_salary = (int)($_POST['max_salary'] ?? 0);
@@ -337,11 +337,12 @@ $cats = $pdo->query("SELECT * FROM job_categories ORDER BY category_name ASC")->
         </div>
         <div>
             <label class="block text-sm font-medium mb-1 dark:text-gray-300" for="last_date">
-                Application Deadline
+                Application Deadline (Optional)
             </label>
             <input type="date" name="last_date" id="last_date" 
                    class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white" 
                    value="<?= e($_POST['last_date'] ?? $job['last_date']) ?>">
+            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Leave empty if there's no specific deadline</p>
         </div>
     </div>
   </div>
