@@ -81,7 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $meta_title = trim($_POST['meta_title'] ?? '');
     $meta_desc = trim($_POST['meta_description'] ?? '');
     $apply_url = trim($_POST['apply_url'] ?? '');
-    $last_date = $_POST['last_date'] ?? null;
+    $last_date = $_POST['last_date'] ?? '';
     $status = $_POST['status'] ?? 'published';
     $min_salary = (int)($_POST['min_salary'] ?? 0);
     $max_salary = (int)($_POST['max_salary'] ?? 0);
