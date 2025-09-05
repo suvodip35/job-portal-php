@@ -63,6 +63,7 @@ function csrf_token(): string {
 }
 function csrf_check(string $token) {
     if (empty($_SESSION['csrf_token']) || !hash_equals($_SESSION['csrf_token'], $token)) {
+        // echo "Session Token = " . $_SESSION['csrf_token'] . " / Token = " . $token;
         http_response_code(400);
         die('CSRF validation failed.');
     }
