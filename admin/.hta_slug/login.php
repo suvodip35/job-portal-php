@@ -34,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
 
             if ($loginOK && $user['role'] === 'admin') {
-                session_regenerate_id(true);
+                // session_regenerate_id(true);
                 $_SESSION['admin_logged_in'] = true;
                 $_SESSION['admin_id'] = $user['user_id'];
                 $_SESSION['admin_name'] = $user['name'];

@@ -1,5 +1,5 @@
 <?php
-session_start();
+// session_start();
 require_once('.hta_config/var.php');
 
 $url = explode('/', $_SERVER['REQUEST_URI']);
