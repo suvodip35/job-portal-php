@@ -86,7 +86,7 @@
   <!-- Canonical URL -->
   <link rel="canonical" href="<?php echo htmlspecialchars($canonicalUrl); ?>">
   <!-- Tailwind CDN for quick production-ready UI; for full production consider building Tailwind -->
-  <script src="/assets/cdn.tailwindcss.com"></script>
+  <script src="/assets/tailwind.css"></script>
 
 </head>
 <body class="bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 antialiased">

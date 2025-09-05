@@ -11,3 +11,11 @@ RewriteRule ^sitemap\.xml$ sitemap.php [L]
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*)$ index.php [L]
+
+<FilesMatch "\.(ico|jpg|jpeg|png|gif|webp|avif|css|js)$">
+  Header set Cache-Control "max-age=31536000, public"
+</FilesMatch>
+
+<FilesMatch "\.(eot|svg|ttf|woff|woff2)$">
+  Header set Cache-Control "max-age=31536000, public"
+</FilesMatch>
