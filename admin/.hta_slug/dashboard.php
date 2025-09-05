@@ -5,10 +5,11 @@ require_admin();
 $totalJobs = (int)$pdo->query("SELECT COUNT(*) FROM jobs")->fetchColumn();
 $published = (int)$pdo->query("SELECT COUNT(*) FROM jobs WHERE status='published'")->fetchColumn();
 $totalUsers = (int)$pdo->query("SELECT COUNT(*) FROM users")->fetchColumn();
-$siteTitle = "Dashboard - Admin";
-
+$siteTitle = "FromCampus - Admin Dashboard";
+// var_dump($_SESSION);
 ?>
-<h1 class="text-2xl font-bold mb-4">Admin Dashboard</h1>
+<h1 class="text-2xl font-bold mb-1">Admin Dashboard</h1>
+<p class="text-xl font-bold mb-4">Welcome Back <?= $_SESSION['admin_name']?></p>
 <div class="grid md:grid-cols-3 gap-4">
   <div class="p-4 rounded bg-white dark:bg-gray-800">
     <h3 class="font-semibold">Total Jobs</h3>

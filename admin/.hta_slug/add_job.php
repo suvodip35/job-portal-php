@@ -57,7 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $min_salary = (int)($_POST['min_salary'] ?? 0);
     $max_salary = (int)($_POST['max_salary'] ?? 0);
     $document_link = trim($_POST['document_link'] ?? '');
-    $createdBy = 'Suvo';
+    $createdBy = $_SESSION['admin_name'] ?? '';
     
     // Handle file upload and check for errors
     $thumbnailResult = handleThumbnailUpload();

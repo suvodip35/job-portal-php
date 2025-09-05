@@ -11,6 +11,7 @@
 $err = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+  // var_dump($_POST);
     $email = trim($_POST['email'] ?? '');
     $pass = $_POST['password'] ?? '';
     $token = $_POST['csrf_token'] ?? '';
@@ -38,6 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_SESSION['admin_logged_in'] = true;
                 $_SESSION['admin_id'] = $user['user_id'];
                 $_SESSION['admin_name'] = $user['name'];
+                $_SESSION['admin_email'] = $user['email'];
                 echo '<script>window.location.href="/admin/dashboard"</script>';
                 exit;
             } else {
