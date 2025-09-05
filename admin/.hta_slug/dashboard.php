@@ -44,7 +44,7 @@ while ($r = $stmt->fetch()):
   <td><?= e($r['job_title']) ?></td>
   <td><?= e($r['company_name']) ?></td>
   <td><?= e($r['status']) ?></td>
-  <td>
+  <td class="inline-flex gap-x-2">
     <a class="text-blue-600" href="edit_job/?id=<?= e($r['job_id']) ?>">Edit</a> |
     <a class="text-red-600" href="delete_job?id=<?= e($r['job_id']) ?>" onclick="return confirm('Delete this job?')">Delete</a>
   </td>
