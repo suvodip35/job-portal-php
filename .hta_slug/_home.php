@@ -499,7 +499,7 @@ $jobs = $stmt->fetchAll();
         <article class="group border rounded-2xl bg-white dark:bg-gray-800 shadow hover:shadow-2xl transition overflow-hidden w-full">
           <?php if (!empty($job['thumbnail'])): ?>
           <div class="w-full aspect-[16/9] overflow-hidden rounded">
-            <img src="<?= e($job['thumbnail']) ?>" fetchpriority="high" decoding="async" alt="<?= e($job['job_title']) ?>" class="w-full h-full object-cover" />
+            <img src="<?= e($job['thumbnail']) ?>" fetchpriority="high" alt="<?= e($job['job_title']) ?>" class="w-full h-full object-cover" />
           </div>
           <?php endif; ?>
           <div class="p-3">
