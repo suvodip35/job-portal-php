@@ -1,6 +1,6 @@
 <?php
   require_once __DIR__ . '/../../.hta_slug/_header.php';
-// require_admin();
+require_admin();
 // stats
 $totalJobs = (int)$pdo->query("SELECT COUNT(*) FROM jobs")->fetchColumn();
 $published = (int)$pdo->query("SELECT COUNT(*) FROM jobs WHERE status='published'")->fetchColumn();

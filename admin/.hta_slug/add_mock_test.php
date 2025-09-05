@@ -1,5 +1,5 @@
 <?php
-// require_admin();
+require_admin();
 require_once __DIR__ . '/../../.hta_slug/_header.php';
 $err = $success = '';
 

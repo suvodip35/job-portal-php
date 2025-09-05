@@ -1,5 +1,5 @@
 <?php
-    session_start();
+    // session_start();
     // require('../.hta_slug/_header.php');
     // require('../.hta_slug/_nav.php');
     require_once('../.hta_config/var.php');

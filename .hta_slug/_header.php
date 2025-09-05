@@ -87,17 +87,7 @@
   <link rel="canonical" href="<?php echo htmlspecialchars($canonicalUrl); ?>">
   <!-- Tailwind CDN for quick production-ready UI; for full production consider building Tailwind -->
   <script src="/assets/cdn.tailwindcss.com"></script>
-  <!-- Font Awesome for icons -->
 
-
-
-  <!-- Theme: apply saved preference -->
-  <script>
-    try {
-      const theme = localStorage.getItem('theme');
-      if (theme === 'dark') document.documentElement.classList.add('dark');
-    } catch (e) {}
-  </script>
 </head>
 <body class="bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 antialiased">
 <!-- Main Navigation -->
@@ -169,7 +159,7 @@
 
 <main class="max-w-6xl mx-auto px-4 py-6 md:pb-6 pb-20"> <!-- Added padding-bottom for mobile -->
 <script>
-  console.log('Test Image', '<?php echo "Image Link" . $ogImage; ?>');
+  // console.log('Test Image', '<?php echo "Image Link" . $ogImage; ?>');
   // Mobile menu toggle
   const mobileMenuButton = document.getElementById('mobileMenuButton');
   const mobileMenu = document.getElementById('mobileMenu');
@@ -177,28 +167,6 @@
   mobileMenuButton.addEventListener('click', () => {
     mobileMenu.classList.toggle('hidden');
   });
-  
-  // Theme toggle functionality (for both top and bottom buttons)
-  function toggleTheme() {
-    const html = document.documentElement;
-    html.classList.toggle('dark');
-    const isDark = html.classList.contains('dark');
-    localStorage.setItem('theme', isDark ? 'dark' : 'light');
-    
-    // Update icon
-    const themeIcon = document.getElementById('themeIcon');
-    if (themeIcon) {
-      const themePath = document.getElementById('themePath');
-      if (isDark) {
-        themePath.setAttribute('d', 'M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.39 5.39 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z');
-      } else {
-        themePath.setAttribute('d', 'M12 3v1m0 16v1m8.66-9H21M3 12H2m15.36 6.36l-.71.71M6.34 5.34l-.71.71M18.36 5.64l-.71-.71M6.34 18.66l-.71-.71');
-      }
-    }
-  }
-  
-  document.getElementById('themeToggle')?.addEventListener('click', toggleTheme);
-  document.getElementById('bottomThemeToggle')?.addEventListener('click', toggleTheme);
   
 
 

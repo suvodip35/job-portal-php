@@ -34,7 +34,7 @@ function handleThumbnailUpload() {
     $filename = uniqid() . '.' . $ext;
     $destination = $uploadDir . $filename;
     
-    if (move_uploaded_file($file['tmp_name'], $destination)) {
+    if (compressImage($file['tmp_name'], $destination, 80, 600, 400)) {
         return '/thumbnails/' . $filename;
     }
     return ['error' => 'Failed to save the uploaded file.'];
@@ -149,7 +149,7 @@ $cats = $pdo->query("SELECT * FROM job_categories ORDER BY category_name ASC")->
 </div>
 <?php endif; ?>
 
-<form method="post" class="space-y-6" enctype="multipart/form-data">
+<form method="post" class="space-y-6" enctype="multipart/form-data" accept-charset="UTF-8">
   <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
   
   <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">

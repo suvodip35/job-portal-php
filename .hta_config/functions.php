@@ -145,3 +145,61 @@ function blinkTag($text = "NEW", $bg = "#ef4444") {
         animation:blink 1s infinite;
     ">'.$text.'</span>';
 }
+
+function compressImage($source, $destination, $quality = 80, $maxWidth = 600, $maxHeight = 400) {
+    $info = getimagesize($source);
+    if ($info === false) {
+        return false;
+    }
+
+    list($width, $height) = $info;
+    $mime = $info['mime'];
+
+    // Aspect ratio maintain করে resize করা
+    $ratio = min($maxWidth / $width, $maxHeight / $height, 1);
+    $newWidth = (int)($width * $ratio);
+    $newHeight = (int)($height * $ratio);
+
+    switch ($mime) {
+        case 'image/jpeg':
+            $image = imagecreatefromjpeg($source);
+            break;
+        case 'image/png':
+            $image = imagecreatefrompng($source);
+            break;
+        case 'image/webp':
+            $image = imagecreatefromwebp($source);
+            break;
+        default:
+            return false;
+    }
+
+    $newImage = imagecreatetruecolor($newWidth, $newHeight);
+
+    // PNG & WEBP transparency handle
+    if ($mime === 'image/png' || $mime === 'image/webp') {
+        imagealphablending($newImage, false);
+        imagesavealpha($newImage, true);
+    }
+
+    imagecopyresampled($newImage, $image, 0, 0, 0, 0,
+        $newWidth, $newHeight, $width, $height);
+
+    // Save compressed image
+    switch ($mime) {
+        case 'image/jpeg':
+            imagejpeg($newImage, $destination, $quality);
+            break;
+        case 'image/png':
+            imagepng($newImage, $destination, 6); // compression level 0-9
+            break;
+        case 'image/webp':
+            imagewebp($newImage, $destination, $quality);
+            break;
+    }
+
+    imagedestroy($image);
+    imagedestroy($newImage);
+
+    return true;
+}

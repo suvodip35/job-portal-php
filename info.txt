@@ -1,1 +1,0 @@
-http://localhost:2056/customers/billing-details/?customerId=cust_67c9925ff14f4834489101&invoiceId=CB03251 ? Additional Amount.
