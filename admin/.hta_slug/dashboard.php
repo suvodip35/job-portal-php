@@ -41,8 +41,8 @@ $stmt = $pdo->query("SELECT job_id, job_title, company_name, status FROM jobs OR
 while ($r = $stmt->fetch()):
 ?>
 <tr class="border-b">
-  <td><?= e($r['job_title']) ?></td>
-  <td><?= e($r['company_name']) ?></td>
+  <td class="line-clamp-1"><?= e($r['job_title']) ?></td>
+  <td class="line-clamp-1"><?= e($r['company_name']) ?></td>
   <td><?= e($r['status']) ?></td>
   <td class="inline-flex gap-x-2">
     <a class="text-blue-600" href="edit_job/?id=<?= e($r['job_id']) ?>">Edit</a> |
