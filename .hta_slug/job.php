@@ -5,6 +5,9 @@ if (!$slug) {
     exit;
 }
 
+// Start output buffering to capture the entire page
+ob_start();
+
 $stmt = $pdo->prepare("SELECT j.*, c.category_name FROM jobs j LEFT JOIN job_categories c ON j.category_slug = c.category_slug WHERE j.job_title_slug = ? AND j.status='published' LIMIT 1");
 $stmt->execute([$slug]);
 $job = $stmt->fetch();
@@ -13,7 +16,7 @@ if (!$job) {
     // require_once __DIR__ . '/includes/header.php';
     echo "<h1>Job not found.</h1>";
     // require_once __DIR__ . '/includes/footer.php';
-    // exit;
+    exit;
 }
 
 // OVERRIDE THE META VARIABLES (these were declared in header.php)
@@ -60,18 +63,6 @@ $schema = [
 require_once('_header.php');
 require __DIR__ . '/../lib/parsedown-master/Parsedown.php';
 $Parsedown = new Parsedown();
-// require_once __DIR__ . '/functions.php';
-
-
-
-
-// var_dump($job['thumbnail']);
-// echo $job['thumbnail'];
-
-// echo "Image " . htmlspecialchars($job['thumbnail']);
-// // echo json_encode($job['thumbnail']);
-// // $siteTitle = $job['meta_title'] ?: $job['job_title'] . ' - ' . APP_NAME;
-// // $metaDesc = $job['meta_description'] ?: mb_substr(strip_tags($job['description']), 0, 160);
 
 // Generate current page URL for sharing
 $currentUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
@@ -79,6 +70,131 @@ $shareTitle = urlencode($job['job_title']);
 $shareText = urlencode("Check out this job opportunity: " . $job['job_title'] . " at " . $job['company_name']);
 ?>
 
+<!-- Loading Placeholder (shown initially) -->
+<div id="loading-placeholder" class="min-h-screen bg-gray-100 dark:bg-gray-900 p-4">
+    <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-4 gap-8">
+        <!-- Breadcrumb placeholder -->
+        <div class="lg:col-span-4">
+            <div class="h-4 bg-gray-300 dark:bg-gray-700 rounded w-1/3 mb-4 animate-pulse"></div>
+        </div>
+        
+        <!-- Main content placeholder -->
+        <main class="lg:col-span-3">
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
+                <!-- Image placeholder -->
+                <div class="w-full h-80 bg-gray-300 dark:bg-gray-700 animate-pulse"></div>
+                
+                <div class="p-6">
+                    <!-- Share buttons placeholder -->
+                    <div class="flex flex-wrap items-center gap-3 mb-6 pb-4 border-b border-gray-200 dark:border-gray-700">
+                        <div class="h-4 bg-gray-300 dark:bg-gray-700 rounded w-16 animate-pulse"></div>
+                        <div class="flex items-center gap-2">
+                            <?php for($i = 0; $i < 6; $i++): ?>
+                            <div class="w-8 h-8 bg-gray-300 dark:bg-gray-700 rounded-full animate-pulse"></div>
+                            <?php endfor; ?>
+                        </div>
+                    </div>
+                    
+                    <!-- Title placeholder -->
+                    <div class="h-8 bg-gray-300 dark:bg-gray-700 rounded w-3/4 mb-2 animate-pulse"></div>
+                    <div class="h-6 bg-gray-300 dark:bg-gray-700 rounded w-1/2 mb-4 animate-pulse"></div>
+                    
+                    <!-- Meta info placeholder -->
+                    <div class="flex items-center gap-4 mt-4">
+                        <?php for($i = 0; $i < 3; $i++): ?>
+                        <div class="h-4 bg-gray-300 dark:bg-gray-700 rounded w-24 animate-pulse"></div>
+                        <?php endfor; ?>
+                    </div>
+                    
+                    <!-- Content placeholder -->
+                    <div class="mt-6 space-y-3">
+                        <?php for($i = 0; $i < 10; $i++): ?>
+                        <div class="h-4 bg-gray-300 dark:bg-gray-700 rounded w-full animate-pulse"></div>
+                        <?php endfor; ?>
+                    </div>
+                    
+                    <!-- Requirements placeholder -->
+                    <div class="mt-8">
+                        <div class="h-6 bg-gray-300 dark:bg-gray-700 rounded w-1/4 mb-4 animate-pulse"></div>
+                        <div class="space-y-2">
+                            <?php for($i = 0; $i < 5; $i++): ?>
+                            <div class="h-4 bg-gray-300 dark:bg-gray-700 rounded w-full animate-pulse"></div>
+                            <?php endfor; ?>
+                        </div>
+                    </div>
+                    
+                    <!-- Buttons placeholder -->
+                    <div class="mt-8 flex gap-4">
+                        <div class="h-12 bg-gray-300 dark:bg-gray-700 rounded w-32 animate-pulse"></div>
+                        <div class="h-12 bg-gray-300 dark:bg-gray-700 rounded w-40 animate-pulse"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Related jobs placeholder (mobile) -->
+            <div class="mt-8 lg:hidden">
+                <div class="h-6 bg-gray-300 dark:bg-gray-700 rounded w-1/3 mb-4 animate-pulse"></div>
+                <div class="space-y-4">
+                    <?php for($i = 0; $i < 3; $i++): ?>
+                    <div class="p-4 border rounded-lg dark:border-gray-700">
+                        <div class="h-5 bg-gray-300 dark:bg-gray-700 rounded w-3/4 mb-2 animate-pulse"></div>
+                        <div class="h-4 bg-gray-300 dark:bg-gray-700 rounded w-1/2 mb-2 animate-pulse"></div>
+                        <div class="h-3 bg-gray-300 dark:bg-gray-700 rounded w-1/4 animate-pulse"></div>
+                    </div>
+                    <?php endfor; ?>
+                </div>
+            </div>
+            
+            <!-- Latest jobs placeholder (mobile) -->
+            <div class="mt-8 lg:hidden">
+                <div class="h-6 bg-gray-300 dark:bg-gray-700 rounded w-1/3 mb-4 animate-pulse"></div>
+                <div class="space-y-4">
+                    <?php for($i = 0; $i < 3; $i++): ?>
+                    <div class="p-4 border rounded-lg dark:border-gray-700">
+                        <div class="h-5 bg-gray-300 dark:bg-gray-700 rounded w-3/4 mb-2 animate-pulse"></div>
+                        <div class="h-4 bg-gray-300 dark:bg-gray-700 rounded w-1/2 mb-2 animate-pulse"></div>
+                        <div class="h-3 bg-gray-300 dark:bg-gray-700 rounded w-1/4 animate-pulse"></div>
+                    </div>
+                    <?php endfor; ?>
+                </div>
+            </div>
+        </main>
+        
+        <!-- Sidebar placeholder -->
+        <aside class="hidden lg:block space-y-6">
+            <!-- Related jobs placeholder -->
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4">
+                <div class="h-6 bg-gray-300 dark:bg-gray-700 rounded w-1/3 mb-4 animate-pulse"></div>
+                <div class="space-y-3">
+                    <?php for($i = 0; $i < 3; $i++): ?>
+                    <div class="p-3 border rounded dark:border-gray-700">
+                        <div class="h-5 bg-gray-300 dark:bg-gray-700 rounded w-3/4 mb-2 animate-pulse"></div>
+                        <div class="h-4 bg-gray-300 dark:bg-gray-700 rounded w-1/2 mb-2 animate-pulse"></div>
+                        <div class="h-3 bg-gray-300 dark:bg-gray-700 rounded w-1/4 animate-pulse"></div>
+                    </div>
+                    <?php endfor; ?>
+                </div>
+            </div>
+            
+            <!-- Latest jobs placeholder -->
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4">
+                <div class="h-6 bg-gray-300 dark:bg-gray-700 rounded w-1/3 mb-4 animate-pulse"></div>
+                <div class="space-y-3">
+                    <?php for($i = 0; $i < 3; $i++): ?>
+                    <div class="p-3 border rounded dark:border-gray-700">
+                        <div class="h-5 bg-gray-300 dark:bg-gray-700 rounded w-3/4 mb-2 animate-pulse"></div>
+                        <div class="h-4 bg-gray-300 dark:bg-gray-700 rounded w-1/2 mb-2 animate-pulse"></div>
+                        <div class="h-3 bg-gray-300 dark:bg-gray-700 rounded w-1/4 animate-pulse"></div>
+                    </div>
+                    <?php endfor; ?>
+                </div>
+            </div>
+        </aside>
+    </div>
+</div>
+
+<!-- Actual Content (hidden initially) -->
+<div id="actual-content" style="display: none;">
 <div class="max-w-7xl mx-auto  grid grid-cols-1 lg:grid-cols-4 gap-8">
   <!-- Breadcrumb -->
   <div class="lg:col-span-4">
@@ -151,7 +267,7 @@ $shareText = urlencode("Check out this job opportunity: " . $job['job_title'] . 
             <!-- WhatsApp -->
             <a href="https://wa.me/?text=<?= $shareText ?>%20<?= urlencode($currentUrl) ?>" target="_blank" rel="noopener" class="p-2 bg-green-500 text-white rounded-full hover:bg-green-600 transition" title="Share on WhatsApp">
               <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.864 3.488"/>
+                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.150-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.050-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.864 3.488"/>
               </svg>
             </a>
 
@@ -177,7 +293,7 @@ $shareText = urlencode("Check out this job opportunity: " . $job['job_title'] . 
             <!-- Discord -->
             <a href="https://discord.com/channels/@me" target="_blank" rel="noopener" class="p-2 bg-indigo-600 text-white rounded-full hover:bg-indigo-700 transition" title="Share on Discord">
               <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M19.27 5.33C17.94 4.71 16.5 4.26 15 4a.09.09 0 0 0-.07.03c-.18.33-.39.76-.53 1.09a16.09 16.09 0 0 0-4.8 0c-.14-.34-.35-.76-.54-1.09c-.01-.02-.04-.03-.07-.03c-1.5.26-2.93.71-4.27 1.33c-.01 0-.02.01-.03.02C2.44 9.59 1.91 13.75 2.2 17.86c0 .02.01.04.03.05c1.62 1.21 3.59 1.93 5.58 2.22c.04.01.08 0 .1-.02c.43-.59.81-1.22 1.14-1.88c.02-.04 0-.08-.04-.09c-.57-.22-1.11-.48-1.64-.78c-.04-.02-.04-.08-.01-.11c.11-.08.22-.17.33-.25c.02-.02.05-.02.07-.01c3.44 1.57 7.15 1.57 10.55 0c.02-.01.05-.01.07.01c.11.09.22.17.33.26c.04.03.04.09-.01.11c-.52.31-1.07.56-1.64.78c-.04.01-.05.06-.04.09c.33.66.71 1.29 1.14 1.88c.02.02.06.03.1.02c2-.29 3.96-1.01 5.58-2.22c.02-.01.03-.03.03-.05c.36-4.53-.82-8.64-3.3-12.51c-.01-.02-.02-.02-.04-.02zM8.95 15.05c-1.03 0-1.89-.95-1.89-2.12s.84-2.12 1.89-2.12c1.06 0 1.9.96 1.89 2.12c0 1.17-.84 2.12-1.89 2.12zm6.1 0c-1.03 0-1.89-.95-1.89-2.12s.84-2.12 1.89-2.12c1.06 0 1.9.96 1.89 2.12c0 1.17-.83 2.12-1.89 2.12z"/>
+                <path d="M19.27 5.33C17.94 4.71 16.5 4.26 15 4a.09.09 0 0 0-.07.03c-.18.33-.39.76-.53 1.09a16.09 16.09 0 0 0-4.8 0c-.14-.34-.35-.76-.54-1.09c-.01-.02-.04-.03-.07-.03c-1.5.26-2.93.71-4.27 1.33c-.01 0-.02.01-.03.02C2.44 9.59 1.91 13.75 2.2 17.86c0 .02.01.04.03.05c1.62 1.21 3.59 1.93 5.58 2.22c.04.01.08 0 .1-.02c.43-.59.81-1.22 1.14-1.88c.02-.04 0-.08-.04-.09c-.57-.22-1.11-.48-1.64-.78c-.04-.02-.04-.08-.01-.11c.11-.08.22-.17.33-.25c.02-.02.05-.02.07-.01c3.44 1.57 7.15 1.57 10.55 0c.02-.01.05-.01.07.01c.11.09.22.17.33.26c.04.03.04.09-.01.11c-.52.31-1.07.56-1.64.78c-.04.01-.05.06-.04.09c.33.66.71 1.29 1.14 1.88c.02.02.06.03.10.02c2-.29 3.96-1.01 5.58-2.22c.02-.01.03-.03.03-.05c.36-4.53-.82-8.64-3.30-12.51c-.01-.02-.02-.02-.04-.02zM8.95 15.05c-1.03 0-1.89-.95-1.89-2.12s.84-2.12 1.89-2.12c1.06 0 1.9.96 1.89 2.12c0 1.17-.84 2.12-1.89 2.12zm6.1 0c-1.03 0-1.89-.95-1.89-2.12s.84-2.12 1.89-2.12c1.06 0 1.9.96 1.89 2.12c0 1.17-.83 2.12-1.89 2.12z"/>
               </svg>
             </a>
 
@@ -260,6 +376,7 @@ $shareText = urlencode("Check out this job opportunity: " . $job['job_title'] . 
     </article>
 
     <!-- Related Jobs (Mobile - Bottom) -->
+    <?php if (!empty($relatedJobs)): ?>
     <div class="mt-8 lg:hidden">
       <h2 class="text-2xl font-bold dark:text-white mb-4">Related Jobs</h2>
       <div class="space-y-4">
@@ -272,8 +389,10 @@ $shareText = urlencode("Check out this job opportunity: " . $job['job_title'] . 
         <?php endforeach; ?>
       </div>
     </div>
+    <?php endif; ?>
 
     <!-- Latest Jobs (Mobile - Bottom) -->
+    <?php if (!empty($latestJobs)): ?>
     <div class="mt-8 lg:hidden">
       <h2 class="text-2xl font-bold dark:text-white mb-4">Latest Jobs</h2>
       <div class="space-y-4">
@@ -286,11 +405,13 @@ $shareText = urlencode("Check out this job opportunity: " . $job['job_title'] . 
         <?php endforeach; ?>
       </div>
     </div>
+    <?php endif; ?>
   </main>
 
   <!-- Sidebar (Desktop) -->
   <aside class="hidden lg:block space-y-6">
     <!-- Related Jobs -->
+    <?php if (!empty($relatedJobs)): ?>
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4">
       <h2 class="text-xl font-bold dark:text-white mb-4">Related Jobs</h2>
       <div class="space-y-3">
@@ -303,8 +424,10 @@ $shareText = urlencode("Check out this job opportunity: " . $job['job_title'] . 
         <?php endforeach; ?>
       </div>
     </div>
+    <?php endif; ?>
 
     <!-- Latest Jobs -->
+    <?php if (!empty($latestJobs)): ?>
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4">
       <h2 class="text-xl font-bold dark:text-white mb-4">Latest Jobs</h2>
       <div class="space-y-3">
@@ -317,7 +440,9 @@ $shareText = urlencode("Check out this job opportunity: " . $job['job_title'] . 
         <?php endforeach; ?>
       </div>
     </div>
+    <?php endif; ?>
   </aside>
+</div>
 </div>
 
 <script type="application/ld+json">
@@ -325,6 +450,15 @@ $shareText = urlencode("Check out this job opportunity: " . $job['job_title'] . 
 </script>
 
 <script>
+// Show actual content and hide placeholder once page is fully loaded
+document.addEventListener('DOMContentLoaded', function() {
+  // Small delay to ensure all content is rendered
+  setTimeout(function() {
+    document.getElementById('loading-placeholder').style.display = 'none';
+    document.getElementById('actual-content').style.display = 'block';
+  }, 300);
+});
+
 function copyToClipboard(button, text) {
   navigator.clipboard.writeText(text).then(function() {
     const originalHtml = button.innerHTML;
@@ -343,8 +477,8 @@ function copyToClipboard(button, text) {
     alert('Failed to copy link. Please try again.');
   });
 }
-
 </script>
+
 <style>
   #markdownContent > h2 {
     font-size: 22px;
@@ -387,7 +521,16 @@ function copyToClipboard(button, text) {
   border: 1px solid #374151;
 }
 
+/* Animation for placeholder */
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.5; }
+  100% { opacity: 1; }
+}
 
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
 </style>
 <?php 
   // require_once __DIR__ . '/includes/footer.php'; 

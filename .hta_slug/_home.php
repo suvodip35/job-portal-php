@@ -8,7 +8,6 @@ $canonicalUrl = "/";
 
 require_once('_header.php');
 
-
 require __DIR__ . '/../lib/parsedown-master/Parsedown.php';
 $Parsedown = new Parsedown();
 
@@ -165,10 +164,126 @@ $stmt->bindValue(':limit', $perPage, PDO::PARAM_INT);
 $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
 $stmt->execute();
 $jobs = $stmt->fetchAll();
-
-// $siteTitle = "Jobs — " . APP_NAME;
-// $metaDesc  = "Latest Bank, Railway, ITI, Police, Army jobs. Powerful filters, mobile drawer, marquee updates.";
 ?>
+
+<!-- Loading Placeholder (shown initially) -->
+<div id="loading-placeholder" class="min-h-screen bg-gray-100 dark:bg-gray-900">
+    <!-- Subnav Placeholder -->
+    <div class="sticky top-0 z-30 bg-white/90 dark:bg-gray-900/90 backdrop-blur border-b border-gray-200 dark:border-gray-700">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6">
+            <div class="flex items-center gap-2 overflow-x-auto no-scrollbar py-2">
+                <?php for($i = 0; $i < 8; $i++): ?>
+                <div class="h-8 bg-gray-300 dark:bg-gray-700 rounded-full w-20 animate-pulse"></div>
+                <?php endfor; ?>
+            </div>
+        </div>
+    </div>
+
+    <!-- Marquee Placeholder -->
+    <div class="border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 py-2 flex items-center gap-3 overflow-hidden">
+            <div class="h-5 bg-gray-300 dark:bg-gray-700 rounded w-16 animate-pulse"></div>
+            <div class="h-4 bg-gray-300 dark:bg-gray-700 rounded w-full animate-pulse"></div>
+        </div>
+    </div>
+
+    <!-- Main Content Placeholder -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-6 grid grid-cols-1 md:grid-cols-12 gap-6">
+        <!-- Sidebar Placeholder -->
+        <aside class="hidden md:block md:col-span-3">
+            <div class="sticky top-20 space-y-4">
+                <!-- Latest Updates Card Placeholder -->
+                <div class="p-4 border rounded-xl bg-white dark:bg-gray-900 shadow">
+                    <div class="h-5 bg-gray-300 dark:bg-gray-700 rounded w-32 mb-3 animate-pulse"></div>
+                    <ul class="space-y-3">
+                        <?php for($i = 0; $i < 5; $i++): ?>
+                        <li class="flex items-start gap-2">
+                            <div class="mt-0.5 w-1.5 h-1.5 rounded-full bg-gray-300 dark:bg-gray-700 animate-pulse"></div>
+                            <div class="h-4 bg-gray-300 dark:bg-gray-700 rounded w-full animate-pulse"></div>
+                        </li>
+                        <?php endfor; ?>
+                    </ul>
+                </div>
+
+                <!-- Filter Card Placeholder -->
+                <div class="p-4 border rounded-xl bg-white dark:bg-gray-900 shadow">
+                    <div class="h-5 bg-gray-300 dark:bg-gray-700 rounded w-20 mb-3 animate-pulse"></div>
+                    <?php for($i = 0; $i < 6; $i++): ?>
+                    <div class="h-10 bg-gray-300 dark:bg-gray-700 rounded w-full mb-3 animate-pulse"></div>
+                    <?php endfor; ?>
+                    <div class="flex gap-3 mt-4">
+                        <div class="h-10 bg-gray-300 dark:bg-gray-700 rounded flex-1 animate-pulse"></div>
+                        <div class="h-10 bg-gray-300 dark:bg-gray-700 rounded flex-1 animate-pulse"></div>
+                    </div>
+                </div>
+
+                <!-- Quick Links Placeholder -->
+                <div class="p-4 border rounded-xl bg-white dark:bg-gray-900 shadow">
+                    <div class="h-5 bg-gray-300 dark:bg-gray-700 rounded w-20 mb-3 animate-pulse"></div>
+                    <?php for($i = 0; $i < 3; $i++): ?>
+                    <div class="h-4 bg-gray-300 dark:bg-gray-700 rounded w-full mb-2 animate-pulse"></div>
+                    <?php endfor; ?>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Content Placeholder -->
+        <main class="md:col-span-9">
+            <div class="flex items-baseline justify-between mb-4">
+                <div class="h-7 bg-gray-300 dark:bg-gray-700 rounded w-48 animate-pulse"></div>
+                <div class="h-8 bg-gray-300 dark:bg-gray-700 rounded w-24 animate-pulse"></div>
+            </div>
+
+            <div class="grid sm:grid-cols-2 lg:grid-cols-2 gap-6">
+                <?php for($i = 0; $i < 6; $i++): ?>
+                <article class="border rounded-2xl bg-white dark:bg-gray-800 shadow overflow-hidden w-full">
+                    <div class="w-full aspect-[16/9] bg-gray-300 dark:bg-gray-700 animate-pulse"></div>
+                    <div class="p-3">
+                        <div class="flex justify-between items-start gap-3">
+                            <div class="min-w-0 flex-1">
+                                <div class="h-6 bg-gray-300 dark:bg-gray-700 rounded w-3/4 mb-2 animate-pulse"></div>
+                                <div class="h-4 bg-gray-300 dark:bg-gray-700 rounded w-full animate-pulse"></div>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <div class="h-5 bg-gray-300 dark:bg-gray-700 rounded w-10 animate-pulse"></div>
+                                <div class="h-5 bg-gray-300 dark:bg-gray-700 rounded w-12 animate-pulse"></div>
+                            </div>
+                        </div>
+
+                        <div class="h-5 bg-gray-300 dark:bg-gray-700 rounded w-16 mt-2 animate-pulse"></div>
+
+                        <div class="mt-3 space-y-2">
+                            <div class="h-4 bg-gray-300 dark:bg-gray-700 rounded w-full animate-pulse"></div>
+                            <div class="h-4 bg-gray-300 dark:bg-gray-700 rounded w-full animate-pulse"></div>
+                            <div class="h-4 bg-gray-300 dark:bg-gray-700 rounded w-2/3 animate-pulse"></div>
+                        </div>
+
+                        <div class="mt-4 flex justify-between items-center">
+                            <div class="h-8 bg-gray-300 dark:bg-gray-700 rounded w-16 animate-pulse"></div>
+                            <div class="flex items-center gap-3">
+                                <div class="h-6 bg-gray-300 dark:bg-gray-700 rounded w-12 animate-pulse"></div>
+                                <div class="h-4 bg-gray-300 dark:bg-gray-700 rounded w-16 animate-pulse"></div>
+                            </div>
+                        </div>
+
+                        <div class="h-4 bg-gray-300 dark:bg-gray-700 rounded w-32 mt-3 animate-pulse"></div>
+                    </div>
+                </article>
+                <?php endfor; ?>
+            </div>
+
+            <!-- Pagination Placeholder -->
+            <div class="mt-8 flex justify-center gap-2">
+                <?php for($i = 0; $i < 5; $i++): ?>
+                <div class="h-10 bg-gray-300 dark:bg-gray-700 rounded w-10 animate-pulse"></div>
+                <?php endfor; ?>
+            </div>
+        </main>
+    </div>
+</div>
+
+<!-- Actual Content (hidden initially) -->
+<div id="actual-content" style="display: none;">
 
 <!-- ===== Category Sub-Nav (sticky under main nav) ===== -->
 <div id="subnav" class="sticky top-0 z-30 bg-white/90 dark:bg-gray-900/90 backdrop-blur border-b border-gray-200 dark:border-gray-700">
@@ -190,8 +305,6 @@ $jobs = $stmt->fetchAll();
         <?= e($t['label']) ?>
       </a>
       <?php endforeach; ?>
-
-      <!-- Mobile Drawer Trigger -->
     </div>
   </div>
 </div>
@@ -455,6 +568,7 @@ $jobs = $stmt->fetchAll();
     
   </main>
 </div>
+</div>
 
 <!-- ===== Utilities ===== -->
 <style>
@@ -468,9 +582,40 @@ $jobs = $stmt->fetchAll();
       width: 85%;
     }
   }
+  
+  /* Animation for placeholder */
+  @keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+  }
+
+  .animate-pulse {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+  
+  .clamp-3 {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    overflow: hidden;
+  }
+
+  .clamp-3 * {
+    display: inline;
+  }
 </style>
 
 <script>
+  // Show actual content and hide placeholder once page is loaded
+  document.addEventListener('DOMContentLoaded', function() {
+    // Small delay to ensure all content is rendered
+    setTimeout(function() {
+      document.getElementById('loading-placeholder').style.display = 'none';
+      document.getElementById('actual-content').style.display = 'block';
+    }, 300);
+  });
+
   // Mobile Drawer
   const openBtn = document.getElementById('openDrawer');
   const closeBtn = document.getElementById('closeDrawer');
@@ -520,16 +665,3 @@ $jobs = $stmt->fetchAll();
   });
   updateSavedCount();
 </script>
-
-<style>
-  .clamp-3 {
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 3;
-  overflow: hidden;
-}
-
-.clamp-3 * {
-  display: inline;
-}
-</style>
