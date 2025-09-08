@@ -1,3 +1,6 @@
 [2025-09-05 18:06:11] ERROR: [2] Undefined array key "name" in /home/suvo/web/jnp.ns77.siliconpin.com/public_html/admin/.hta_slug/dashboard.php on line 12
 [2025-09-05 18:06:39] ERROR: [2] Undefined array key "email" in /home/suvo/web/jnp.ns77.siliconpin.com/public_html/admin/.hta_slug/login.php on line 42
 [2025-09-05 18:06:39] ERROR: [2] Undefined array key "name" in /home/suvo/web/jnp.ns77.siliconpin.com/public_html/admin/.hta_slug/dashboard.php on line 12
+[2025-09-05 23:21:32] EXCEPTION: SQLSTATE[HY093]: Invalid parameter number: mixed named and positional parameters in /home/suvo/web/jnp.ns77.siliconpin.com/public_html/.hta_slug/_home.php on line 145
+[2025-09-06 00:43:18] EXCEPTION: SQLSTATE[HY093]: Invalid parameter number: mixed named and positional parameters in /home/suvo/web/jnp.ns77.siliconpin.com/public_html/.hta_slug/_home.php on line 145
+[2025-09-06 02:28:04] EXCEPTION: SQLSTATE[HY093]: Invalid parameter number: mixed named and positional parameters in /home/suvo/web/jnp.ns77.siliconpin.com/public_html/.hta_slug/_home.php on line 145

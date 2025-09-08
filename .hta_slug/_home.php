@@ -4,7 +4,7 @@ $pageDescription = "JOB Notification Portal";
 $keywords = "Goverment JOBS, ITI JOBS, Railway Jobs, Engineer";
 $author = "J_N_P";
 $ogImage = "https://fromcampus.com/assets/logo/FromCampus_Color_text.png";
-$canonicalUrl = "/";
+$canonicalUrl = "www.fromcampus.com";
 
 require_once('_header.php');
 
@@ -314,11 +314,21 @@ $jobs = $stmt->fetchAll();
 <div class="border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 py-2 flex items-center gap-3 overflow-hidden">
     <span class="px-2 py-0.5 text-xs font-semibold rounded bg-yellow-300 text-black">Breaking</span>
-    <marquee behavior="scroll" direction="left" onmouseover="this.stop();" onmouseout="this.start();" class="overflow-hidden">
-      <?php foreach ($marqueeJobs as $i=>$mj): ?>
-        <a class="hover:underline" href="<?= BASE_URL ?>job?slug=<?= e($mj['job_title_slug']) ?>"><?= e($mj['job_title']) ?></a><?= $i<count($marqueeJobs)-1 ? ' • ' : '' ?>
-      <?php endforeach; ?>
-    </marquee>
+    <div class="marquee-wrap">
+      <div class="marquee-content">
+        <?php foreach ($marqueeJobs as $i=>$mj): ?>
+          <a class="marquee-link" href="<?= BASE_URL ?>job?slug=<?= e($mj['job_title_slug']) ?>">
+            <?= e($mj['job_title']) ?>
+          </a><?= $i<count($marqueeJobs)-1 ? ' • ' : '' ?>
+        <?php endforeach; ?>
+        <!-- Duplicate for seamless loop -->
+        <?php foreach ($marqueeJobs as $i=>$mj): ?>
+          <a class="marquee-link" href="<?= BASE_URL ?>job?slug=<?= e($mj['job_title_slug']) ?>">
+            <?= e($mj['job_title']) ?>
+          </a><?= $i<count($marqueeJobs)-1 ? ' • ' : '' ?>
+        <?php endforeach; ?>
+      </div>
+    </div>
   </div>
 </div>
 <?php endif; ?>
@@ -603,6 +613,42 @@ $jobs = $stmt->fetchAll();
 
   .clamp-3 * {
     display: inline;
+  }
+
+  .marquee-wrap {
+    overflow: hidden;
+    white-space: nowrap;
+    position: relative;
+  }
+
+  .marquee-content {
+    display: inline-block;
+    white-space: nowrap;
+    will-change: transform;
+    animation: marquee 40s linear infinite;
+  }
+
+  /* Hover করলে marquee থামবে */
+  .marquee-wrap:hover .marquee-content {
+    animation-play-state: paused;
+  }
+
+  /* লিঙ্ক স্টাইল */
+  .marquee-link {
+    text-decoration: none;
+    color: #FFFFFF; /* Tailwind-এর blue-600 এর মতো */
+    margin: 0 6px;
+    transition: all 0.5s ease-in-out;
+  }
+
+  /* শুধু লিঙ্ক hover করলে underline হবে */
+  .marquee-link:hover {
+    text-decoration: underline;
+  }
+
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
   }
 </style>
 
