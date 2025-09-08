@@ -310,6 +310,7 @@ $metaDesc  = "Latest Bank, Railway, ITI, Police, Army jobs. Powerful filters, mo
           <input type="hidden" name="cat" value="<?= e($activeTab) ?>">
           
           <input name="search" value="<?= e($search) ?>" placeholder="Keyword" class="w-full px-3 py-2 border rounded dark:bg-gray-800 dark:border-gray-700"/>
+          <label for="location" class="sr-only">Select your state</label>
           <select name="location" <?= e($location) ?> class="w-full mb-3 px-3 py-2 border rounded dark:bg-gray-800 dark:border-gray-700">
             <option value="">-- Select State --</option>
             <?php foreach ($indianStates as $slug => $name): ?>
@@ -320,14 +321,15 @@ $metaDesc  = "Latest Bank, Railway, ITI, Police, Army jobs. Powerful filters, mo
           </select>
           
           <div class="grid grid-cols-2 gap-3">
+            <label for="since" class="sr-only">Since:</label>
             <select name="since" class="w-full px-3 py-2 border rounded dark:bg-gray-800 dark:border-gray-700">
               <option value="0"  <?= $since==0?'selected':'' ?>>Any</option>
               <option value="7"  <?= $since==7?'selected':'' ?>>7 days</option>
               <option value="30" <?= $since==30?'selected':'' ?>>30 days</option>
               <option value="90" <?= $since==90?'selected':'' ?>>90 days</option>
             </select>
-            
-            <select name="type" class="w-full px-3 py-2 border rounded dark:bg-gray-800 dark:border-gray-700">
+            <label for="job-type" class="sr-only">JOB Type:</label>
+            <select id="job-type" name="type" class="w-full px-3 py-2 border rounded dark:bg-gray-800 dark:border-gray-700">
               <option value="" <?= $jobType===''?'selected':'' ?>>Any</option>
               <option value="full-time"  <?= $jobType==='full-time'?'selected':'' ?>>Full-time</option>
               <option value="part-time"  <?= $jobType==='part-time'?'selected':'' ?>>Part-time</option>
@@ -339,7 +341,7 @@ $metaDesc  = "Latest Bank, Railway, ITI, Police, Army jobs. Powerful filters, mo
             
             <input type="number" name="smax" value="<?= e((string)$salaryMax) ?>" placeholder="Salary Max" class="w-full px-3 py-2 border rounded dark:bg-gray-800 dark:border-gray-700"/>
           </div>
-          
+          <label for="sort" class="sr-only">Sort By:</label>
           <select name="sort" class="w-full px-3 py-2 border rounded dark:bg-gray-800 dark:border-gray-700">
             <option value="recent"    <?= $sort==='recent'?'selected':'' ?>>Recent first</option>
             <option value="last_date" <?= $sort==='last_date'?'selected':'' ?>>Closest last date</option>

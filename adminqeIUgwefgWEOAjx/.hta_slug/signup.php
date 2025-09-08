@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $hash = password_hash($pass, PASSWORD_DEFAULT);
             $stmt = $pdo->prepare("INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, ?)");
             $stmt->execute([$name, $email, $hash, 'user']);
-            $success = 'Account created successfully. You can now <a href="/admin/login" class="text-blue-600">login</a>.';
+            $success = 'Account created successfully. You can now <a href="/adminqeIUgwefgWEOAjx/login" class="text-blue-600">login</a>.';
         }
     } else {
         $err = 'Please fill in all fields.';
@@ -99,7 +99,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       <div class="px-8 py-4 bg-gray-50 dark:bg-gray-700 border-t border-gray-200 dark:border-gray-600 text-center">
         <p class="text-gray-600 dark:text-gray-300 text-sm">
           Already have an account? 
-          <a href="/admin/login" class="text-blue-600 hover:text-blue-500 dark:text-blue-400 dark:hover:text-blue-300 font-medium">
+          <a href="/adminqeIUgwefgWEOAjx/login" class="text-blue-600 hover:text-blue-500 dark:text-blue-400 dark:hover:text-blue-300 font-medium">
             Login here
           </a>
         </p>

@@ -2,7 +2,7 @@
   require_once __DIR__ . '/../../.hta_slug/_header.php';
 
   if (isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] === true) {
-    echo "<script>window.location.href='/admin'</script>";
+    echo "<script>window.location.href='/adminqeIUgwefgWEOAjx'</script>";
     exit;
 }
 
@@ -40,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_SESSION['admin_id'] = $user['user_id'];
                 $_SESSION['admin_name'] = $user['name'];
                 $_SESSION['admin_email'] = $user['email'];
-                echo '<script>window.location.href="/admin/dashboard"</script>';
+                echo '<script>window.location.href="/adminqeIUgwefgWEOAjx/dashboard"</script>';
                 exit;
             } else {
                 $err = 'Invalid credentials or not an admin.';

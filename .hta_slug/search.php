@@ -27,7 +27,7 @@ $results = $stmt->fetchAll();
   <div class="grid gap-4">
     <?php foreach ($results as $r): ?>
       <div class="p-3 border rounded bg-white dark:bg-gray-800">
-        <a href="<?= BASE_URL ?>job?slug=<?= e($r['job_title_slug']) ?>"><h3 class="font-semibold"><?= e($r['job_title']) ?></h3></a>
+        <a aria-label="<?= e($r['job_title']) ?>" href="<?= BASE_URL ?>job?slug=<?= e($r['job_title_slug']) ?>"><h3 class="font-semibold"><?= e($r['job_title']) ?></h3></a>
         <p class="text-sm text-gray-600"><?= e($r['company_name']) ?> • <?= e($r['location']) ?></p>
       </div>
     <?php endforeach; ?>

@@ -74,7 +74,7 @@ function csrf_check(string $token) {
  */
 function require_admin() {
     if (empty($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
-        echo '<script>window.location.href="/admin/login"</script>';
+        echo '<script>window.location.href="/adminqeIUgwefgWEOAjx/login"</script>';
         // header('Location: login.php');
         exit;
     }

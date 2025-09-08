@@ -8,6 +8,6 @@ if ($id) {
     $stmt = $pdo->prepare("DELETE FROM jobs WHERE job_id = ?");
     $stmt->execute([$id]);
 }
-echo "<script>window.location.href='/admin/dashboard'</script>";
+echo "<script>window.location.href='/adminqeIUgwefgWEOAjx/dashboard'</script>";
 // header('Location: dashboard.php');
 exit;

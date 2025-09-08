@@ -4,7 +4,7 @@ $pageDescription = "JOB Notification Portal";
 $keywords = "Goverment JOBS, ITI JOBS, Railway Jobs, Engineer";
 $author = "J_N_P";
 $ogImage = "https://fromcampus.com/assets/logo/FromCampus_Color_text.png";
-$canonicalUrl = "www.fromcampus.com";
+$canonicalUrl = "https://fromcampus.com/";
 
 require_once('_header.php');
 
@@ -364,9 +364,9 @@ $jobs = $stmt->fetchAll();
 
         <label class="block text-xs mb-1">Keyword</label>
         <input name="search" value="<?= e($search) ?>" placeholder="Title, Company" class="w-full mb-3 px-3 py-2 border rounded dark:bg-gray-800 dark:border-gray-700"/>
-        <label class="block text-xs mb-1">Location</label>
-        
-        <select name="location" <?= e($location) ?> class="w-full mb-3 px-3 py-2 border rounded dark:bg-gray-800 dark:border-gray-700">
+
+        <label for="location" class="block text-xs mb-1">Location</label>
+        <select id="location" name="location" <?= e($location) ?> class="w-full mb-3 px-3 py-2 border rounded dark:bg-gray-800 dark:border-gray-700">
           <option value="">-- Select State --</option>
           <?php foreach ($indianStates as $slug => $name): ?>
             <option value="<?= htmlspecialchars($slug) ?>">
@@ -376,8 +376,8 @@ $jobs = $stmt->fetchAll();
         </select>
         <div class="grid grid-cols-2 gap-3">
           <div>
-            <label class="block text-xs mb-1">Since</label>
-            <select name="since" class="w-full px-3 py-2 border rounded dark:bg-gray-800 dark:border-gray-700">
+            <label for="since" class="block text-xs mb-1">Since</label>
+            <select id="since" name="since" class="w-full px-3 py-2 border rounded dark:bg-gray-800 dark:border-gray-700">
               <option value="0"  <?= $since==0?'selected':'' ?>>Any</option>
               <option value="7"  <?= $since==7?'selected':'' ?>>7 days</option>
               <option value="30" <?= $since==30?'selected':'' ?>>30 days</option>
@@ -385,8 +385,8 @@ $jobs = $stmt->fetchAll();
             </select>
           </div>
           <div>
-            <label class="block text-xs mb-1">Type</label>
-            <select name="type" class="w-full px-3 py-2 border rounded dark:bg-gray-800 dark:border-gray-700">
+            <label for class="block text-xs mb-1">Type</label>
+            <select id="type" name="type" class="w-full px-3 py-2 border rounded dark:bg-gray-800 dark:border-gray-700">
               <option value="" <?= $jobType===''?'selected':'' ?>>Any</option>
               <option value="full-time"  <?= $jobType==='full-time'?'selected':'' ?>>Full-time</option>
               <option value="part-time"  <?= $jobType==='part-time'?'selected':'' ?>>Part-time</option>
@@ -407,7 +407,7 @@ $jobs = $stmt->fetchAll();
           </div>
         </div>
 
-        <label class="block text-xs mb-1 mt-3">Sort</label>
+        <label for="sort" class="block text-xs mb-1 mt-3">Sort</label>
         <select name="sort" class="w-full px-3 py-2 border rounded dark:bg-gray-800 dark:border-gray-700">
           <option value="recent"    <?= $sort==='recent'?'selected':'' ?>>Recent first</option>
           <option value="last_date" <?= $sort==='last_date'?'selected':'' ?>>Closest last date</option>
@@ -455,14 +455,15 @@ $jobs = $stmt->fetchAll();
           </select>
           
           <div class="grid grid-cols-2 gap-3">
-            <select name="since" class="w-full px-3 py-2 border rounded dark:bg-gray-800 dark:border-gray-700">
+            <label for="since" class="sr-only">Since</label>
+            <select id="since" name="since" class="w-full px-3 py-2 border rounded dark:bg-gray-800 dark:border-gray-700">
               <option value="0"  <?= $since==0?'selected':'' ?>>Any</option>
               <option value="7"  <?= $since==7?'selected':'' ?>>7 days</option>
               <option value="30" <?= $since==30?'selected':'' ?>>30 days</option>
               <option value="90" <?= $since==90?'selected':'' ?>>90 days</option>
             </select>
-            
-            <select name="type" class="w-full px-3 py-2 border rounded dark:bg-gray-800 dark:border-gray-700">
+            <label for="type" class="sr-only">Type</label>
+            <select id="type" name="type" class="w-full px-3 py-2 border rounded dark:bg-gray-800 dark:border-gray-700">
               <option value="" <?= $jobType===''?'selected':'' ?>>Any</option>
               <option value="full-time"  <?= $jobType==='full-time'?'selected':'' ?>>Full-time</option>
               <option value="part-time"  <?= $jobType==='part-time'?'selected':'' ?>>Part-time</option>
@@ -474,7 +475,7 @@ $jobs = $stmt->fetchAll();
             
             <input type="number" name="smax" value="<?= e((string)$salaryMax) ?>" placeholder="Salary Max" class="w-full px-3 py-2 border rounded dark:bg-gray-800 dark:border-gray-700"/>
           </div>
-          
+          <label for="sort" class="sr-only">Sort By</label>
           <select name="sort" class="w-full px-3 py-2 border rounded dark:bg-gray-800 dark:border-gray-700">
             <option value="recent"    <?= $sort==='recent'?'selected':'' ?>>Recent first</option>
             <option value="last_date" <?= $sort==='last_date'?'selected':'' ?>>Closest last date</option>
@@ -516,7 +517,7 @@ $jobs = $stmt->fetchAll();
             <div class="flex justify-between items-start gap-3">
               <div class="min-w-0">
                 <a href="<?= BASE_URL ?>job?slug=<?= e($job['job_title_slug']) ?>">
-                  <h2 class="text-lg font-semibold text-blue-600 group-hover:underline truncate"><?= e($job['job_title']) ?></h2>
+                  <h1 class="text-lg font-semibold text-blue-600 group-hover:underline truncate"><?= e($job['job_title']) ?></h1>
                 </a>
                 <p class="text-sm text-gray-600 dark:text-gray-300 mt-0.5 truncate">🏢 <?= e($job['company_name']) ?> • 📍 <?= e($job['location']) ?></p>
               </div>
@@ -570,7 +571,7 @@ $jobs = $stmt->fetchAll();
         ?>
       </div>
     <?php endif; ?>
-    <button id="openDrawer"class="fixed bottom-20 right-4 md:right-20  px-4 py-2 text-sm rounded-full shadow-lg bg-blue-600 text-white dark:bg-gray-800 dark:border-gray-700 flex flex-col items-center justify-center space-x-2 w-16 h-16 rounded-full">
+    <button aria-label="Open drawer menu" id="openDrawer"class="fixed bottom-20 right-4 md:right-20  px-4 py-2 text-sm rounded-full shadow-lg bg-blue-600 text-white dark:bg-gray-800 dark:border-gray-700 flex flex-col items-center justify-center space-x-2 w-16 h-16 rounded-full">
       <svg width="20px" height="20px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <title>Filter</title> <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"> <g id="Filter"> <rect id="Rectangle" fill-rule="nonzero" x="0" y="0" width="24" height="24"> </rect> <line x1="4" y1="5" x2="16" y2="5" id="Path" stroke="#ffffff" stroke-width="2" stroke-linecap="round"> </line> <line x1="4" y1="12" x2="10" y2="12" id="Path" stroke="#ffffff" stroke-width="2" stroke-linecap="round"> </line> <line x1="14" y1="12" x2="20" y2="12" id="Path" stroke="#ffffff" stroke-width="2" stroke-linecap="round"> </line> <line x1="8" y1="19" x2="20" y2="19" id="Path" stroke="#ffffff" stroke-width="2" stroke-linecap="round"> </line> <circle id="Oval" stroke="#ffffff" stroke-width="2" stroke-linecap="round" cx="18" cy="5" r="2"> </circle> <circle id="Oval" stroke="#ffffff" stroke-width="2" stroke-linecap="round" cx="12" cy="12" r="2"> </circle> <circle id="Oval" stroke="#ffffff" stroke-width="2" stroke-linecap="round" cx="6" cy="19" r="2"> </circle> </g> </g> </g></svg>  
       Filters
     </button>
