@@ -536,7 +536,7 @@ $jobs = $stmt->fetchAll();
             <?php  endif;  ?>
 
               <div class="mt-3 text-sm text-gray-700 dark:text-gray-200 clamp-3">
-                <?= $Parsedown->text($job['description']) ?>
+                <h2><?= $Parsedown->text($job['description']) ?></h2>
               </div>
 
             <div class="mt-4 flex justify-between items-center">
