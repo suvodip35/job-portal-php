@@ -638,7 +638,7 @@ $jobs = $stmt->fetchAll();
   .marquee-link {
     text-decoration: none;
     margin: 0 6px;
-    transition: all 0.5s ease-in-out;
+    transition: all 2s ease-in-out;
   }
 
   /* শুধু লিঙ্ক hover করলে underline হবে */
