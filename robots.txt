@@ -1,6 +1,6 @@
-# Allow to all
+# Block all crawlers
 User-agent: *
-Disallow:
+Disallow: /
 
 # Sitemap Location
 Sitemap: https://fromcampus.com/sitemap.xml
