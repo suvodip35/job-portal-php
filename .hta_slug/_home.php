@@ -626,7 +626,7 @@ $jobs = $stmt->fetchAll();
     display: inline-block;
     white-space: nowrap;
     will-change: transform;
-    animation: marquee 40s linear infinite;
+    animation: marquee 120s linear infinite;
   }
 
   /* Hover করলে marquee থামবে */
@@ -638,7 +638,7 @@ $jobs = $stmt->fetchAll();
   .marquee-link {
     text-decoration: none;
     margin: 0 6px;
-    transition: all 2s ease-in-out;
+    transition: all 0.5s ease-in-out;
   }
 
   /* শুধু লিঙ্ক hover করলে underline হবে */
