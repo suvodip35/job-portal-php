@@ -637,7 +637,6 @@ $jobs = $stmt->fetchAll();
   /* লিঙ্ক স্টাইল */
   .marquee-link {
     text-decoration: none;
-    color: #FFFFFF; /* Tailwind-এর blue-600 এর মতো */
     margin: 0 6px;
     transition: all 0.5s ease-in-out;
   }
