@@ -626,7 +626,7 @@ $jobs = $stmt->fetchAll();
     display: inline-block;
     white-space: nowrap;
     will-change: transform;
-    animation: marquee 120s linear infinite;
+    animation: marquee 90s linear infinite;
   }
 
   /* Hover করলে marquee থামবে */
