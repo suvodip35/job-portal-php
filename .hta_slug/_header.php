@@ -113,6 +113,7 @@
         <a href="<?= BASE_URL ?>sitemap" class="hover:text-blue-600 dark:hover:text-blue-400">Sitemap</a> -->
         <a href="/" class="hover:text-blue-600 dark:hover:text-blue-400">Home</a>
         <a href="/" class="hover:text-blue-600 dark:hover:text-blue-400">Jobs</a>
+        <a href="/updates" class="hover:text-blue-600 dark:hover:text-blue-400">Updates</a>
         <a href="/contact" class="hover:text-blue-600 dark:hover:text-blue-400">Contact</a>
         <a href="/saved-jobs" class="hover:text-blue-600 dark:hover:text-blue-400">Saved</a>
         
@@ -157,7 +158,7 @@
 </nav>
 
 
-<main class="max-w-6xl mx-auto px-4 py-6 md:pb-6 pb-20"> <!-- Added padding-bottom for mobile -->
+<main class="max-w-8xl mx-auto px-4 py-6 md:pb-6 pb-20"> <!-- Added padding-bottom for mobile -->
 <script>
   // console.log('Test Image', '<?php echo "Image Link" . $ogImage; ?>');
   // Mobile menu toggle

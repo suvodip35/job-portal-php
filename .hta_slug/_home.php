@@ -1,8 +1,8 @@
 <?php
-$pageTitle = "JOB Notification Portal";
-$pageDescription = "JOB Notification Portal";
+$pageTitle = "FromCampus - JOB Notification Portal";
+$pageDescription = "FromCampus - JOB Notification Portal";
 $keywords = "Goverment JOBS, ITI JOBS, Railway Jobs, Engineer";
-$author = "J_N_P";
+$author = "FromCampus";
 $ogImage = "https://fromcampus.com/assets/logo/FromCampus_Color_text.png";
 $canonicalUrl = "https://fromcampus.com/";
 
@@ -37,7 +37,7 @@ $salaryMax = isset($_GET['smax']) ? (int)$_GET['smax'] : 0;
 
 // Pagination
 $page   = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
-$perPage= 12;
+$perPage= 9;
 $offset = ($page - 1) * $perPage;
 
 // Marquee (latest 20)
@@ -164,6 +164,11 @@ $stmt->bindValue(':limit', $perPage, PDO::PARAM_INT);
 $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
 $stmt->execute();
 $jobs = $stmt->fetchAll();
+
+
+$updatesStmt = $pdo->prepare("SELECT * FROM updates WHERE created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY) ORDER BY created_at DESC LIMIT 20");
+$updatesStmt->execute();
+$currentUpdates = $updatesStmt->fetchAll();
 ?>
 
 <!-- Loading Placeholder (shown initially) -->
@@ -234,7 +239,7 @@ $jobs = $stmt->fetchAll();
                 <div class="h-8 bg-gray-300 dark:bg-gray-700 rounded w-24 animate-pulse"></div>
             </div>
 
-            <div class="grid sm:grid-cols-2 lg:grid-cols-2 gap-6">
+            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 <?php for($i = 0; $i < 6; $i++): ?>
                 <article class="border rounded-2xl bg-white dark:bg-gray-800 shadow overflow-hidden w-full">
                     <div class="w-full aspect-[16/9] bg-gray-300 dark:bg-gray-700 animate-pulse"></div>
@@ -278,6 +283,29 @@ $jobs = $stmt->fetchAll();
                 <div class="h-10 bg-gray-300 dark:bg-gray-700 rounded w-10 animate-pulse"></div>
                 <?php endfor; ?>
             </div>
+
+            <!-- Current Updates Placeholder -->
+            <div class="mt-4 mb-8">
+                <div class="h-8 bg-gray-300 dark:bg-gray-700 rounded w-1/4 mb-6 animate-pulse"></div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
+                    <?php for($i = 0; $i < 4; $i++): ?>
+                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-3">
+                        <div class="h-8 bg-gray-300 dark:bg-gray-700 rounded w-2/3 mb-3 animate-pulse"></div>
+                        <div class="space-y-3">
+                            <?php for($j = 0; $j < 3; $j++): ?>
+                            <div class="p-2 border rounded dark:border-gray-700">
+                                <div class="flex justify-between mb-2">
+                                    <div class="h-5 bg-gray-300 dark:bg-gray-700 rounded w-3/4 animate-pulse"></div>
+                                    <div class="h-5 bg-gray-300 dark:bg-gray-700 rounded w-10 animate-pulse"></div>
+                                </div>
+                                <div class="h-3 bg-gray-300 dark:bg-gray-700 rounded w-1/2 animate-pulse"></div>
+                            </div>
+                            <?php endfor; ?>
+                        </div>
+                    </div>
+                    <?php endfor; ?>
+                </div>
+            </div>
         </main>
     </div>
 </div>
@@ -308,6 +336,7 @@ $jobs = $stmt->fetchAll();
     </div>
   </div>
 </div>
+
 
 <!-- ===== Marquee (Native tag as requested) ===== -->
 <?php if ($marqueeJobs): ?>
@@ -505,9 +534,9 @@ $jobs = $stmt->fetchAll();
     <?php if (empty($jobs)): ?>
       <div class="mt-6 p-6 border rounded-xl bg-white dark:bg-gray-800">No jobs matched your filters.</div>
     <?php else: ?>
-      <div class="mt-4 grid sm:grid-cols-2 lg:grid-cols-2 gap-6">
+      <div class="mt-4 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
         <?php foreach ($jobs as $job): ?>
-        <article class="group border rounded-2xl bg-white dark:bg-gray-800 shadow hover:shadow-2xl transition overflow-hidden w-full">
+        <article aria-label="<?= e($job['job_title']) ?>" onclick="location.href='<?= BASE_URL ?>job?slug=<?= e($job['job_title_slug']) ?>'" class="group border cursor-pointer rounded-2xl bg-white dark:bg-gray-800 shadow hover:shadow-2xl transition overflow-hidden w-full">
           <?php if (!empty($job['thumbnail'])): ?>
           <div class="w-full aspect-[16/9] overflow-hidden rounded">
             <img src="<?= e($job['thumbnail']) ?>" fetchpriority="high"  alt="<?= e($job['job_title']) ?>" class="w-full h-full object-cover" />
@@ -556,17 +585,9 @@ $jobs = $stmt->fetchAll();
       </div>
 
       <!-- Pagination -->
-      <div class="mt-8">
+      <div class="mt-8 flex justify-center">
         <?php
-          $base = BASE_URL.'?cat='.urlencode($activeTab)
-                .'&search='.urlencode($search)
-                .'&location='.urlencode($location)
-                .'&since='.urlencode((string)$since)
-                .'&type='.urlencode($jobType)
-                .'&smin='.urlencode((string)$salaryMin)
-                .'&smax='.urlencode((string)$salaryMax)
-                .'&sort='.urlencode($sort)
-                .'&';
+          $base = BASE_URL.'?cat='.urlencode($activeTab).'&search='.urlencode($search).'&location='.urlencode($location).'&since='.urlencode((string)$since).'&type='.urlencode($jobType).'&smin='.urlencode((string)$salaryMin).'&smax='.urlencode((string)$salaryMax).'&sort='.urlencode($sort).'&';
           echo paginate($total, $perPage, $page, $base);
         ?>
       </div>
@@ -576,13 +597,122 @@ $jobs = $stmt->fetchAll();
       Filters
     </button>
 
-    
+    <!-- Current Updates Section -->
+    <?php if (!empty($currentUpdates)): ?>
+      <div class="mt-4 mb-8">
+          <div class="flex items-center justify-between mb-6">
+              <h2 class="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                  <svg class="w-6 h-6 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                      <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+                  </svg>
+                  Current Updates
+              </h2>
+              <a href="<?= BASE_URL ?>updates" class="text-blue-600 dark:text-blue-300 hover:underline font-medium flex items-center gap-1">
+                  View All <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+              </a>
+          </div>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
+              <?php 
+              $updateTypes = [
+                  'exam' => ['title' => 'Exam Updates', 'color' => 'blue', 'icon' => 'M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z'],
+                  'result' => ['title' => 'Result Updates', 'color' => 'green', 'icon' => 'M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z'],
+                  'syllabus' => ['title' => 'Syllabus Updates', 'color' => 'yellow', 'icon' => 'M12.586 4.586a2 2 0 112.828 2.828l-3 3a2 2 0 01-2.828 0 1 1 0 00-1.414 1.414 4 4 0 005.656 0l3-3a4 4 0 00-5.656-5.656l-1.5 1.5a1 1 0 101.414 1.414l1.5-1.5zm-5 5a2 2 0 012.828 0 1 1 0 101.414-1.414 4 4 0 00-5.656 0l-3 3a4 4 0 105.656 5.656l1.5-1.5a1 1 0 10-1.414-1.414l1.5-1.5a2 2 0 11-2.828-2.828l3-3z'],
+                  'ans_key' => ['title' => 'Answer Key', 'color' => 'red', 'icon' => 'M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z']
+              ];
+              
+              foreach ($updateTypes as $type => $typeInfo): 
+                  $filteredUpdates = array_filter($currentUpdates, function($update) use ($type) {
+                      return $update['update_type'] === $type;
+                  });
+                  
+                  // শুধুমাত্র সেই টাইপের updates থাকলে show করবে
+                  if (!empty($filteredUpdates)):
+              ?>
+              <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden border border-gray-200 dark:border-gray-700">
+                  <div class="bg-<?= $typeInfo['color'] ?>-600 p-3 flex items-center">
+                      <svg class="w-5 h-5 mr-2 text-white" fill="currentColor" viewBox="0 0 20 20">
+                          <path fill-rule="evenodd" d="<?= $typeInfo['icon'] ?>" clip-rule="evenodd"/>
+                      </svg>
+                      <h3 class="text-lg font-bold text-white"><?= $typeInfo['title'] ?></h3>
+                  </div>
+                  <div class="p-3 space-y-3 max-h-80 overflow-y-auto scroll-container">
+                      <div class="scroll-content">
+                          <?php foreach ($filteredUpdates as $update): ?>
+                          <a href="<?= BASE_URL ?>updates/details?slug=<?= e($update['slug']) ?>" class="block p-2 border rounded hover:shadow-md transition dark:border-gray-700 dark:hover:bg-gray-700">
+                              <div class="flex justify-between items-start">
+                                  <h4 class="text-sm font-medium dark:text-white line-clamp-2 flex-1"><?= e($update['title']) ?></h4>
+                                  <?php if (strtotime($update['created_at']) > strtotime('-2 days')): ?>
+                                      <span class="blink-badge" style="background-color: <?= 
+                                          $typeInfo['color'] === 'blue' ? '#3b82f6' : 
+                                          ($typeInfo['color'] === 'green' ? '#10b981' : 
+                                          ($typeInfo['color'] === 'yellow' ? '#f59e0b' : '#ef4444')) 
+                                      ?>;">NEW</span>
+                                  <?php endif; ?>
+                              </div>
+                              <p class="text-xs text-gray-600 dark:text-gray-300 mt-1"><?= date('M d, Y', strtotime($update['created_at'])) ?></p>
+                          </a>
+                          <?php endforeach; ?>
+                      </div>
+                  </div>
+              </div>
+              <?php 
+                  endif;
+              endforeach; 
+              ?>
+          </div>
+      </div>
+    <?php endif; ?>
   </main>
 </div>
 </div>
 
 <!-- ===== Utilities ===== -->
 <style>
+  /* Auto scroll styles */
+    .scroll-container {
+        position: relative;
+        overflow: hidden;
+    }
+
+    .scroll-content {
+        animation: scrollContent 6s linear infinite;
+    }
+
+    .scroll-container:hover .scroll-content {
+        animation-play-state: paused;
+    }
+
+    @keyframes scrollContent {
+        0% { transform: translateY(0); }
+        100% { transform: translateY(-50%); }
+    }
+
+    /* Blinking badge animation */
+    @keyframes blink {
+        0%, 50%, 100% { opacity: 1; }
+        25%, 75% { opacity: 0.5; }
+    }
+
+    .blink-badge {
+        display: inline-block;
+        padding: 2px 6px;
+        font-size: 10px;
+        font-weight: bold;
+        border-radius: 4px;
+        color: #fff;
+        animation: blink 1.5s infinite;
+        flex-shrink: 0;
+        margin-left: 8px;
+        line-height: 1.2;
+    }
+    .line-clamp-2 {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
   .no-scrollbar::-webkit-scrollbar { display: none; }
   .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
   .line-clamp-3 {
@@ -710,4 +840,18 @@ $jobs = $stmt->fetchAll();
     }
   });
   updateSavedCount();
+
+    // Initialize auto-scroll for update sections
+    document.addEventListener('DOMContentLoaded', function() {
+        const scrollContainers = document.querySelectorAll('.scroll-container');
+        
+        scrollContainers.forEach(container => {
+            const content = container.querySelector('.scroll-content');
+            if (content && content.scrollHeight > container.clientHeight) {
+                // Duplicate content for seamless scrolling
+                const clone = content.cloneNode(true);
+                container.appendChild(clone);
+            }
+        });
+    });
 </script>
