@@ -6,6 +6,24 @@ $author = "FromCampus";
 $ogImage = "https://fromcampus.com/assets/logo/FromCampus_Color_text.png";
 $canonicalUrl = "https://fromcampus.com/";
 
+$schema = [
+    "@context" => "https://schema.org",
+    "@type" => "WebSite",
+    "name" => "FromCampus - JOB Notification Portal",
+    "url" => "https://fromcampus.com/",
+    "description" => "FromCampus - JOB Notification Portal",
+    "keywords" => "Goverment JOBS, ITI JOBS, Railway Jobs, Engineer",
+    "publisher" => [
+        "@type" => "Organization",
+        "name" => "FromCampus",
+        "url" => "https://fromcampus.com/",
+        "logo" => [
+            "@type" => "ImageObject",
+            "url" => "https://fromcampus.com/assets/logo/FromCampus_Color_text.png"
+        ]
+    ]
+];
+
 require_once('_header.php');
 
 require __DIR__ . '/../lib/parsedown-master/Parsedown.php';
@@ -666,6 +684,9 @@ $currentUpdates = $updatesStmt->fetchAll();
   </main>
 </div>
 </div>
+<script type="application/ld+json">
+  <?= json_encode($schema, JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT) ?>
+</script>
 
 <!-- ===== Utilities ===== -->
 <style>

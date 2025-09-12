@@ -19,13 +19,7 @@ if (!$update) {
 }
 
 // Fetch latest jobs (last 30 days)
-$latestJobs = $pdo->query("
-    SELECT job_title, job_title_slug, company_name, location, posted_date, last_date 
-    FROM jobs 
-    WHERE status='published' AND posted_date >= DATE_SUB(NOW(), INTERVAL 30 DAY) 
-    ORDER BY posted_date DESC 
-    LIMIT 10
-")->fetchAll();
+$latestJobs = $pdo->query("SELECT job_title, job_title_slug, company_name, location, posted_date, last_date FROM jobs WHERE status='published' AND posted_date >= DATE_SUB(NOW(), INTERVAL 30 DAY) ORDER BY posted_date DESC LIMIT 10")->fetchAll();
 
 // Function to check if job is new (within last 2 days)
 function isNewJob($posted_date) {
@@ -43,6 +37,36 @@ $pageDescription    = mb_substr(strip_tags($update['description']), 0, 160);
 $keywords           = "Exam Updates, Admit Card, Result, Govt Notice, " . $update['title'];
 $ogImage            = "https://fromcampus.com/assets/logo/FromCampus_Color_text.png";
 $canonicalUrl       = BASE_URL . "updates/details?slug=" . $slug;
+
+$schema = [
+  "@context" => "https://schema.org",
+  "@type" => "NewsArticle",
+  "mainEntityOfPage" => [
+    "@type" => "WebPage",
+    "@id" => $canonicalUrl
+  ],
+  "headline" => $update['title'],
+  "description" => strip_tags($update['description']),
+  "image" => !empty($update['thumbnail']) 
+      ? BASE_URL . "uploads/updates/" . $update['thumbnail'] 
+      : "https://fromcampus.com/assets/logo/FromCampus_Color_text.png",
+  "author" => [
+    "@type" => "Organization",
+    "name" => "FromCampus"
+  ],
+  "publisher" => [
+    "@type" => "Organization",
+    "name" => "FromCampus",
+    "logo" => [
+      "@type" => "ImageObject",
+      "url" => "https://fromcampus.com/assets/logo/FromCampus_Color_text.png"
+    ]
+  ],
+  "datePublished" => date('c', strtotime($update['posted_date'])),
+  "dateModified" => !empty($update['updated_at']) 
+      ? date('c', strtotime($update['updated_at'])) 
+      : date('c', strtotime($update['posted_date']))
+];
 
 // Markdown parser for content
 require __DIR__ . '/../../lib/parsedown-master/Parsedown.php';
@@ -463,6 +487,9 @@ $ansKeyUpdates = $pdo->query("SELECT slug, title, created_at FROM updates WHERE 
   </div>
 </div>
 </div>
+<script type="application/ld+json">
+  <?= json_encode($schema, JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT) ?>
+</script>
 
 <script>
 // Show actual content and hide placeholder once page is fully loaded

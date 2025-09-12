@@ -9,6 +9,30 @@ $keywords = "Exam Updates, Admit Card, Result, Govt Notice, Latest Notifications
 $ogImage = "https://fromcampus.com/assets/logo/FromCampus_Color_text.png";
 $canonicalUrl = BASE_URL . "updates/";
 
+$schema = [
+    "@context" => "https://schema.org",
+    "@type" => "CollectionPage",
+    "name" => "Latest Updates - FromCampus",
+    "url" => $canonicalUrl,
+    "description" => "Stay updated with the latest exam notifications, admit cards, results, and government notices",
+    "keywords" => "Exam Updates, Admit Card, Result, Govt Notice, Latest Notifications",
+    "image" => $ogImage,
+    "isPartOf" => [
+        "@type" => "WebSite",
+        "name" => "FromCampus - JOB Notification Portal",
+        "url" => "https://fromcampus.com/"
+    ],
+    "publisher" => [
+        "@type" => "Organization",
+        "name" => "FromCampus",
+        "url" => "https://fromcampus.com/",
+        "logo" => [
+            "@type" => "ImageObject",
+            "url" => "https://fromcampus.com/assets/logo/FromCampus_Color_text.png"
+        ]
+    ]
+];
+
 // Fetch updates for marquee
 $marqueeUpdates = $pdo->query("SELECT slug, title, created_at FROM updates ORDER BY created_at DESC LIMIT 8")->fetchAll();
 
@@ -314,7 +338,9 @@ function markdownExcerpt($markdown, $Parsedown, $length = 80) {
         </div>
     </div>
 </div>
-
+<script type="application/ld+json">
+    <?= json_encode($schema, JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT) ?>
+</script>
 <script>
 // Show actual content and hide placeholder once page is fully loaded
 document.addEventListener('DOMContentLoaded', function() {
