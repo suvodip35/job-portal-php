@@ -1,3 +1,8 @@
 [2025-09-12 13:51:31] ERROR: [2] require(../.hta_slug/_nav.php): Failed to open stream: No such file or directory in /home/suvo/web/jnp.ns77.siliconpin.com/public_html/updates/index.php on line 4
 [2025-09-12 13:51:31] EXCEPTION: Failed opening required '../.hta_slug/_nav.php' (include_path='.:/usr/share/php') in /home/suvo/web/jnp.ns77.siliconpin.com/public_html/updates/index.php on line 4
 [2025-09-12 13:55:53] ERROR: [2] Undefined array key "email" in /home/suvo/web/jnp.ns77.siliconpin.com/public_html/adminqeIUgwefgWEOAjx/.hta_slug/login.php on line 42
+[2025-09-12 15:40:46] FATAL: Undefined variable $GogImageURIPrefix in /home/suvo/web/jnp.ns77.siliconpin.com/public_html/.hta_slug/job.php on line 59
+[2025-09-12 15:40:46] FATAL: Undefined variable $GogImageURIPrefix in /home/suvo/web/jnp.ns77.siliconpin.com/public_html/.hta_slug/job.php on line 59
+[2025-09-12 15:40:54] FATAL: Undefined variable $GogImageURIPrefix in /home/suvo/web/jnp.ns77.siliconpin.com/public_html/.hta_slug/job.php on line 59
+[2025-09-12 15:40:54] FATAL: Undefined variable $GogImageURIPrefix in /home/suvo/web/jnp.ns77.siliconpin.com/public_html/.hta_slug/job.php on line 59
+[2025-09-12 15:41:01] FATAL: Undefined variable $GogImageURIPrefix in /home/suvo/web/jnp.ns77.siliconpin.com/public_html/.hta_slug/job.php on line 59
