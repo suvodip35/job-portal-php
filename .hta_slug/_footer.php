@@ -2,7 +2,7 @@
 <!-- Fixed Bottom Navigation for Mobile -->
 <div class="md:hidden fixed bottom-0 left-0 right-0 bg-gray-100 dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 z-50">
   <div class="flex justify-around">
-    <a href="<?= BASE_URL ?>" class="flex flex-col items-center p-2 text-xs hover:text-blue-600 dark:hover:text-blue-400">
+    <a href="/" class="flex flex-col items-center p-2 text-xs hover:text-blue-600 dark:hover:text-blue-400">
       <svg class="w-5 h-5 mb-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
         <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path>
       </svg>
@@ -45,12 +45,12 @@
       <div>
         <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-4">Quick Links</h2>
         <ul class="space-y-2">
-          <li><a href="<?= BASE_URL ?>" class="hover:text-blue-600 dark:hover:text-blue-400">Home</a></li>
-          <li><a href="<?= BASE_URL ?>jobs" class="hover:text-blue-600 dark:hover:text-blue-400">Jobs</a></li>
+          <li><a href="/" class="hover:text-blue-600 dark:hover:text-blue-400">Home</a></li>
+          <li><a href="/jobs" class="hover:text-blue-600 dark:hover:text-blue-400">Jobs</a></li>
           <li><a href="/updates" class="hover:text-blue-600 dark:hover:text-blue-400">Updates</a></li>
-          <li><a href="<?= BASE_URL ?>saved-jobs" class="hover:text-blue-600 dark:hover:text-blue-400">Saved Jobs</a></li>
-          <li><a href="<?= BASE_URL ?>mock-tests" class="hover:text-blue-600 dark:hover:text-blue-400">Mock Tests</a></li>
-          <li><a href="<?= BASE_URL ?>contact" class="hover:text-blue-600 dark:hover:text-blue-400">Contact Us</a></li>
+          <li><a href="/saved-jobs" class="hover:text-blue-600 dark:hover:text-blue-400">Saved Jobs</a></li>
+          <li><a href="/mock-tests" class="hover:text-blue-600 dark:hover:text-blue-400">Mock Tests</a></li>
+          <li><a href="/contact" class="hover:text-blue-600 dark:hover:text-blue-400">Contact Us</a></li>
         </ul>
       </div>
 
@@ -58,8 +58,8 @@
       <div>
         <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-4">Legal</h2>
         <ul class="space-y-2">
-          <li><a href="<?= BASE_URL ?>privacy-policy" class="hover:text-blue-600 dark:hover:text-blue-400">Privacy Policy</a></li>
-          <li><a href="<?= BASE_URL ?>terms" class="hover:text-blue-600 dark:hover:text-blue-400">Terms & Conditions</a></li>
+          <li><a href="/privacy-policy" class="hover:text-blue-600 dark:hover:text-blue-400">Privacy Policy</a></li>
+          <li><a href="/terms" class="hover:text-blue-600 dark:hover:text-blue-400">Terms & Conditions</a></li>
         </ul>
       </div>
 

@@ -95,6 +95,7 @@ function paginate(int $total, int $perPage, int $current, string $baseUrl): stri
 }
 
 $indianStates = [
+    "anywhere-india" => "Anywhere India",
     "andhra-pradesh" => "Andhra Pradesh",
     "arunachal-pradesh" => "Arunachal Pradesh",
     "assam" => "Assam",

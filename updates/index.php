@@ -8,7 +8,7 @@ $segments = explode('/', trim($path, '/'));
 // For /updates/ → segments = ['updates']
 // For /updates/sample-page → segments = ['updates','sample-page']
 $slug = $segments[1] ?? ''; 
-
+// echo "Slug -:" . $slug;
 if ($slug === '' || $slug === '_home') {
     require_once('.hta_slug/_home.php');
 } elseif (file_exists(".hta_slug/{$slug}.php")) {

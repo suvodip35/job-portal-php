@@ -41,24 +41,49 @@ $latestJobs = $latestStmt->fetchAll();
 
 // Prepare structured data JSON-LD (JobPosting)
 $schema = [
-    "@context" => "https://schema.org/",
-    "@type" => "JobPosting",
-    "title" => $job['job_title'],
-    "description" => strip_tags($job['description']),
-    "datePosted" => date('c', strtotime($job['posted_date'])),
-    "validThrough" => $job['last_date'] ? date('c', strtotime($job['last_date'])) : null,
-    "employmentType" => $job['job_type'] ?? 'FULL_TIME',
-    "hiringOrganization" => [
-        "@type" => "Organization",
-        "name" => $job['company_name']
-    ],
-    "jobLocation" => [
-        "@type" => "Place",
-        "address" => [
-            "@type" => "PostalAddress",
-            "addressLocality" => $job['location']
-        ]
-    ],
+  "@context" => "https://schema.org/",
+  "@type" => "JobPosting",
+  "title" => $job['job_title'],
+  "description" => strip_tags($job['meta_description'] ?? $job['description']),
+  "identifier" => [
+      "@type" => "PropertyValue",
+      "name" => $job['company_name'],
+      "value" => $job['job_id']
+  ],
+  "datePosted" => date('c', strtotime($job['posted_date'])),
+  "validThrough" => !empty($job['last_date']) ? date('c', strtotime($job['last_date'])) : null,
+  "employmentType" => strtoupper($job['job_type'] ?? 'FULL_TIME'),
+  "hiringOrganization" => [
+      "@type" => "Organization",
+      "name" => $job['company_name'],
+      "logo" => !empty($job['thumbnail']) ? $GogImageURIPrefix.$job['thumbnail'] : "https://fromcampus.com/assets/logo/FromCampus_Color_text.png",
+      "sameAs" => "https://fromcampus.com/"
+  ],
+  "jobLocation" => [
+      "@type" => "Place",
+      "address" => [
+          "@type" => "PostalAddress",
+          "addressLocality" => $job['location'],
+          "addressCountry" => "IN"
+      ]
+  ],
+  "baseSalary" => [
+      "@type" => "MonetaryAmount",
+      "currency" => "INR",
+      "value" => [
+          "@type" => "QuantitativeValue",
+          "minValue" => !empty($job['min_salary']) ? (int)$job['min_salary'] : null,
+          "maxValue" => !empty($job['max_salary']) ? (int)$job['max_salary'] : null,
+          "unitText" => "MONTH"
+      ]
+  ],
+  "qualifications" => strip_tags($job['requirements'] ?? ''),
+  "url" => BASE_URL.'/jobs/'.$job['job_title_slug'],
+  "applicationContact" => [
+      "@type" => "ContactPoint",
+      "url" => $job['apply_url']
+  ],
+  "dateModified" => !empty($job['updated_at']) ? date('c', strtotime($job['updated_at'])) : null
 ];
 require_once('_header.php');
 require __DIR__ . '/../lib/parsedown-master/Parsedown.php';
