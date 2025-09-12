@@ -35,7 +35,7 @@
 
   require_once __DIR__ . '/../.hta_config/functions.php';
   require_once __DIR__ . '/../.hta_config/config.php';
-
+  $GogImageURIPrefix = 'https://fromcampus.com';
   // Use job-specific values if available, otherwise fallback to defaults
   $siteTitle      = $siteTitle      ?? APP_NAME;
   $metaDesc       = $metaDesc       ?? 'Latest job notifications, mock tests and exam resources.';
@@ -43,9 +43,9 @@
   $pageDescription= $pageDescription?? $metaDesc;
   $keywords       = $keywords       ?? "Government JOBS, ITI JOBS, Railway Jobs, Engineer";
   $author         = $author         ?? "J_N_P";
-  $ogImage        = !empty($job['thumbnail']) ? $job['thumbnail'] : "https://fromcampus.com/assets/logo/FromCampus_Color_text.png";
+  $ogImage        = !empty($job['thumbnail']) ? $GogImageURIPrefix . $job['thumbnail'] : "https://fromcampus.com/assets/logo/FromCampus_Color_text.png";
   $canonicalUrl   = $canonicalUrl   ?? BASE_URL;
-
+// echo $ogImage;
 ?>
 
 <!DOCTYPE html>
