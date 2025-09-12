@@ -1,19 +1,20 @@
 <?php
-    // session_start();
-    // require('../.hta_slug/_header.php');
-    // require('../.hta_slug/_nav.php');
-    require_once('../.hta_config/var.php');
+require_once('../.hta_config/var.php');
 
-$url = explode('/', $_SERVER['REQUEST_URI']);
-if (strpos($url[1], "?") !== false) {
-    $url2 = explode('?', $url[1]);
-    $slug=$url2[0];
-}   else  $slug=$url[2];
+// Get the path without query string
+$path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+$segments = explode('/', trim($path, '/')); 
 
-// require_once('../.hta_slug/_header.php');
+// For /updates/ → segments = ['updates']
+// For /updates/sample-page → segments = ['updates','sample-page']
+$slug = $segments[1] ?? ''; 
 
-if($slug=="") require_once('.hta_slug/_home.php');
-elseif(file_exists(".hta_slug/".$slug.".php")) include ".hta_slug/".$slug.".php";
-else require_once('.hta_slug/_404.php');
+if ($slug === '' || $slug === '_home') {
+    require_once('.hta_slug/_home.php');
+} elseif (file_exists(".hta_slug/{$slug}.php")) {
+    include ".hta_slug/{$slug}.php";
+} else {
+    require_once('.hta_slug/_404.php');
+}
 
-require_once('../.hta_slug/_footer.php'); 
+require_once('../.hta_slug/_footer.php');

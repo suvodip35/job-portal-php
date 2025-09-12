@@ -1,5 +1,0 @@
-[2025-09-11 20:28:32] EXCEPTION: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'posted_date' in 'ORDER BY' in /home/suvo/web/jnp.ns77.siliconpin.com/public_html/updates/.hta_slug/details.php on line 60
-[2025-09-11 20:31:20] ERROR: [2] Undefined variable $admitCardUpdates in /home/suvo/web/jnp.ns77.siliconpin.com/public_html/updates/.hta_slug/details.php on line 407
-[2025-09-11 20:31:20] ERROR: [2] foreach() argument must be of type array|object, null given in /home/suvo/web/jnp.ns77.siliconpin.com/public_html/updates/.hta_slug/details.php on line 407
-[2025-09-11 20:31:20] ERROR: [2] Undefined variable $noticeUpdates in /home/suvo/web/jnp.ns77.siliconpin.com/public_html/updates/.hta_slug/details.php on line 449
-[2025-09-11 20:31:20] ERROR: [2] foreach() argument must be of type array|object, null given in /home/suvo/web/jnp.ns77.siliconpin.com/public_html/updates/.hta_slug/details.php on line 449

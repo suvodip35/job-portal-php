@@ -20,12 +20,12 @@
       </svg>
       <span>Saved</span>
     </a>
-    <button id="bottomSubscribePushBtn" class="flex flex-col items-center p-2 text-xs hover:text-blue-600 dark:hover:text-blue-400">
+    <a href="/updates" id="bottomUpdatesLink" class="flex flex-col items-center p-2 text-xs hover:text-blue-600 dark:hover:text-blue-400">
       <svg class="w-5 h-5 mb-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
         <path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z"></path>
       </svg>
-      <span>Alerts</span>
-    </button>
+      <span>Updates</span>
+    </a>
   </div>
 </div>
 <footer class="bg-gray-100 dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 mt-12">
@@ -47,6 +47,7 @@
         <ul class="space-y-2">
           <li><a href="<?= BASE_URL ?>" class="hover:text-blue-600 dark:hover:text-blue-400">Home</a></li>
           <li><a href="<?= BASE_URL ?>jobs" class="hover:text-blue-600 dark:hover:text-blue-400">Jobs</a></li>
+          <li><a href="/updates" class="hover:text-blue-600 dark:hover:text-blue-400">Updates</a></li>
           <li><a href="<?= BASE_URL ?>saved-jobs" class="hover:text-blue-600 dark:hover:text-blue-400">Saved Jobs</a></li>
           <li><a href="<?= BASE_URL ?>mock-tests" class="hover:text-blue-600 dark:hover:text-blue-400">Mock Tests</a></li>
           <li><a href="<?= BASE_URL ?>contact" class="hover:text-blue-600 dark:hover:text-blue-400">Contact Us</a></li>
