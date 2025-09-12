@@ -99,6 +99,8 @@
 
   <meta name="robots" content="index, follow">
   <meta name="googlebot" content="index, follow">
+
+  <meta property="fb:app_id" content="1469923257657008" />
   <!-- Tailwind CDN for quick production-ready UI; for full production consider building Tailwind -->
   <script src="/assets/tailwind.css"></script>
 
