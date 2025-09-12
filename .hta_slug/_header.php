@@ -82,9 +82,23 @@
   <meta name="twitter:title" content="<?php echo htmlspecialchars($pageTitle); ?>">
   <meta name="twitter:description" content="<?php echo htmlspecialchars($pageDescription); ?>">
   <meta name="twitter:image" content="<?php echo $ogImage; ?>">
+
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
   
+  <meta property="og:site_name" content="FromCampus">
+
+  <meta name="twitter:site" content="@FromCampus">
+  <meta name="twitter:creator" content="@FromCampus">
+
+  <meta property="og:locale" content="en_IN">
+  <meta property="og:locale" content="bn_IN">
+  <meta property="og:locale" content="hi_IN">
   <!-- Canonical URL -->
   <link rel="canonical" href="<?php echo htmlspecialchars($canonicalUrl); ?>">
+
+  <meta name="robots" content="index, follow">
+  <meta name="googlebot" content="index, follow">
   <!-- Tailwind CDN for quick production-ready UI; for full production consider building Tailwind -->
   <script src="/assets/tailwind.css"></script>
 
