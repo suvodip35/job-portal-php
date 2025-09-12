@@ -47,9 +47,7 @@ $schema = [
   ],
   "headline" => $update['title'],
   "description" => strip_tags($update['description']),
-  "image" => !empty($update['thumbnail']) 
-      ? BASE_URL . "uploads/updates/" . $update['thumbnail'] 
-      : "https://fromcampus.com/assets/logo/FromCampus_Color_text.png",
+  "image" => !empty($update['thumbnail']) ? BASE_URL . "thumbnails/" . $update['thumbnail'] : "https://fromcampus.com/assets/logo/FromCampus_Color_text.png",
   "author" => [
     "@type" => "Organization",
     "name" => "FromCampus"
@@ -62,11 +60,12 @@ $schema = [
       "url" => "https://fromcampus.com/assets/logo/FromCampus_Color_text.png"
     ]
   ],
-  "datePublished" => date('c', strtotime($update['posted_date'])),
-  "dateModified" => !empty($update['updated_at']) 
-      ? date('c', strtotime($update['updated_at'])) 
-      : date('c', strtotime($update['posted_date']))
+  "datePublished" => date('c', strtotime($update['created_at']))
 ];
+
+if (!empty($update['updated_at'])) {
+  $schema["dateModified"] = date('c', strtotime($update['updated_at']));
+}
 
 // Markdown parser for content
 require __DIR__ . '/../../lib/parsedown-master/Parsedown.php';

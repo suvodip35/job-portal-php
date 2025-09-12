@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $token = $_POST['csrf_token'] ?? '';
     csrf_check($token);
     if ($email && $pass) {
-        $stmt = $pdo->prepare("SELECT user_id, name, password, role FROM users WHERE email = ?");
+        $stmt = $pdo->prepare("SELECT user_id, name, email, password, role FROM users WHERE email = ?");
         $stmt->execute([$email]);
         $user = $stmt->fetch();
         if ($user) {
@@ -36,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             if ($loginOK && $user['role'] === 'admin') {
                 // session_regenerate_id(true);
-                $_SESSION['admin_logged_in'] = true;
+                $_SESSION['admin_logged_in'] = true; 
                 $_SESSION['admin_id'] = $user['user_id'];
                 $_SESSION['admin_name'] = $user['name'];
                 $_SESSION['admin_email'] = $user['email'];

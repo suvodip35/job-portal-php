@@ -11,7 +11,7 @@ ob_start();
 $stmt = $pdo->prepare("SELECT j.*, c.category_name FROM jobs j LEFT JOIN job_categories c ON j.category_slug = c.category_slug WHERE j.job_title_slug = ? AND j.status='published' LIMIT 1");
 $stmt->execute([$slug]);
 $job = $stmt->fetch();
-
+$ogImageURIPrefix = 'https://fromcampus.com';
 if (!$job) {
     // require_once __DIR__ . '/includes/header.php';
     echo "<h1>Job not found.</h1>";
@@ -56,7 +56,7 @@ $schema = [
   "hiringOrganization" => [
       "@type" => "Organization",
       "name" => $job['company_name'],
-      "logo" => !empty($job['thumbnail']) ? $GogImageURIPrefix.$job['thumbnail'] : "https://fromcampus.com/assets/logo/FromCampus_Color_text.png",
+      "logo" => !empty($job['thumbnail']) ? $ogImageURIPrefix.$job['thumbnail'] : "https://fromcampus.com/assets/logo/FromCampus_Color_text.png",
       "sameAs" => "https://fromcampus.com/"
   ],
   "jobLocation" => [
