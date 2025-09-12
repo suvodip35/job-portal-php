@@ -45,6 +45,7 @@
   $author         = $author         ?? "J_N_P";
   $ogImage        = !empty($job['thumbnail']) ? $ogImageURIPrefix . $job['thumbnail'] : "https://fromcampus.com/assets/logo/FromCampus_Color_text.png";
   $canonicalUrl   = $canonicalUrl   ?? BASE_URL;
+  $ampHtmlCanonical = $ampHtmlCanonical ?? "/job-amp";
 // echo $ogImage;
 ?>
 
@@ -96,6 +97,7 @@
   <meta property="og:locale" content="hi_IN">
   <!-- Canonical URL -->
   <link rel="canonical" href="<?php echo htmlspecialchars($canonicalUrl); ?>">
+  <link rel="amphtml" href="https://example.com/my-article.amp.html">
 
   <meta name="robots" content="index, follow">
   <meta name="googlebot" content="index, follow">

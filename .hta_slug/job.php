@@ -25,6 +25,7 @@ $pageDescription = $job['meta_description'] ?: mb_substr(strip_tags($job['descri
 $keywords = "Government JOBS, ITI JOBS, Railway Jobs, Engineer, " . $job['job_title'];
 $ogImage = BASE_URL . $job['thumbnail'] ? $job['thumbnail'] : "/assets/logo.png";
 $canonicalUrl = BASE_URL . "job?slug=" . $slug;
+$ampHtmlCanonical = "https://fromcampus.com/job-amp/?slug=".$slug;
 
 // Get related jobs (same category, excluding current job)
 $relatedJobs = [];
