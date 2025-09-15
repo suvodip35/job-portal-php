@@ -24,7 +24,7 @@ $pageTitle = $job['meta_title'] ?: $job['job_title'] . ' - ' . APP_NAME;
 $pageDescription = $job['meta_description'] ?: mb_substr(strip_tags($job['description']), 0, 160);
 $keywords = "Government JOBS, ITI JOBS, Railway Jobs, Engineer, " . $job['job_title'];
 $ogImage = BASE_URL . $job['thumbnail'] ? $job['thumbnail'] : "/assets/logo.png";
-$canonicalUrl = BASE_URL . "job?slug=" . $slug;
+$canonicalUrl = "https://fromcampus.com/job?slug=" . $slug;
 $ampHtmlCanonical = "https://fromcampus.com/job-amp?slug=".$slug;
 
 // Get related jobs (same category, excluding current job)
@@ -42,50 +42,69 @@ $latestJobs = $latestStmt->fetchAll();
 
 // Prepare structured data JSON-LD (JobPosting)
 $schema = [
-  "@context" => "https://schema.org/",
-  "@type" => "JobPosting",
-  "title" => $job['job_title'],
-  "description" => strip_tags($job['meta_description'] ?? $job['description']),
-  "identifier" => [
-      "@type" => "PropertyValue",
-      "name" => $job['company_name'],
-      "value" => $job['job_id']
-  ],
-  "datePosted" => date('c', strtotime($job['posted_date'])),
-  "validThrough" => !empty($job['last_date']) ? date('c', strtotime($job['last_date'])) : null,
-  "employmentType" => strtoupper($job['job_type'] ?? 'FULL_TIME'),
-  "hiringOrganization" => [
-      "@type" => "Organization",
-      "name" => $job['company_name'],
-      "logo" => !empty($job['thumbnail']) ? $ogImageURIPrefix.$job['thumbnail'] : "https://fromcampus.com/assets/logo/FromCampus_Color_text.png",
-      "sameAs" => "https://fromcampus.com/"
-  ],
-  "jobLocation" => [
-      "@type" => "Place",
-      "address" => [
-          "@type" => "PostalAddress",
-          "addressLocality" => $job['location'],
-          "addressCountry" => "IN"
-      ]
-  ],
-  "baseSalary" => [
-      "@type" => "MonetaryAmount",
-      "currency" => "INR",
-      "value" => [
-          "@type" => "QuantitativeValue",
-          "minValue" => !empty($job['min_salary']) ? (int)$job['min_salary'] : null,
-          "maxValue" => !empty($job['max_salary']) ? (int)$job['max_salary'] : null,
-          "unitText" => "MONTH"
-      ]
-  ],
-  "qualifications" => strip_tags($job['requirements'] ?? ''),
-  "url" => BASE_URL.'/jobs/'.$job['job_title_slug'],
-  "applicationContact" => [
-      "@type" => "ContactPoint",
-      "url" => $job['apply_url']
-  ],
-  "dateModified" => !empty($job['updated_at']) ? date('c', strtotime($job['updated_at'])) : null
+    "@context" => "https://schema.org/",
+    "@type" => "JobPosting",
+    "title" => $job['job_title'] ?? "N/A",
+    "description" => strip_tags($job['meta_description'] ?? $job['description'] ?? "N/A"),
+    "identifier" => [
+        "@type" => "PropertyValue",
+        "name" => $job['company_name'] ?? "N/A",
+        "value" => $job['job_id'] ?? "N/A"
+    ],
+    "datePosted" => !empty($job['posted_date']) ? date('c', strtotime($job['posted_date'])) : date('c'),
+    "validThrough" => !empty($job['last_date']) ? date('c', strtotime($job['last_date'])) : "N/A",
+    "employmentType" => strtoupper($job['job_type'] ?? 'FULL_TIME'),
+    "hiringOrganization" => [
+        "@type" => "Organization",
+        "name" => $job['company_name'] ?? "N/A",
+        "logo" => !empty($job['thumbnail']) ? $ogImageURIPrefix.$job['thumbnail'] : "https://fromcampus.com/assets/logo/FromCampus_Color_text.png",
+        "sameAs" => "https://fromcampus.com/"
+    ],
+    "jobLocation" => [
+        "@type" => "Place",
+        "address" => [
+            "@type" => "PostalAddress",
+            "streetAddress"   => "N/A",
+            "addressLocality" => $job['location'] ?? "N/A",
+            "addressRegion"   => "N/A",
+            "postalCode"      => "N/A",
+            "addressCountry"  => "IN"
+        ]
+    ],
+    "qualifications" => strip_tags($job['requirements'] ?? "N/A"),
+    "url" => BASE_URL.'/jobs/'.($job['job_title_slug'] ?? "N/A"),
+    "applicationContact" => [
+        "@type" => "ContactPoint",
+        "url" => $job['apply_url'] ?? "N/A"
+    ],
+    "dateModified" => !empty($job['updated_at']) ? date('c', strtotime($job['updated_at'])) : date('c')
 ];
+
+// Handle salary only if at least one value exists, else send N/A fallback
+if (!empty($job['min_salary']) || !empty($job['max_salary'])) {
+    $schema["baseSalary"] = [
+        "@type" => "MonetaryAmount",
+        "currency" => "INR",
+        "value" => [
+            "@type" => "QuantitativeValue",
+            "minValue" => !empty($job['min_salary']) ? (int)$job['min_salary'] : "N/A",
+            "maxValue" => !empty($job['max_salary']) ? (int)$job['max_salary'] : "N/A",
+            "unitText" => "MONTH"
+        ]
+    ];
+} else {
+    $schema["baseSalary"] = [
+        "@type" => "MonetaryAmount",
+        "currency" => "INR",
+        "value" => [
+            "@type" => "QuantitativeValue",
+            "minValue" => "N/A",
+            "maxValue" => "N/A",
+            "unitText" => "MONTH"
+        ]
+    ];
+}
+
 require_once('_header.php');
 require __DIR__ . '/../lib/parsedown-master/Parsedown.php';
 $Parsedown = new Parsedown();

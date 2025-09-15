@@ -1,5 +1,7 @@
 <?php
+require_once __DIR__ . '../../../.hta_config/functions.php';
 require __DIR__ . '/../../lib/parsedown-master/Parsedown.php';
+
 $Parsedown = new Parsedown();
 $slug = $_GET['slug'] ?? '';
 
@@ -18,7 +20,7 @@ if (!$slug) {
     $pageThumbnail = "https://fromcampus.com/assets/logo/FromCampus_Color_text.png";
     $currentUrl = "https://fromcampus.com";
     
-    require_once __DIR__ . '/../../.hta_slug/_header.php';
+    // require_once __DIR__ . '/../../.hta_slug/_header.php';
 ?>
 <!doctype html>
 <html ⚡ lang="en">
@@ -261,7 +263,7 @@ $jobTitle = htmlspecialchars($job['job_title']);
 $jobDescription = htmlspecialchars(strip_tags($job['description']));
 $jobThumbnail = $job['thumbnail'] ? "https://fromcampus.com".$job['thumbnail'] : "https://fromcampus.com/assets/logo/FromCampus_Color_text.png";
 
-require_once __DIR__ . '/../../.hta_slug/_header.php';
+// require_once __DIR__ . '/../../.hta_slug/_header.php';
 ?>
 <!doctype html>
 <html ⚡ lang="en">

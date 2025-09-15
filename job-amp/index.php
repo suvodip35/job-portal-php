@@ -17,4 +17,4 @@ if ($slug === '' || $slug === '_home') {
     require_once('.hta_slug/_404.php');
 }
 
-require_once('../.hta_slug/_footer.php');
+// require_once('../.hta_slug/_footer.php');

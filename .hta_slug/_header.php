@@ -42,7 +42,7 @@
   $pageTitle      = $pageTitle      ?? $siteTitle;
   $pageDescription= $pageDescription?? $metaDesc;
   $keywords       = $keywords       ?? "Government JOBS, ITI JOBS, Railway Jobs, Engineer";
-  $author         = $author         ?? "J_N_P";
+  $author         = $author         ?? "FromCampus";
   $ogImage        = !empty($job['thumbnail']) ? $ogImageURIPrefix . $job['thumbnail'] : "https://fromcampus.com/assets/logo/FromCampus_Color_text.png";
   $canonicalUrl   = $canonicalUrl   ?? BASE_URL;
   $ampHtmlCanonical = $ampHtmlCanonical ?? "https://fromcampus.com/job-amp";
