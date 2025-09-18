@@ -1,5 +1,4 @@
 <?php
-require_once __DIR__ . '/../../.hta_slug/_header.php';
 
 // Get slug from URL
 $slug = $_GET['slug'] ?? '';
@@ -37,7 +36,7 @@ $pageDescription    = mb_substr(strip_tags($update['description']), 0, 160);
 $keywords           = "Exam Updates, Admit Card, Result, Govt Notice, " . $update['title'];
 $ogImage            = "https://fromcampus.com/assets/logo/FromCampus_Color_text.png";
 $canonicalUrl       = BASE_URL . "updates/details?slug=" . $slug;
-
+// echo $canonicalUrl;
 $schema = [
   "@context" => "https://schema.org",
   "@type" => "NewsArticle",
@@ -70,7 +69,7 @@ if (!empty($update['updated_at'])) {
 // Markdown parser for content
 require __DIR__ . '/../../lib/parsedown-master/Parsedown.php';
 $Parsedown = new Parsedown();
-
+require_once __DIR__ . '/../../.hta_slug/_header.php';
 // Generate current URL
 $currentUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http")
               . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";

@@ -38,7 +38,7 @@ while ($r = $stmt->fetch()) {
 // Updates
 $stmt = $pdo->query("SELECT slug, update_type, created_at FROM updates ORDER BY created_at DESC LIMIT 1000");
 while ($r = $stmt->fetch()) {
-    $loc = $base . '/updates/' . urlencode($r['slug']);
+    $loc = $base . '/updates/details?slug=' . urlencode($r['slug']);
     $lastmod = date('Y-m-d', strtotime($r['created_at']));
 
     // Mapping based on update_type
