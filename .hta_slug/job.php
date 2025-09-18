@@ -52,7 +52,7 @@ $schema = [
         "value" => $job['job_id'] ?? "N/A"
     ],
     "datePosted" => !empty($job['posted_date']) ? date('c', strtotime($job['posted_date'])) : date('c'),
-    "validThrough" => !empty($job['last_date']) ? date('c', strtotime($job['last_date'])) : "N/A",
+    "validThrough" => !empty($job['last_date']) ? date('c', strtotime($job['last_date'])) : date('c', strtotime('+30 days')),
     "employmentType" => strtoupper($job['job_type'] ?? 'FULL_TIME'),
     "hiringOrganization" => [
         "@type" => "Organization",
@@ -64,10 +64,8 @@ $schema = [
         "@type" => "Place",
         "address" => [
             "@type" => "PostalAddress",
-            "streetAddress"   => "N/A",
             "addressLocality" => $job['location'] ?? "N/A",
-            "addressRegion"   => "N/A",
-            "postalCode"      => "N/A",
+            "addressRegion"   => $job['location'] ?? "N/A",
             "addressCountry"  => "IN"
         ]
     ],

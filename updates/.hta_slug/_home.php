@@ -299,7 +299,7 @@ function markdownExcerpt($markdown, $Parsedown, $length = 80) {
                             <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
                         </svg>
                     </div>
-                    <h2 class="text-lg font-bold text-white">Notices</h2>
+                    <h2 class="text-lg font-bold text-white">Answer Key Updates</h2>
                 </div>
                 <div class="flex-1 overflow-y-auto max-h-[600px] scrollbar-thin scrollbar-thumb-red-300 scrollbar-track-red-100 dark:scrollbar-thumb-red-700 dark:scrollbar-track-red-900">
                     <div class="p-4 space-y-4">
