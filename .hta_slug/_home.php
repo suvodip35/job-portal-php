@@ -655,7 +655,7 @@ $currentUpdates = $updatesStmt->fetchAll();
                       <h3 class="text-lg font-bold text-white"><?= $typeInfo['title'] ?></h3>
                   </div>
                   <div class="p-3 space-y-3 max-h-80 overflow-y-auto scroll-container">
-                      <div class="scroll-content">
+                      <div class="scroll-inner">
                           <?php foreach ($filteredUpdates as $update): ?>
                           <a href="<?= BASE_URL ?>updates/details?slug=<?= e($update['slug']) ?>" class="block p-2 border rounded hover:shadow-md transition dark:border-gray-700 dark:hover:bg-gray-700">
                               <div class="flex justify-between items-start">
@@ -690,24 +690,30 @@ $currentUpdates = $updatesStmt->fetchAll();
 
 <!-- ===== Utilities ===== -->
 <style>
-  /* Auto scroll styles */
-    .scroll-container {
-        position: relative;
-        overflow: hidden;
-    }
+  .scroll-container {
+    position: relative;
+    overflow: hidden;
+    height: 20rem; /* তোমার max-h-80 */
+  }
 
-    .scroll-content {
-        animation: scrollContent 6s linear infinite;
-    }
+  .scroll-inner {
+    display: flex;
+    flex-direction: column;
+    animation: scrollLoop 10s linear infinite;
+  }
 
-    .scroll-container:hover .scroll-content {
-        animation-play-state: paused;
-    }
+  .scroll-container:hover .scroll-inner {
+    animation-play-state: paused;
+  }
 
-    @keyframes scrollContent {
-        0% { transform: translateY(0); }
-        100% { transform: translateY(-50%); }
+  @keyframes scrollLoop {
+    0% {
+      transform: translateY(0);
     }
+    100% {
+      transform: translateY(-50%);
+    }
+  }
 
     /* Blinking badge animation */
     @keyframes blink {
@@ -861,18 +867,4 @@ $currentUpdates = $updatesStmt->fetchAll();
     }
   });
   updateSavedCount();
-
-    // Initialize auto-scroll for update sections
-    document.addEventListener('DOMContentLoaded', function() {
-        const scrollContainers = document.querySelectorAll('.scroll-container');
-        
-        scrollContainers.forEach(container => {
-            const content = container.querySelector('.scroll-content');
-            if (content && content.scrollHeight > container.clientHeight) {
-                // Duplicate content for seamless scrolling
-                const clone = content.cloneNode(true);
-                container.appendChild(clone);
-            }
-        });
-    });
 </script>
