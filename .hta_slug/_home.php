@@ -184,7 +184,8 @@ $stmt->execute();
 $jobs = $stmt->fetchAll();
 
 
-$updatesStmt = $pdo->prepare("SELECT * FROM updates WHERE created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY) ORDER BY created_at DESC LIMIT 20");
+// $updatesStmt = $pdo->prepare("SELECT * FROM updates WHERE created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY) ORDER BY created_at DESC LIMIT 20");
+$updatesStmt = $pdo->prepare("SELECT * FROM updates ORDER BY created_at DESC LIMIT 20");
 $updatesStmt->execute();
 $currentUpdates = $updatesStmt->fetchAll();
 ?>
