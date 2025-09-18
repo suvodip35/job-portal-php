@@ -23,7 +23,7 @@ if (!$job) {
 $pageTitle = $job['meta_title'] ?: $job['job_title'] . ' - ' . APP_NAME;
 $pageDescription = $job['meta_description'] ?: mb_substr(strip_tags($job['description']), 0, 160);
 $keywords = "Government JOBS, ITI JOBS, Railway Jobs, Engineer, " . $job['job_title'];
-$ogImage = BASE_URL . $job['thumbnail'] ? $job['thumbnail'] : "/assets/logo.png";
+$ogImage = BASE_URL . $job['thumbnail'] ? $job['thumbnail'] : "assets/logo/FromCampus_Color_text.png";
 $canonicalUrl = "https://fromcampus.com/job?slug=" . $slug;
 $ampHtmlCanonical = "https://fromcampus.com/job-amp?slug=".$slug;
 
