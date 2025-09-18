@@ -394,7 +394,7 @@ $currentUpdates = $updatesStmt->fetchAll();
           <?php foreach ($latestUpdates as $lu): ?>
           <li class="flex items-start gap-2">
             <span class="inline-block mt-0.5 w-1.5 h-1.5 rounded-full bg-blue-600"></span>
-            <a href="<?= BASE_URL ?>job?slug=<?= e($lu['job_title_slug']) ?>" class="text-sm hover:underline line-clamp-1">
+            <a href="<?= BASE_URL ?>job?slug=<?= e($lu['job_title_slug']) ?>" class="text-sm hover:underline line-clamp-2">
               <?= e($lu['job_title']) ?>
               <span class="block text-xs text-gray-500 mt-0.5"><?= date('M d', strtotime($lu['posted_date'])) ?></span>
             </a>
@@ -783,7 +783,7 @@ $currentUpdates = $updatesStmt->fetchAll();
     display: inline-block;
     white-space: nowrap;
     will-change: transform;
-    animation: marquee 90s linear infinite;
+    animation: marquee 120s linear infinite;
   }
 
   /* Hover করলে marquee থামবে */
