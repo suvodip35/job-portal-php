@@ -178,6 +178,16 @@ $jobDescription = $Parsedown->text($job['description']);
     .fc-job-meta { font-size:14px; margin-bottom:15px; }
     .fc-job-content { margin-bottom:20px; }
     .fc-footer { text-align:center; padding:20px; font-size:14px; color:#777; }
+    .fc-main-btn {
+      display:inline-block;
+      padding:10px 18px;
+      background:#e67e22;
+      color:#fff;
+      border-radius:5px;
+      text-decoration:none;
+      font-size:16px;
+      font-weight:bold;
+    }
   </style>
 </head>
 <body>
@@ -196,6 +206,10 @@ $jobDescription = $Parsedown->text($job['description']);
 
       <div class="fc-job-content"><?= $jobDescription ?></div>
     </article>
+    <div style="text-align:center; margin:20px 0;">
+      <a href="https://fromcampus.com/job?slug=<?= $job['job_title_slug'] ?>" 
+        class="fc-main-btn">View Main Page</a>
+    </div>
     <footer class="fc-footer">&copy; <?= date('Y') ?> FromCampus. All rights reserved.</footer>
   </div>
 </body>
