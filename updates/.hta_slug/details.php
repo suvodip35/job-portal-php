@@ -46,7 +46,7 @@ $schema = [
   ],
   "headline" => $update['title'],
   "description" => strip_tags($update['description']),
-  "image" => !empty($update['thumbnail']) ? BASE_URL . "thumbnails/" . $update['thumbnail'] : "https://fromcampus.com/assets/logo/FromCampus_Color_text.png",
+  "image" => "https://fromcampus.com/assets/logo/FromCampus_Color_text.png",
   "author" => [
     "@type" => "Organization",
     "name" => "FromCampus"
@@ -71,8 +71,7 @@ require __DIR__ . '/../../lib/parsedown-master/Parsedown.php';
 $Parsedown = new Parsedown();
 require_once __DIR__ . '/../../.hta_slug/_header.php';
 // Generate current URL
-$currentUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http")
-              . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+$currentUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
 $shareTitle = urlencode($update['title']);
 $shareText  = urlencode("Check out this update: " . $update['title']);
 
@@ -197,8 +196,8 @@ $ansKeyUpdates = $pdo->query("SELECT slug, title, created_at FROM updates WHERE 
         <?php endif; ?>
 
         <!-- Content -->
-        <div class="prose dark:prose-invert max-w-none"><?= $Parsedown->text($update['description']) ?></div>
-
+        <!-- <div class="prose dark:prose-invert max-w-none"><?= $Parsedown->text($update['description']) ?></div> -->
+        <div id="markdownContent" class="job-description mt-6 prose dark:prose-invert max-w-none text-justify leading-7"><?= $Parsedown->text($update['description']) ?></div>
         <!-- Apply Link -->
         
           <div class="mt-8">

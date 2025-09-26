@@ -191,3 +191,45 @@
 
 
 </script>
+<style>
+  #markdownContent > h2 {
+    font-size: 22px;
+    font-weight: bold;
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+  .job-description table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+    border: 1px solid #d1d5db; /* Light mode border */
+  }
+
+  /* Light Mode */
+  .job-description th {
+    font-weight: 600;
+    padding: 0.3rem 1rem;
+    border: 1px solid #d1d5db; /* Light border */
+    text-align: left;
+  }
+
+  .job-description td {
+    padding: 0.3rem 1rem;
+    border: 1px solid #d1d5db;
+  }
+
+  /* 🌙 Dark Mode */
+  .dark .job-description table {
+    border: 1px solid #ffffffff; /* gray-700 */
+  }
+
+  #markdownContent > .dark .job-description th {
+    color: #f9fafb; /* White text */
+    border: 1px solid #374151;
+  }
+
+  #markdownContent > .dark .job-description td {
+    color: #e5e7eb; /* Light gray text */
+    border: 1px solid #374151;
+  }
+</style>
