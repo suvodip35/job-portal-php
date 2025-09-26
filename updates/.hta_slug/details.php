@@ -35,7 +35,7 @@ $pageTitle          = $update['title'] . ' - ' . APP_NAME;
 $pageDescription    = mb_substr(strip_tags($update['description']), 0, 160);
 $keywords           = "Exam Updates, Admit Card, Result, Govt Notice, " . $update['title'];
 $ogImage            = "https://fromcampus.com/assets/logo/FromCampus_Color_text.png";
-$canonicalUrl       = BASE_URL . "updates/details?slug=" . $slug;
+$canonicalUrl       = "/updates/details?slug=" . $slug;
 // echo $canonicalUrl;
 $schema = [
   "@context" => "https://schema.org",
@@ -159,13 +159,13 @@ $ansKeyUpdates = $pdo->query("SELECT slug, title, created_at FROM updates WHERE 
     <nav class="flex px-4" aria-label="Breadcrumb">
       <ol class="inline-flex items-center space-x-1 md:space-x-3">
         <li class="inline-flex items-center">
-          <a href="<?= BASE_URL ?>" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white">Home</a>
+          <a href="/" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white">Home</a>
           <svg class="w-3 h-3 text-gray-400 mx-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
               <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
             </svg>
         </li>
         <li class="inline-flex items-center">
-          <a href="<?= BASE_URL ?>" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white">Updates</a>
+          <a href="/updates" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white">Updates</a>
         </li>
         <li aria-current="page">
           <div class="flex items-center">
@@ -316,7 +316,7 @@ $ansKeyUpdates = $pdo->query("SELECT slug, title, created_at FROM updates WHERE 
         </div>
         
         <div class="mt-6 text-center">
-            <a href="<?= BASE_URL ?>job-updates" class="inline-flex items-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 transition-colors">
+            <a href="/" class="inline-flex items-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 transition-colors">
                 View All Jobs
                 <svg class="w-4 h-4 ml-1" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd"/>
@@ -383,7 +383,7 @@ $ansKeyUpdates = $pdo->query("SELECT slug, title, created_at FROM updates WHERE 
 
       <!-- Footer fixed -->
       <div class="mt-4 text-center">
-        <a href="<?= BASE_URL ?>job-updates" class="inline-flex items-center text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 text-xs font-medium">
+        <a href="/" class="inline-flex items-center text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 text-xs font-medium">
           View All Jobs
           <svg class="w-3 h-3 ml-1" fill="currentColor" viewBox="0 0 20 20">
             <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/>
@@ -414,7 +414,7 @@ $ansKeyUpdates = $pdo->query("SELECT slug, title, created_at FROM updates WHERE 
         </a>
         <?php endforeach; ?>
       </div>
-      <a href="<?= BASE_URL ?>" class="block text-center mt-4 text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 text-sm font-medium">
+      <a href="/updates" class="block text-center mt-4 text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 text-sm font-medium">
         View All Exam Updates →
       </a>
     </div>
@@ -435,7 +435,7 @@ $ansKeyUpdates = $pdo->query("SELECT slug, title, created_at FROM updates WHERE 
         </a>
         <?php endforeach; ?>
       </div>
-      <a href="<?= BASE_URL ?>" class="block text-center mt-4 text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 text-sm font-medium">
+      <a href="/updates" class="block text-center mt-4 text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 text-sm font-medium">
         View All Result Updates →
       </a>
     </div>
@@ -456,7 +456,7 @@ $ansKeyUpdates = $pdo->query("SELECT slug, title, created_at FROM updates WHERE 
         </a>
         <?php endforeach; ?>
       </div>
-      <a href="<?= BASE_URL ?>" class="block text-center mt-4 text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 text-sm font-medium">
+      <a href="/updates" class="block text-center mt-4 text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 text-sm font-medium">
         View All Syllabus Updates →
       </a>
     </div>
@@ -477,7 +477,7 @@ $ansKeyUpdates = $pdo->query("SELECT slug, title, created_at FROM updates WHERE 
         </a>
         <?php endforeach; ?>
       </div>
-      <a href="<?= BASE_URL ?>" class="block text-center mt-4 text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 text-sm font-medium">
+      <a href="/updates" class="block text-center mt-4 text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 text-sm font-medium">
         View All Answerkey Updates →
       </a>
     </div>
