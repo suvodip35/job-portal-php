@@ -36,7 +36,7 @@ $pageDescription    = mb_substr(strip_tags($update['description']), 0, 160);
 $keywords           = "Exam Updates, Admit Card, Result, Govt Notice, " . $update['title'];
 $ogImage            = "https://fromcampus.com/assets/logo/FromCampus_Color_text.png";
 $canonicalUrl       = "https://fromcampus.com/updates/details?slug=" . $slug;
-// echo $canonicalUrl;
+
 $schema = [
   "@context" => "https://schema.org",
   "@type" => "NewsArticle",
