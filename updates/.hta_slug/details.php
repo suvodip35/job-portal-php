@@ -6,7 +6,7 @@ if (!$slug) {
     echo "<script>window.location.href='/'</script>";
     exit;
 }
-
+// echo "<script>console.log('Slug: " . $slug . "');</script>";
 // Fetch update details
 $stmt = $pdo->prepare("SELECT * FROM updates WHERE slug = :slug LIMIT 1");
 $stmt->execute([':slug' => $slug]);
