@@ -7,7 +7,7 @@ $pageTitle = 'Latest Updates - ' . APP_NAME;
 $pageDescription = 'Stay updated with the latest exam notifications, admit cards, results, and government notices';
 $keywords = "Exam Updates, Admit Card, Result, Govt Notice, Latest Notifications";
 $ogImage = "https://fromcampus.com/assets/logo/FromCampus_Color_text.png";
-$canonicalUrl = BASE_URL . "updates/";
+$canonicalUrl ="/updates";
 
 $schema = [
     "@context" => "https://schema.org",
