@@ -13,6 +13,31 @@ echo '<?xml version="1.0" encoding="UTF-8"?>';
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
+  <!-- About Us Page -->
+  <url>
+    <loc><?= e($base)?>/about-us</loc>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <!-- Terms & Conditions -->
+  <url>
+    <loc><?= e($base)?>/terms</loc>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <!-- Privacy Policy -->
+  <url>
+    <loc><?= e($base)?>/privacy-policy</loc>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+    <!-- Contact Us -->
+  <url>
+    <loc><?= e($base)?>/contact</loc>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
 
   <!-- Updates main page -->
   <url>

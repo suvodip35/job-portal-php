@@ -58,6 +58,7 @@
       <div>
         <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-4">Legal</h2>
         <ul class="space-y-2">
+          <li><a href="/about-us" class="hover:text-blue-600 dark:hover:text-blue-400">About Us</a></li>
           <li><a href="/privacy-policy" class="hover:text-blue-600 dark:hover:text-blue-400">Privacy Policy</a></li>
           <li><a href="/terms" class="hover:text-blue-600 dark:hover:text-blue-400">Terms & Conditions</a></li>
         </ul>
@@ -67,7 +68,7 @@
       <div>
         <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-4">Follow Us</h2>
         <div class="flex space-x-4">
-          <a href="#" class="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400" aria-label="Visit our Facebook page">
+          <a href="https://www.facebook.com/fromcampus/" target="_blank" class="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400" aria-label="Visit our Facebook page">
             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.99H7.898v-2.888h2.54V9.845c0-2.506 1.493-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562v1.875h2.773l-.443 2.888h-2.33v6.99C18.343 21.128 22 16.991 22 12z"/></svg>
           </a>
           <a href="#" class="text-gray-600 dark:text-gray-400 hover:text-pink-600 dark:hover:text-pink-400" aria-label="Visit our Instagram page">
