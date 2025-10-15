@@ -231,6 +231,8 @@ if (!$job) {
     exit; 
 }
 
+
+
 // Prepare meta data
 $pageTitle = $job['meta_title'] ?: $job['job_title'] . " - FromCampus";
 $pageDescription = $job['meta_description'] ?: mb_substr(strip_tags($job['description']),0,160);
