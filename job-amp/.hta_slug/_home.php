@@ -5,6 +5,51 @@ require __DIR__ . '/../../lib/parsedown-master/Parsedown.php';
 $Parsedown = new Parsedown();
 $slug = $_GET['slug'] ?? '';
 
+// AMP-safe HTML processor function
+function processAmpContent($content) {
+    global $Parsedown;
+    
+    // Convert Markdown to HTML
+    $html = $Parsedown->text($content);
+    
+    // Remove any script tags
+    $html = preg_replace('/<script\b[^>]*>(.*?)<\/script>/is', '', $html);
+    
+    // Remove inline event handlers
+    $html = preg_replace('/on\w+=\s*"[^"]*"/', '', $html);
+    $html = preg_replace("/on\w+=\s*'[^']*'/", '', $html);
+    $html = preg_replace('/on\w+=\s*[^\s>]+/', '', $html);
+    
+    // Remove style attributes
+    $html = preg_replace('/style="[^"]*"/', '', $html);
+    
+    // Convert images to amp-img
+    $html = preg_replace_callback('/<img([^>]+)>/i', function($matches) {
+        $attrs = $matches[1];
+        
+        // Extract src
+        preg_match('/src="([^"]*)"/i', $attrs, $srcMatch);
+        $src = $srcMatch[1] ?? '';
+        
+        // Extract alt
+        preg_match('/alt="([^"]*)"/i', $attrs, $altMatch);
+        $alt = $altMatch[1] ?? '';
+        
+        // Remove existing width/height attributes
+        $attrs = preg_replace('/(width|height|style)="[^"]*"/i', '', $attrs);
+        
+        return '<amp-img src="' . $src . '" ' . $attrs . ' width="16" height="9" layout="responsive" alt="' . $alt . '"></amp-img>';
+    }, $html);
+    
+    // Ensure all URLs are absolute and use HTTPS
+    $html = preg_replace('/href="\/([^"]*)"/', 'href="https://fromcampus.com/$1"', $html);
+    
+    // Fix table attributes for AMP
+    $html = preg_replace('/<table([^>]*)>/i', '<table $1>', $html);
+    
+    return $html;
+}
+
 // If no slug → Show all published jobs
 if (!$slug) {
     $stmt = $pdo->prepare("SELECT j.*, c.category_name 
@@ -70,6 +115,7 @@ if (!$slug) {
   <!-- AMP components -->
   <script async custom-element="amp-form" src="https://cdn.ampproject.org/v0/amp-form-0.1.js"></script>
   <script async custom-element="amp-bind" src="https://cdn.ampproject.org/v0/amp-bind-0.1.js"></script>
+  <script async custom-element="amp-img" src="https://cdn.ampproject.org/v0/amp-img-0.1.js"></script>
 
   <style amp-custom>
     body { 
@@ -104,11 +150,6 @@ if (!$slug) {
         margin-bottom:20px; 
         border-radius:8px;
         background: white;
-        transition: transform 0.2s ease;
-    }
-    .fc-job-card:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
     }
     .fc-job-title { 
         font-size:20px; 
@@ -139,10 +180,6 @@ if (!$slug) {
         text-decoration:none; 
         border-radius:6px;
         font-weight: 500;
-        transition: background 0.3s ease;
-    }
-    .fc-job-link:hover {
-        background: #2980b9;
     }
     .fc-footer { 
         text-align:center; 
@@ -231,8 +268,6 @@ if (!$job) {
     exit; 
 }
 
-
-
 // Prepare meta data
 $pageTitle = $job['meta_title'] ?: $job['job_title'] . " - FromCampus";
 $pageDescription = $job['meta_description'] ?: mb_substr(strip_tags($job['description']),0,160);
@@ -241,16 +276,8 @@ $thumbnailUrl = $job['thumbnail'] ? "https://fromcampus.com".$job['thumbnail'] :
 $currentUrl = "https://fromcampus.com/job-amp?slug=".$job['job_title_slug'];
 $jobTitle = htmlspecialchars($job['job_title']);
 
-// Process and sanitize description for AMP
-$jobDescription = $Parsedown->text($job['description']);
-// Remove any script tags and inline event handlers
-// $jobDescription = preg_replace('/<script\b[^>]*>(.*?)<\/script>/is', '', $jobDescription);
-// $jobDescription = preg_replace('/on\w+=\s*"[^"]*"/', '', $jobDescription);
-// $jobDescription = preg_replace("/on\w+=\s*'[^']*'/", '', $jobDescription);
-// $jobDescription = preg_replace('/on\w+=\s*[^\s>]+/', '', $jobDescription);
-
-// // Ensure images are AMP compatible
-// $jobDescription = preg_replace('/<img(/[^>]*>)/', '<amp-img$1 layout="responsive" width="16" height="9"', $jobDescription);
+// Process description with AMP-safe function
+$jobDescription = processAmpContent($job['description']);
 ?>
 <!doctype html>
 <html ⚡ lang="en">
@@ -295,7 +322,7 @@ $jobDescription = $Parsedown->text($job['description']);
   <!-- AMP runtime -->
   <script async src="https://cdn.ampproject.org/v0.js"></script>
 
-  <!-- AMP components for images -->
+  <!-- AMP components -->
   <script async custom-element="amp-img" src="https://cdn.ampproject.org/v0/amp-img-0.1.js"></script>
 
   <style amp-custom>
@@ -305,6 +332,7 @@ $jobDescription = $Parsedown->text($job['description']);
         padding:0;
         background-color: #f8f9fa;
         line-height: 1.6;
+        color: #333;
     }
     .fc-container { 
         max-width:800px; 
@@ -313,6 +341,11 @@ $jobDescription = $Parsedown->text($job['description']);
         background: white;
         box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         min-height: 100vh;
+    }
+    .fc-job-header {
+        border-bottom: 2px solid #3498db;
+        padding-bottom: 20px;
+        margin-bottom: 25px;
     }
     .fc-job-title { 
         font-size:28px; 
@@ -338,12 +371,43 @@ $jobDescription = $Parsedown->text($job['description']);
         margin-bottom:30px;
         color: #2c3e50;
     }
+    .fc-job-content table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 15px 0;
+        font-size: 14px;
+    }
+    .fc-job-content table, 
+    .fc-job-content th, 
+    .fc-job-content td {
+        border: 1px solid #ddd;
+    }
+    .fc-job-content th, 
+    .fc-job-content td {
+        padding: 10px;
+        text-align: left;
+    }
+    .fc-job-content th {
+        background-color: #f2f2f2;
+        font-weight: bold;
+    }
     .fc-job-content h1, 
     .fc-job-content h2, 
     .fc-job-content h3 {
         color: #2c3e50;
         margin-top: 25px;
         margin-bottom: 15px;
+    }
+    .fc-job-content h1 {
+        font-size: 24px;
+        border-bottom: 1px solid #3498db;
+        padding-bottom: 10px;
+    }
+    .fc-job-content h2 {
+        font-size: 20px;
+    }
+    .fc-job-content h3 {
+        font-size: 18px;
     }
     .fc-job-content p {
         margin-bottom: 15px;
@@ -358,6 +422,10 @@ $jobDescription = $Parsedown->text($job['description']);
     }
     .fc-job-content strong {
         color: #2c3e50;
+    }
+    .fc-job-content a {
+        color: #3498db;
+        text-decoration: none;
     }
     .fc-job-content amp-img {
         margin: 20px 0;
@@ -381,11 +449,7 @@ $jobDescription = $Parsedown->text($job['description']);
       text-decoration:none;
       font-size:16px;
       font-weight:bold;
-      transition: background 0.3s ease;
       margin: 10px;
-    }
-    .fc-main-btn:hover {
-        background: #d35400;
     }
     .fc-back-btn {
         display:inline-block;
@@ -396,11 +460,7 @@ $jobDescription = $Parsedown->text($job['description']);
         text-decoration:none;
         font-size:16px;
         font-weight:bold;
-        transition: background 0.3s ease;
         margin: 10px;
-    }
-    .fc-back-btn:hover {
-        background: #7f8c8d;
     }
     .fc-action-buttons {
         text-align: center;
@@ -422,11 +482,6 @@ $jobDescription = $Parsedown->text($job['description']);
         margin-left: 15px;
         vertical-align: middle;
         font-weight: 500;
-    }
-    .fc-job-header {
-        border-bottom: 2px solid #3498db;
-        padding-bottom: 20px;
-        margin-bottom: 25px;
     }
   </style>
 </head>
@@ -453,8 +508,7 @@ $jobDescription = $Parsedown->text($job['description']);
                  width="800" 
                  height="450" 
                  layout="responsive" 
-                 alt="<?= $jobTitle ?>"
-                 class="fc-job-image">
+                 alt="<?= $jobTitle ?>">
         </amp-img>
       <?php endif; ?>
 
@@ -466,7 +520,7 @@ $jobDescription = $Parsedown->text($job['description']);
     <div class="fc-action-buttons">
       <a href="https://fromcampus.com/job?slug=<?= urlencode($job['job_title_slug']) ?>" 
          class="fc-main-btn">📄 View Main Page</a>
-      <a href="/" class="fc-back-btn">⬅ Back to Jobs List</a>
+      <a href="/job-amp" class="fc-back-btn">⬅ Back to Jobs List</a>
     </div>
 
     <footer class="fc-footer">
