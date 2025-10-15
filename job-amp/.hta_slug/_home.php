@@ -244,13 +244,13 @@ $jobTitle = htmlspecialchars($job['job_title']);
 // Process and sanitize description for AMP
 $jobDescription = $Parsedown->text($job['description']);
 // Remove any script tags and inline event handlers
-$jobDescription = preg_replace('/<script\b[^>]*>(.*?)<\/script>/is', '', $jobDescription);
-$jobDescription = preg_replace('/on\w+=\s*"[^"]*"/', '', $jobDescription);
-$jobDescription = preg_replace("/on\w+=\s*'[^']*'/", '', $jobDescription);
-$jobDescription = preg_replace('/on\w+=\s*[^\s>]+/', '', $jobDescription);
+// $jobDescription = preg_replace('/<script\b[^>]*>(.*?)<\/script>/is', '', $jobDescription);
+// $jobDescription = preg_replace('/on\w+=\s*"[^"]*"/', '', $jobDescription);
+// $jobDescription = preg_replace("/on\w+=\s*'[^']*'/", '', $jobDescription);
+// $jobDescription = preg_replace('/on\w+=\s*[^\s>]+/', '', $jobDescription);
 
-// Ensure images are AMP compatible
-$jobDescription = preg_replace('/<img(/[^>]*>)/', '<amp-img$1 layout="responsive" width="16" height="9"', $jobDescription);
+// // Ensure images are AMP compatible
+// $jobDescription = preg_replace('/<img(/[^>]*>)/', '<amp-img$1 layout="responsive" width="16" height="9"', $jobDescription);
 ?>
 <!doctype html>
 <html ⚡ lang="en">
