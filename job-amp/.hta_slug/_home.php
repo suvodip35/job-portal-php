@@ -406,7 +406,6 @@ $jobDescription = $Parsedown->text($job['description']);
         text-align: center;
         margin: 30px 0;
         padding: 20px;
-        background: #f8f9fa;
         border-radius: 8px;
         position: fixed;
         bottom: 20px;
