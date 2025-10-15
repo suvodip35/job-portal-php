@@ -226,10 +226,10 @@ $stmt = $pdo->prepare("SELECT j.*, c.category_name
 $stmt->execute([$slug]);
 $job = $stmt->fetch();
 
-// if (!$job) { 
-//     echo "<h1>Job not found</h1>"; 
-//     exit; 
-// }
+if (!$job) { 
+    echo "<h1>Job not found</h1>"; 
+    exit; 
+}
 
 // Prepare meta data
 $pageTitle = $job['meta_title'] ?: $job['job_title'] . " - FromCampus";
