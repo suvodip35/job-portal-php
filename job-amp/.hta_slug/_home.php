@@ -5,6 +5,53 @@ require __DIR__ . '/../../lib/parsedown-master/Parsedown.php';
 $Parsedown = new Parsedown();
 $slug = $_GET['slug'] ?? '';
 
+function ampSanitizeJobDescription($markdown) {
+    $Parsedown = new Parsedown();
+    
+    // 1️⃣ Markdown → HTML
+    $html = $Parsedown->text($markdown);
+
+    // 2️⃣ Remove SCRIPT tags
+    $html = preg_replace('/<script\b[^>]*>(.*?)<\/script>/is', '', $html);
+
+    // 3️⃣ Remove inline JS events (onclick, onload etc)
+    $html = preg_replace('/on\w+="[^"]*"/i', '', $html);
+
+    // 4️⃣ Remove inline styles
+    $html = preg_replace('/style="[^"]*"/i', '', $html);
+
+    // 5️⃣ Replace YouTube link → amp-youtube
+    $html = preg_replace_callback(
+        '#https?://(?:www\.)?youtu(?:be\.com/watch\?v=|\.be/)([a-zA-Z0-9_-]+)#',
+        function($m) {
+            return '<amp-youtube data-videoid="'.$m[1].'" width="480" height="270" layout="responsive"></amp-youtube>';
+        },
+        $html
+    );
+
+    // 6️⃣ Load HTML into DOM for <img> conversion
+    $dom = new DOMDocument();
+    libxml_use_internal_errors(true);
+    $dom->loadHTML('<?xml encoding="utf-8" ?>'.$html);
+    libxml_clear_errors();
+
+    // Convert <img> → <amp-img>
+    foreach ($dom->getElementsByTagName('img') as $img) {
+        $amp = $dom->createElement('amp-img');
+        $amp->setAttribute('src', $img->getAttribute('src'));
+        $amp->setAttribute('alt', $img->getAttribute('alt') ?? '');
+        $amp->setAttribute('layout', 'responsive');
+        $amp->setAttribute('width', '800');
+        $amp->setAttribute('height', '450');
+        $img->parentNode->replaceChild($amp, $img);
+    }
+
+    // 7️⃣ Remove <iframe> completely (or convert later)
+    $html = preg_replace('/<iframe\b[^>]*>(.*?)<\/iframe>/is', '', $dom->saveHTML());
+
+    return $html;
+}
+
 // If no slug → Show all published jobs
 if (!$slug) {
     $stmt = $pdo->prepare("SELECT j.*, c.category_name 
@@ -241,34 +288,7 @@ $thumbnailUrl = $job['thumbnail'] ? "https://fromcampus.com".$job['thumbnail'] :
 $currentUrl = "https://fromcampus.com/job-amp?slug=".$job['job_title_slug'];
 $jobTitle = htmlspecialchars($job['job_title']);
 
-$html = $Parsedown->text($job['description']);
-
-// Disallow script tags first (markdown-er agei remove)
-// So JS code markdown block e thakleo break hobena
-$jobDescriptionSafe = preg_replace('/<script\b[^>]*>(.*?)<\/script>/is', '', $html);
-
-// Load DOM to convert <img> to <amp-img>
-$dom = new DOMDocument();
-libxml_use_internal_errors(true);
-$dom->loadHTML('<?xml encoding="utf-8" ?>' . $jobDescriptionSafe);
-libxml_clear_errors();
-
-$imgs = $dom->getElementsByTagName('img');
-
-foreach ($imgs as $img) {
-    $ampImg = $dom->createElement('amp-img');
-    $ampImg->setAttribute('src', $img->getAttribute('src'));
-    $ampImg->setAttribute('alt', $img->getAttribute('alt') ?? '');
-    $ampImg->setAttribute('layout', 'responsive');
-
-    // Default size (fallback)
-    $ampImg->setAttribute('width', '800');
-    $ampImg->setAttribute('height', '450');
-
-    $img->parentNode->replaceChild($ampImg, $img);
-}
-
-$jobDescriptionAMP = $dom->saveHTML();
+$jobDescriptionAMP = ampSanitizeJobDescription($job['description']);
 ?>
 <!doctype html>
 <html ⚡ lang="en">
