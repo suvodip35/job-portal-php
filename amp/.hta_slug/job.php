@@ -11,16 +11,16 @@ function ampSanitizeJobDescription($markdown) {
     // 1️⃣ Markdown → HTML
     $html = $Parsedown->text($markdown);
 
-    // 2️⃣ Remove SCRIPT tags
+    // 2️⃣ Remove <script> tags completely
     $html = preg_replace('/<script\b[^>]*>(.*?)<\/script>/is', '', $html);
 
     // 3️⃣ Remove inline JS events (onclick, onload etc)
     $html = preg_replace('/on\w+="[^"]*"/i', '', $html);
 
-    // 4️⃣ Remove inline styles
+    // 4️⃣ Remove inline CSS
     $html = preg_replace('/style="[^"]*"/i', '', $html);
 
-    // 5️⃣ Replace YouTube link → amp-youtube
+    // 5️⃣ Convert YouTube link → <amp-youtube>
     $html = preg_replace_callback(
         '#https?://(?:www\.)?youtu(?:be\.com/watch\?v=|\.be/)([a-zA-Z0-9_-]+)#',
         function($m) {
@@ -29,28 +29,40 @@ function ampSanitizeJobDescription($markdown) {
         $html
     );
 
-    // 6️⃣ Load HTML into DOM for <img> conversion
+    // 6️⃣ Convert <img> to <amp-img> using DOM
     $dom = new DOMDocument();
     libxml_use_internal_errors(true);
-    $dom->loadHTML('<?xml encoding="utf-8" ?>'.$html);
+    $dom->loadHTML('<?xml encoding="utf-8" ?><div id="amp-wrapper">'.$html.'</div>');
     libxml_clear_errors();
 
-    // Convert <img> → <amp-img>
     foreach ($dom->getElementsByTagName('img') as $img) {
         $amp = $dom->createElement('amp-img');
-        $amp->setAttribute('src', $img->getAttribute('src'));
-        $amp->setAttribute('alt', $img->getAttribute('alt') ?? '');
+
+        $src = $img->getAttribute('src');
+        $alt = $img->getAttribute('alt') ?: '';
+
+        $amp->setAttribute('src', $src);
+        $amp->setAttribute('alt', $alt);
         $amp->setAttribute('layout', 'responsive');
         $amp->setAttribute('width', '800');
         $amp->setAttribute('height', '450');
+        $amp->appendChild($dom->createElement('noscript')); // AMP fallback
+
         $img->parentNode->replaceChild($amp, $img);
     }
 
-    // 7️⃣ Remove <iframe> completely (or convert later)
-    $html = preg_replace('/<iframe\b[^>]*>(.*?)<\/iframe>/is', '', $dom->saveHTML());
+    // 7️⃣ Remove iframe fully (AMP incompatible)
+    $finalHTML = $dom->saveHTML();
 
-    return $html;
+    $finalHTML = preg_replace('/<iframe\b[^>]*>(.*?)<\/iframe>/is', '', $finalHTML);
+
+    // 8️⃣ Remove wrapper + extra HTML tags DOM adds
+    $finalHTML = preg_replace('/^.*<div id="amp-wrapper">/s', '', $finalHTML);
+    $finalHTML = preg_replace('/<\/div>.*$/s', '', $finalHTML);
+
+    return trim($finalHTML);
 }
+
 
 // If no slug → Show all published jobs
 if (!$slug) {
@@ -289,6 +301,7 @@ $currentUrl = "https://fromcampus.com/amp/job?slug=".$job['job_title_slug'];
 $jobTitle = htmlspecialchars($job['job_title']);
 
 $jobDescriptionAMP = ampSanitizeJobDescription($job['description']);
+
 ?>
 <!doctype html>
 <html ⚡ lang="en">
@@ -490,9 +503,9 @@ $jobDescriptionAMP = ampSanitizeJobDescription($job['description']);
         <amp-img src="<?= $thumbnailUrl ?>" width="800" height="450" layout="responsive" alt="<?= $jobTitle ?>" class="fc-job-image"></amp-img>
       <?php endif; ?>
 
-      <!-- <div class="fc-job-content">
+      <div class="fc-job-content">
         <?= $jobDescriptionAMP ?>
-    </div> -->
+    </div>
     </article>
 
     <div class="fc-action-buttons">
