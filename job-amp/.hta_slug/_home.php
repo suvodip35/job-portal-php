@@ -241,16 +241,34 @@ $thumbnailUrl = $job['thumbnail'] ? "https://fromcampus.com".$job['thumbnail'] :
 $currentUrl = "https://fromcampus.com/job-amp?slug=".$job['job_title_slug'];
 $jobTitle = htmlspecialchars($job['job_title']);
 
-// Process and sanitize description for AMP
-$jobDescription = $Parsedown->text($job['description']);
-// Remove any script tags and inline event handlers
-// $jobDescription = preg_replace('/<script\b[^>]*>(.*?)<\/script>/is', '', $jobDescription);
-// $jobDescription = preg_replace('/on\w+=\s*"[^"]*"/', '', $jobDescription);
-// $jobDescription = preg_replace("/on\w+=\s*'[^']*'/", '', $jobDescription);
-// $jobDescription = preg_replace('/on\w+=\s*[^\s>]+/', '', $jobDescription);
+$html = $Parsedown->text($job['description']);
 
-// // Ensure images are AMP compatible
-// $jobDescription = preg_replace('/<img(/[^>]*>)/', '<amp-img$1 layout="responsive" width="16" height="9"', $jobDescription);
+// Disallow script tags first (markdown-er agei remove)
+// So JS code markdown block e thakleo break hobena
+$jobDescriptionSafe = preg_replace('/<script\b[^>]*>(.*?)<\/script>/is', '', $html);
+
+// Load DOM to convert <img> to <amp-img>
+$dom = new DOMDocument();
+libxml_use_internal_errors(true);
+$dom->loadHTML('<?xml encoding="utf-8" ?>' . $jobDescriptionSafe);
+libxml_clear_errors();
+
+$imgs = $dom->getElementsByTagName('img');
+
+foreach ($imgs as $img) {
+    $ampImg = $dom->createElement('amp-img');
+    $ampImg->setAttribute('src', $img->getAttribute('src'));
+    $ampImg->setAttribute('alt', $img->getAttribute('alt') ?? '');
+    $ampImg->setAttribute('layout', 'responsive');
+
+    // Default size (fallback)
+    $ampImg->setAttribute('width', '800');
+    $ampImg->setAttribute('height', '450');
+
+    $img->parentNode->replaceChild($ampImg, $img);
+}
+
+$jobDescriptionAMP = $dom->saveHTML();
 ?>
 <!doctype html>
 <html ⚡ lang="en">
@@ -449,18 +467,10 @@ $jobDescription = $Parsedown->text($job['description']);
       </header>
 
       <?php if ($job['thumbnail']): ?>
-        <amp-img src="<?= $thumbnailUrl ?>" 
-                 width="800" 
-                 height="450" 
-                 layout="responsive" 
-                 alt="<?= $jobTitle ?>"
-                 class="fc-job-image">
-        </amp-img>
+        <amp-img src="<?= $thumbnailUrl ?>" width="800" height="450" layout="responsive" alt="<?= $jobTitle ?>" class="fc-job-image"></amp-img>
       <?php endif; ?>
 
-      <div class="fc-job-content">
-          <?= $jobDescription ?>
-      </div>
+      <div class="fc-job-content"><?= $jobDescriptionAMP ?></div>
     </article>
 
     <div class="fc-action-buttons">
