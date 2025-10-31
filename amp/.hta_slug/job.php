@@ -66,7 +66,7 @@ if (!$slug) {
     $keywords = "Government JOBS, ITI JOBS, Railway Jobs, Engineer";
     $author = "FromCampus";
     $ogImage = "https://fromcampus.com/assets/logo/FromCampus_Color_text.png";
-    $currentUrl = "https://fromcampus.com/job-amp";
+    $currentUrl = "https://fromcampus.com/amp/job";
 ?>
 <!doctype html>
 <html ⚡ lang="en">
@@ -228,7 +228,7 @@ if (!$slug) {
       <?php foreach ($jobs as $job): 
         $jobTitle = htmlspecialchars($job['job_title']);
         $jobExcerpt = htmlspecialchars(strip_tags(substr($job['description'],0,200))) . '...';
-        $jobUrl = "/job-amp?slug=" . urlencode($job['job_title_slug']);
+        $jobUrl = "/amp/job?slug=" . urlencode($job['job_title_slug']);
         $categoryName = htmlspecialchars($job['category_name'] ?? 'General');
       ?>
         <article class="fc-job-card">
@@ -285,7 +285,7 @@ $pageTitle = $job['meta_title'] ?: $job['job_title'] . " - FromCampus";
 $pageDescription = $job['meta_description'] ?: mb_substr(strip_tags($job['description']),0,160);
 $keywords = "Government JOBS, ITI JOBS, Railway Jobs, Engineer, " . $job['job_title'];
 $thumbnailUrl = $job['thumbnail'] ? "https://fromcampus.com".$job['thumbnail'] : "https://fromcampus.com/assets/logo/FromCampus_Color_text.png";
-$currentUrl = "https://fromcampus.com/job-amp?slug=".$job['job_title_slug'];
+$currentUrl = "https://fromcampus.com/amp/job?slug=".$job['job_title_slug'];
 $jobTitle = htmlspecialchars($job['job_title']);
 
 $jobDescriptionAMP = ampSanitizeJobDescription($job['description']);

@@ -13,33 +13,14 @@ echo '<?xml version="1.0" encoding="UTF-8"?>';
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
-  <!-- About Us Page -->
-  <url>
-    <loc><?= e($base)?>/about-us</loc>
-    <changefreq>daily</changefreq>
-    <priority>1.0</priority>
-  </url>
-  <!-- Terms & Conditions -->
-  <url>
-    <loc><?= e($base)?>/terms</loc>
-    <changefreq>daily</changefreq>
-    <priority>1.0</priority>
-  </url>
-  <!-- Privacy Policy -->
-  <url>
-    <loc><?= e($base)?>/privacy-policy</loc>
-    <changefreq>daily</changefreq>
-    <priority>1.0</priority>
-  </url>
 
-    <!-- Contact Us -->
-  <url>
-    <loc><?= e($base)?>/contact</loc>
-    <changefreq>daily</changefreq>
-    <priority>1.0</priority>
-  </url>
+  <!-- Static Pages -->
+  <url><loc><?= e($base) ?>/about-us</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc><?= e($base) ?>/terms</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc><?= e($base) ?>/privacy-policy</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc><?= e($base) ?>/contact</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
 
-  <!-- Updates main page -->
+  <!-- Updates Main Page -->
   <url>
     <loc><?= e($base . '/updates') ?></loc>
     <changefreq>daily</changefreq>
@@ -47,44 +28,47 @@ echo '<?xml version="1.0" encoding="UTF-8"?>';
   </url>
 
 <?php
-// Jobs
-$stmt = $pdo->query("SELECT job_title_slug, posted_date FROM jobs WHERE status='published' ORDER BY posted_date DESC LIMIT 1000");
+// ============================
+// JOBS + AMP JOB URLs
+// ============================
+$stmt = $pdo->query("SELECT job_title_slug, posted_date FROM jobs WHERE status='published' ORDER BY posted_date DESC LIMIT 2000");
 while ($r = $stmt->fetch()) {
-    $loc = $base . '/job?slug=' . urlencode($r['job_title_slug']);
+    $slug = urlencode($r['job_title_slug']);
     $lastmod = date('Y-m-d', strtotime($r['posted_date']));
+
+    // Normal job page
+    $loc = $base . '/job?slug=' . $slug;
     echo "<url>\n";
     echo "  <loc>" . e($loc) . "</loc>\n";
     echo "  <lastmod>$lastmod</lastmod>\n";
     echo "  <changefreq>weekly</changefreq>\n";
     echo "  <priority>0.8</priority>\n";
     echo "</url>\n";
+
+    // AMP job page
+    $amp = $base . '/amp/job?slug=' . $slug;
+    echo "<url>\n";
+    echo "  <loc>" . e($amp) . "</loc>\n";
+    echo "  <lastmod>$lastmod</lastmod>\n";
+    echo "  <changefreq>weekly</changefreq>\n";
+    echo "  <priority>0.7</priority>\n";
+    echo "</url>\n";
 }
 
-// Updates
-$stmt = $pdo->query("SELECT slug, update_type, created_at FROM updates ORDER BY created_at DESC LIMIT 1000");
+// ============================
+// UPDATES + AMP (OPTIONAL)
+// ============================
+$stmt = $pdo->query("SELECT slug, update_type, created_at FROM updates ORDER BY created_at DESC LIMIT 2000");
 while ($r = $stmt->fetch()) {
-    $loc = $base . '/updates/details?slug=' . urlencode($r['slug']);
+    $slug = urlencode($r['slug']);
     $lastmod = date('Y-m-d', strtotime($r['created_at']));
+    $loc = $base . '/updates/details?slug=' . $slug;
 
-    // Mapping based on update_type
     switch ($r['update_type']) {
-        case 'exam':
-            $priority = '0.9';
-            $freq = 'daily';
-            break;
-        case 'admit_card':
-            $priority = '0.8';
-            $freq = 'weekly';
-            break;
-        case 'result':
-            $priority = '0.8';
-            $freq = 'weekly';
-            break;
-        case 'notice':
-        default:
-            $priority = '0.7';
-            $freq = 'monthly';
-            break;
+        case 'exam': $priority='0.9'; $freq='daily'; break;
+        case 'admit_card': $priority='0.8'; $freq='weekly'; break;
+        case 'result': $priority='0.8'; $freq='weekly'; break;
+        default: $priority='0.7'; $freq='monthly'; break;
     }
 
     echo "<url>\n";
@@ -93,6 +77,17 @@ while ($r = $stmt->fetch()) {
     echo "  <changefreq>$freq</changefreq>\n";
     echo "  <priority>$priority</priority>\n";
     echo "</url>\n";
+
+    // OPTIONAL: Updates AMP page (only if you have AMP version)
+    /*
+    $amp = $base . '/amp/updates/details?slug=' . $slug;
+    echo "<url>\n";
+    echo "  <loc>" . e($amp) . "</loc>\n";
+    echo "  <lastmod>$lastmod</lastmod>\n";
+    echo "  <changefreq>$freq</changefreq>\n";
+    echo "  <priority>0.6</priority>\n";
+    echo "</url>\n";
+    */
 }
 ?>
 </urlset>
