@@ -490,7 +490,9 @@ $jobDescriptionAMP = ampSanitizeJobDescription($job['description']);
         <amp-img src="<?= $thumbnailUrl ?>" width="800" height="450" layout="responsive" alt="<?= $jobTitle ?>" class="fc-job-image"></amp-img>
       <?php endif; ?>
 
-      <div class="fc-job-content"><?= $jobDescriptionAMP ?></div>
+      <!-- <div class="fc-job-content">
+        <?= $jobDescriptionAMP ?>
+    </div> -->
     </article>
 
     <div class="fc-action-buttons">
