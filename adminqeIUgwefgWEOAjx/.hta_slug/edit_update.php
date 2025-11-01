@@ -56,8 +56,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $slug = $update['slug'];
         }
         
-        $stmt = $pdo->prepare("UPDATE updates SET title = ?, slug = ?, update_type = ?, description = ?, link = ? WHERE id = ?");
-        $stmt->execute([$title, $slug, $update_type, $description, $link, $id]);
+        $stmt = $pdo->prepare("UPDATE updates SET title = ?, slug = ?, update_type = ?, description = ?, link = ?, meta_title = ?, meta_description = ? WHERE id = ?");
+        $stmt->execute([$title, $slug, $update_type, $description, $link, $_POST['meta_title'], $_POST['meta_description'], $id]);
         $success = "Update updated successfully!";
         
         // Refresh the update data
@@ -170,6 +170,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <?php endif; ?>
         <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Supports Markdown formatting</p>
     </div>
+    <div class="mb-4">
+      <label class="block text-sm font-medium mb-1 dark:text-gray-300" for="meta_title">
+          Meta Title
+      </label>
+      <input type="text" name="meta_title" id="meta_title" 
+            class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white
+                    <?= (isset($_POST['meta_title']) && trim($_POST['meta_title']) === '') ? 'border-red-500' : '' ?>"
+            value="<?= e($_POST['meta_title'] ?? $update['meta_title']) ?>" 
+            placeholder="Enter meta title here...">
+      <?php if (isset($_POST['meta_title']) && trim($_POST['meta_title']) === ''): ?>
+      <p class="mt-1 text-xs text-red-500 dark:text-red-400">Please provide a meta title</p>
+        <?php endif; ?>
+    </div>
+
+    <div class="mb-4">
+        <label class="block text-sm font-medium mb-1 dark:text-gray-300" for="meta_description">
+            Meta Description
+        </label>
+        <textarea name="meta_description" id="meta_description" 
+                  class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white
+                        <?= (!isset($_POST['meta_description']) || trim($_POST['meta_description'] ?? '') === '') ? 'border-red-500' : '' ?>" 
+                  rows="6" placeholder="Enter meta description here..."><?= e($_POST['meta_description'] ?? $update['meta_description']) ?></textarea>
+        <?php if (!isset($_POST['meta_description']) || trim($_POST['meta_description'] ?? '') === ''): ?>
+        <p class="mt-1 text-xs text-red-500 dark:text-red-400">Please provide a meta description</p>
+        <?php endif; ?>
+    </div>    
   </div>
   
   <div class="flex justify-end gap-3">

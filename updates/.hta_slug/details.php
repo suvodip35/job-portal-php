@@ -31,11 +31,12 @@ function formatDate($date) {
 }
 
 // Meta values override
-$pageTitle          = $update['title'] . ' - ' . APP_NAME;
-$pageDescription    = mb_substr(strip_tags($update['description']), 0, 160);
-$keywords           = "Exam Updates, Admit Card, Result, Govt Notice, " . $update['title'];
-$ogImage            = "https://fromcampus.com/assets/logo/FromCampus_Color_text.png";
-$canonicalUrl       = "https://fromcampus.com/updates/details?slug=" . $slug;
+$pageTitle       = ($update['meta_title'] ?? $update['title']) . ' - ' . APP_NAME;
+$pageDescription = mb_substr(strip_tags($update['meta_description'] ?? $update['description']), 0, 160);
+$metaTitle       = $update['meta_title'] ?? $update['title'];
+$keywords        = "Exam Updates, Admit Card, Result, Govt Notice, " . $metaTitle;
+$ogImage         = "https://fromcampus.com/assets/logo/FromCampus_Color_text.png";
+$canonicalUrl    = "https://fromcampus.com/updates/details?slug=" . $slug;
 
 $schema = [
   "@context" => "https://schema.org",
@@ -44,8 +45,8 @@ $schema = [
     "@type" => "WebPage",
     "@id" => $canonicalUrl
   ],
-  "headline" => $update['title'],
-  "description" => strip_tags($update['description']),
+  "headline" => $update['meta_title'] ?? $update['title'],
+  "description" => strip_tags($update['meta_description'] ?? $update['description']),
   "image" => "https://fromcampus.com/assets/logo/FromCampus_Color_text.png",
   "author" => [
     "@type" => "Organization",
