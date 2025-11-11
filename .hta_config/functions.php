@@ -126,7 +126,98 @@ $indianStates = [
     "west-bengal" => "West Bengal"
 ];
 
-
+$bookCategories = [
+    [
+        'category_id' => 1,
+        'category_name' => 'Bank Jobs',
+        'category_slug' => 'bank-jobs',
+        'description' => 'All latest bank job notifications and recruitment ...'
+    ],
+    [
+        'category_id' => 2,
+        'category_name' => 'Railway Jobs',
+        'category_slug' => 'railway-jobs',
+        'description' => 'Latest railway recruitment notifications and exam ...'
+    ],
+    [
+        'category_id' => 3,
+        'category_name' => 'ITI Jobs',
+        'category_slug' => 'iti-jobs',
+        'description' => 'Jobs for ITI diploma holders across various trades...'
+    ],
+    [
+        'category_id' => 4,
+        'category_name' => 'Police Jobs',
+        'category_slug' => 'police-jobs',
+        'description' => 'Police recruitment, constable, SI, and other posts...'
+    ],
+    [
+        'category_id' => 5,
+        'category_name' => 'Army Jobs',
+        'category_slug' => 'army-jobs',
+        'description' => 'Indian Army recruitment and related opportunities.'
+    ],
+    [
+        'category_id' => 6,
+        'category_name' => 'Teaching Jobs',
+        'category_slug' => 'teaching-jobs',
+        'description' => 'Primary, secondary, and college teaching vacancies...'
+    ],
+    [
+        'category_id' => 7,
+        'category_name' => 'Defence Jobs',
+        'category_slug' => 'defence-jobs',
+        'description' => 'Defence sector recruitment like Navy, Airforce.'
+    ],
+    [
+        'category_id' => 8,
+        'category_name' => 'Engineering Jobs',
+        'category_slug' => 'engineering-jobs',
+        'description' => 'Engineering vacancies in public and private sector...'
+    ],
+    [
+        'category_id' => 9,
+        'category_name' => 'Medical Jobs',
+        'category_slug' => 'medical-jobs',
+        'description' => 'Doctor, nurse, and healthcare-related vacancies.'
+    ],
+    [
+        'category_id' => 10,
+        'category_name' => 'Government Jobs',
+        'category_slug' => 'government-jobs',
+        'description' => 'All types of government job updates.'
+    ],
+    [
+        'category_id' => 11,
+        'category_name' => 'Private Jobs',
+        'category_slug' => 'private-jobs',
+        'description' => 'Private sector job openings in multiple industries...'
+    ],
+    [
+        'category_id' => 12,
+        'category_name' => 'Internships',
+        'category_slug' => 'internships',
+        'description' => 'Internship opportunities for students and freshers...'
+    ],
+    [
+        'category_id' => 13,
+        'category_name' => 'Part-Time Jobs',
+        'category_slug' => 'part-time-jobs',
+        'description' => 'Part-time and flexible job opportunities.'
+    ],
+    [
+        'category_id' => 14,
+        'category_name' => 'Work From Home',
+        'category_slug' => 'work-from-home',
+        'description' => 'Remote and online job openings.'
+    ],
+    [
+        'category_id' => 15,
+        'category_name' => 'Overseas Jobs',
+        'category_slug' => 'overseas-jobs',
+        'description' => 'Job opportunities outside the country.'
+    ]
+];
 
 function blinkTag($text = "NEW", $bg = "#ef4444") {
     return '

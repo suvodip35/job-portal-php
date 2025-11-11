@@ -15,15 +15,6 @@ if (!$job) {
     exit;
 } 
 
-// Fetch current recommended books for this job - from the jobs table
-$currentRecommendedBooks = [];
-if (!empty($job['suggested_books'])) {
-    $currentRecommendedBooks = json_decode($job['suggested_books'], true) ?? [];
-}
-
-// Fetch book categories for the dropdown
-$bookCategories = $pdo->query("SELECT DISTINCT category_slug, category_name FROM job_categories ORDER BY category_name ASC")->fetchAll();
-
 $err = $success = '';
 $fieldErrors = [];
 
@@ -90,12 +81,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $meta_title = trim($_POST['meta_title'] ?? '');
     $meta_desc = trim($_POST['meta_description'] ?? '');
     $apply_url = trim($_POST['apply_url'] ?? '');
-    $last_date = !empty($_POST['last_date']) ? $_POST['last_date'] : null;
+    $last_date = !empty($_POST['last_date']) ? $_POST['last_date'] : null; // Allow empty last_date
     $status = $_POST['status'] ?? 'published';
     $min_salary = (int)($_POST['min_salary'] ?? 0);
     $max_salary = (int)($_POST['max_salary'] ?? 0);
     $document_link = trim($_POST['document_link'] ?? '');
-    $recommended_books = $_POST['recommended_books'] ?? [];
     
     // Handle file upload and check for errors
     $thumbnailResult = handleThumbnailUpload();
@@ -142,45 +132,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $base_slug = slugify($title);
         $slug = unique_slug($pdo, 'jobs', 'job_title_slug', $base_slug, $id);
         
-        // Handle suggested books - convert to JSON array (same as add job)
-        $suggested_books = [];
-        if (isset($recommended_books) && is_array($recommended_books)) {
-            // Filter out empty values and convert to integers
-            $suggested_books = array_filter($recommended_books, function($bookId) {
-                return !empty($bookId) && is_numeric($bookId);
-            });
-            $suggested_books = array_map('intval', $suggested_books);
+        // Prepare update query with or without thumbnail
+        if ($thumbnail) {
+            $u = $pdo->prepare("UPDATE jobs SET category_slug=?, job_title=?, job_title_slug=?, meta_title=?, meta_description=?, company_name=?, location=?, description=?, requirements=?, job_type=?, apply_url=?, last_date=?, status=?, min_salary=?, max_salary=?, document_link=?, thumbnail=?, updated_at=NOW() WHERE job_id=?");
+            $u->execute([$category_slug, $title, $slug, $meta_title, $meta_desc, $company, $location, $description, $requirements, $job_type, $apply_url, $last_date, $status, $min_salary, $max_salary, $document_link, $thumbnail, $id]);
+        } else {
+            $u = $pdo->prepare("UPDATE jobs SET category_slug=?, job_title=?, job_title_slug=?, meta_title=?, meta_description=?, company_name=?, location=?, description=?, requirements=?, job_type=?, apply_url=?, last_date=?, status=?, min_salary=?, max_salary=?, document_link=?, updated_at=NOW() WHERE job_id=?");
+
+            $u->execute([$category_slug, $title, $slug, $meta_title, $meta_desc, $company, $location, $description, $requirements, $job_type, $apply_url, $last_date, $status, $min_salary, $max_salary, $document_link, $id]);
         }
         
-        // Convert to JSON string for storage
-        $suggested_books_json = !empty($suggested_books) ? json_encode($suggested_books) : null;
+        $success = 'Job updated successfully!';
         
-        try {
-            // Prepare update query with or without thumbnail - INCLUDING suggested_books
-            if ($thumbnail) {
-                $u = $pdo->prepare("UPDATE jobs SET category_slug=?, job_title=?, job_title_slug=?, meta_title=?, meta_description=?, company_name=?, location=?, description=?, requirements=?, job_type=?, apply_url=?, last_date=?, status=?, min_salary=?, max_salary=?, document_link=?, thumbnail=?, suggested_books=?, updated_at=NOW() WHERE job_id=?");
-                $u->execute([$category_slug, $title, $slug, $meta_title, $meta_desc, $company, $location, $description, $requirements, $job_type, $apply_url, $last_date, $status, $min_salary, $max_salary, $document_link, $thumbnail, $suggested_books_json, $id]);
-            } else {
-                $u = $pdo->prepare("UPDATE jobs SET category_slug=?, job_title=?, job_title_slug=?, meta_title=?, meta_description=?, company_name=?, location=?, description=?, requirements=?, job_type=?, apply_url=?, last_date=?, status=?, min_salary=?, max_salary=?, document_link=?, suggested_books=?, updated_at=NOW() WHERE job_id=?");
-                $u->execute([$category_slug, $title, $slug, $meta_title, $meta_desc, $company, $location, $description, $requirements, $job_type, $apply_url, $last_date, $status, $min_salary, $max_salary, $document_link, $suggested_books_json, $id]);
-            }
-            
-            $success = 'Job updated successfully!' . (!empty($suggested_books) ? ' ' . count($suggested_books) . ' book(s) recommended.' : '');
-            
-            // refresh job data
-            $stmt->execute([$id]);
-            $job = $stmt->fetch();
-            
-            // refresh current recommended books
-            $currentRecommendedBooks = [];
-            if (!empty($job['suggested_books'])) {
-                $currentRecommendedBooks = json_decode($job['suggested_books'], true) ?? [];
-            }
-            
-        } catch (Exception $e) {
-            $fieldErrors['general'] = 'Failed to update job: ' . $e->getMessage();
-            $err = 'Failed to update job. Please try again.';
-        }
+        // refresh job data
+        $stmt->execute([$id]);
+        $job = $stmt->fetch();
     } else {
         $err = 'Please fix the errors below.';
     }
@@ -380,64 +346,6 @@ $cats = $pdo->query("SELECT * FROM job_categories ORDER BY category_name ASC")->
         </div>
     </div>
   </div>
-
-  <!-- Recommended Books Section -->
-  <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
-    <h2 class="text-lg font-semibold mb-4 text-gray-800 dark:text-white border-b pb-2">Suggest Books</h2>
-
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-        <div>
-            <label class="block text-sm font-medium mb-1 dark:text-gray-300" for="book_type">
-                Book Type
-            </label>
-            <select onchange="fetchBooksByCategory(this.value)" name="book_type" id="book_type" class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-                <option value="">-Select-</option>
-                <?php
-                    foreach ($bookCategories as $category) {
-                        $selected = (($_POST['book_type'] ?? '') == $category['category_slug']) ? 'selected' : '';
-                        echo "<option value=\"{$category['category_slug']}\" $selected>{$category['category_name']}</option>";
-                    }
-                ?>
-            </select>
-        </div>
-        <div>
-            <label class="block text-sm font-medium mb-1 dark:text-gray-300" for="select_books">
-                Select Books (Multiple)
-            </label>
-            <select name="recommended_books[]" id="select_books" multiple 
-                    class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white h-32">
-                <option value="">-Select a book type first-</option>
-            </select>
-            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Hold Ctrl/Cmd to select multiple books</p>
-        </div>
-    </div>
-
-    <div id="selected-books-preview" class="mt-4 p-3 bg-gray-50 dark:bg-gray-700 rounded border border-gray-200 dark:border-gray-600 <?= empty($currentRecommendedBooks) ? 'hidden' : '' ?>">
-        <h3 class="text-sm font-medium mb-2 dark:text-gray-300">Selected Books:</h3>
-        <div id="selected-books-list" class="space-y-1">
-            <?php if (!empty($currentRecommendedBooks)): ?>
-                <?php 
-                // Fetch book details for currently selected books
-                if (!empty($currentRecommendedBooks)) {
-                    $placeholders = str_repeat('?,', count($currentRecommendedBooks) - 1) . '?';
-                    $bookDetailsStmt = $pdo->prepare("SELECT id, title FROM books WHERE id IN ($placeholders)");
-                    $bookDetailsStmt->execute($currentRecommendedBooks);
-                    $currentBookDetails = $bookDetailsStmt->fetchAll(PDO::FETCH_ASSOC);
-                    
-                    foreach ($currentBookDetails as $book): ?>
-                        <div class="flex items-center justify-between text-sm p-2 bg-white dark:bg-gray-600 rounded selected-book-item">
-                            <span class="dark:text-gray-200"><?= e($book['title']) ?></span>
-                            <button type="button" onclick="deselectBook('<?= e($book['id']) ?>')" class="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300">
-                                ×
-                            </button>
-                        </div>
-                    <?php endforeach;
-                }
-                ?>
-            <?php endif; ?>
-        </div>
-    </div>
-  </div>
   
   <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
     <h2 class="text-lg font-semibold mb-4 text-gray-800 dark:text-white border-b pb-2">Additional Information</h2>
@@ -611,116 +519,6 @@ $cats = $pdo->query("SELECT * FROM job_categories ORDER BY category_name ASC")->
     }
   });
 
-  // Function to fetch books by category
-  async function fetchBooksByCategory(categorySlug) {
-      const bookSelect = document.getElementById('select_books');
-      
-      // Clear and show loading
-      bookSelect.innerHTML = '<option value="">Loading books...</option>';
-      bookSelect.disabled = true;
-      
-      if (!categorySlug) {
-          bookSelect.innerHTML = '<option value="">-Select a book type first-</option>';
-          bookSelect.disabled = false;
-          return;
-      }
-
-      try {
-          const response = await fetch(`/get-books.php?categorySlug=${encodeURIComponent(categorySlug)}`);
-          
-          if (!response.ok) {
-              throw new Error(`Failed to fetch books: ${response.status}`);
-          }
-
-          const books = await response.json();
-          
-          // Populate dropdown
-          bookSelect.innerHTML = '<option value="">-Select books-</option>';
-          
-          if (books.length > 0) {
-              books.forEach(book => {
-                  const option = document.createElement('option');
-                  option.value = book.id;
-                  option.textContent = book.title;
-                  
-                  // Pre-select if this book was already selected
-                  <?php if (!empty($currentRecommendedBooks)): ?>
-                  if ([<?= !empty($currentRecommendedBooks) ? implode(',', $currentRecommendedBooks) : '' ?>].includes(book.id)) {
-                      option.selected = true;
-                  }
-                  <?php endif; ?>
-                  
-                  bookSelect.appendChild(option);
-              });
-              
-              // Update preview after populating
-              updateSelectedBooksPreview();
-          } else {
-              bookSelect.innerHTML = '<option value="">-No books available-</option>';
-          }
-          
-      } catch (error) {
-          console.error('Error fetching books:', error);
-          bookSelect.innerHTML = '<option value="">-Error loading books-</option>';
-      } finally {
-          bookSelect.disabled = false;
-      }
-  }
-
-  // Function to update selected books preview
-  function updateSelectedBooksPreview() {
-      const bookSelect = document.getElementById('select_books');
-      const previewContainer = document.getElementById('selected-books-preview');
-      const selectedBooksList = document.getElementById('selected-books-list');
-      
-      const selectedOptions = Array.from(bookSelect.selectedOptions);
-      
-      if (selectedOptions.length === 0) {
-          previewContainer.classList.add('hidden');
-          return;
-      }
-      
-      // Show preview container
-      previewContainer.classList.remove('hidden');
-      
-      // Update selected books list
-      selectedBooksList.innerHTML = '';
-      
-      selectedOptions.forEach(option => {
-          if (option.value) {
-              const bookItem = document.createElement('div');
-              bookItem.className = 'flex items-center justify-between text-sm p-2 bg-white dark:bg-gray-600 rounded selected-book-item';
-              bookItem.innerHTML = `
-                  <span class="dark:text-gray-200">${option.textContent}</span>
-                  <button type="button" onclick="deselectBook('${option.value}')" class="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300">
-                      ×
-                  </button>
-              `;
-              selectedBooksList.appendChild(bookItem);
-          }
-      });
-  }
-
-  // Function to deselect a book
-  function deselectBook(bookId) {
-      const bookSelect = document.getElementById('select_books');
-      const option = bookSelect.querySelector(`option[value="${bookId}"]`);
-      
-      if (option) {
-          option.selected = false;
-          updateSelectedBooksPreview();
-      }
-  }
-
-  // Initialize event listeners when page loads
-  document.addEventListener('DOMContentLoaded', function() {
-      const bookSelect = document.getElementById('select_books');
-      bookSelect.addEventListener('change', updateSelectedBooksPreview);
-      
-      // Initialize preview with any pre-selected books
-      updateSelectedBooksPreview();
-  });
-
   // Preview styling
   const style = document.createElement('style');
   style.textContent = `
@@ -728,34 +526,6 @@ $cats = $pdo->query("SELECT * FROM job_categories ORDER BY category_name ASC")->
     .editor-preview u { text-decoration: underline; }
     .fa-highlight:before { content: "H"; font-weight: bold; padding: 0 3px; }
     .fa-underline:before { content: "U"; text-decoration: underline; }
-    #select_books option:checked {
-        background-color: #3b82f6;
-        color: white;
-    }
-    .selected-book-item {
-        transition: all 0.2s ease-in-out;
-    }
-    .selected-book-item:hover {
-        background-color: #f3f4f6;
-    }
-    .dark .selected-book-item:hover {
-        background-color: #4b5563;
-    }
   `;
   document.head.appendChild(style);
 </script>
-<style>
-    #select_books option:checked {
-        background-color: #3b82f6;
-        color: white;
-    }
-
-    .selected-book-item {
-        transition: all 0.2s ease-in-out;
-    }
-
-    .selected-book-item:hover {
-        background-color: #f3f4f6;
-        dark:background-color: #4b5563;
-    }
-</style>

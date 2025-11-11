@@ -103,22 +103,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (empty($errors)) {
         $base_slug = slugify($title);
         $slug = unique_slug($pdo, 'jobs', 'job_title_slug', $base_slug);
-
-        // Handle suggested books - convert to JSON array
-        $suggested_books = [];
-        if (isset($_POST['select_books']) && is_array($_POST['select_books'])) {
-            // Filter out empty values and convert to integers
-            $suggested_books = array_filter($_POST['select_books'], function($bookId) {
-                return !empty($bookId) && is_numeric($bookId);
-            });
-            $suggested_books = array_map('intval', $suggested_books);
-        }
-        
-        // Convert to JSON string for storage
-        $suggested_books_json = !empty($suggested_books) ? json_encode($suggested_books) : null;
-
-        $stmt = $pdo->prepare("INSERT INTO jobs (category_slug, job_title, job_title_slug, meta_title, meta_description, company_name, location, description, requirements, job_type, apply_url, last_date, status, min_salary, max_salary, document_link, created_by, thumbnail, suggested_books) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
-        $stmt->execute([$category_slug, $title, $slug, $meta_title, $meta_desc, $company, $location, $description, $requirements, $job_type, $apply_url, $last_date, $status, $min_salary, $max_salary, $document_link, $createdBy, $thumbnail, $suggested_books_json]);
+        $stmt = $pdo->prepare("INSERT INTO jobs (category_slug, job_title, job_title_slug, meta_title, meta_description, company_name, location, description, requirements, job_type, apply_url, last_date, status, min_salary, max_salary, document_link, created_by, thumbnail) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+        $stmt->execute([$category_slug, $title, $slug, $meta_title, $meta_desc, $company, $location, $description, $requirements, $job_type, $apply_url, $last_date, $status, $min_salary, $max_salary, $document_link, $createdBy, $thumbnail]);
         $success = 'Job posted successfully! It is now live on the website.';
     } else {
         $err = implode('<br>', $errors);
@@ -127,8 +113,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 // fetch categories for select
 $cats = $pdo->query("SELECT * FROM job_categories ORDER BY category_name ASC")->fetchAll();
-$allBooks = $pdo->query("SELECT * FROM books WHERE status = 'active' ORDER BY created_at ASC")->fetchAll();
-var_dump($bookTypeLabels);
 ?>
 
 <!-- Add EasyMDE CSS -->
@@ -322,109 +306,74 @@ var_dump($bookTypeLabels);
     </div>
   </div>
   
-    <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
-        <h2 class="text-lg font-semibold mb-4 text-gray-800 dark:text-white border-b pb-2">Additional Information</h2>
+  <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+    <h2 class="text-lg font-semibold mb-4 text-gray-800 dark:text-white border-b pb-2">Additional Information</h2>
     
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-            <div>
-                <label class="block text-sm font-medium mb-1 dark:text-gray-300" for="job_type">
-                    Job Type
-                </label>
-                <select name="job_type" id="job_type" class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-                    <option value="full-time" <?= (($_POST['job_type'] ?? 'full-time') == 'full-time') ? 'selected' : '' ?>>Full-time</option>
-                    <option value="part-time" <?= (($_POST['job_type'] ?? '') == 'part-time') ? 'selected' : '' ?>>Part-time</option>
-                    <option value="contract" <?= (($_POST['job_type'] ?? '') == 'contract') ? 'selected' : '' ?>>Contract</option>
-                    <option value="internship" <?= (($_POST['job_type'] ?? '') == 'internship') ? 'selected' : '' ?>>Internship</option>
-                </select>
-            </div>
-            <div>
-                <label class="block text-sm font-medium mb-1 dark:text-gray-300" for="status">
-                    Status
-                </label>
-                <select name="status" id="status" class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-                    <option value="published" <?= (($_POST['status'] ?? 'published') == 'published') ? 'selected' : '' ?>>Published</option>
-                    <option value="draft" <?= (($_POST['status'] ?? '') == 'draft') ? 'selected' : '' ?>>Draft</option>
-                    <option value="closed" <?= (($_POST['status'] ?? '') == 'closed') ? 'selected' : '' ?>>Closed</option>
-                </select>
-            </div>
-        </div>
-    
-        <div class="mb-4">
-            <label class="block text-sm font-medium mb-1 dark:text-gray-300" for="meta_title">
-                Meta Title (for SEO)
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+        <div>
+            <label class="block text-sm font-medium mb-1 dark:text-gray-300" for="job_type">
+                Job Type
             </label>
-            <input name="meta_title" id="meta_title" 
-                class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white" 
-                value="<?= e($_POST['meta_title'] ?? '') ?>" 
-                placeholder="Recommended: 50-60 characters">
-            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Appears in search engine results</p>
+            <select name="job_type" id="job_type" class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                <option value="full-time" <?= (($_POST['job_type'] ?? 'full-time') == 'full-time') ? 'selected' : '' ?>>Full-time</option>
+                <option value="part-time" <?= (($_POST['job_type'] ?? '') == 'part-time') ? 'selected' : '' ?>>Part-time</option>
+                <option value="contract" <?= (($_POST['job_type'] ?? '') == 'contract') ? 'selected' : '' ?>>Contract</option>
+                <option value="internship" <?= (($_POST['job_type'] ?? '') == 'internship') ? 'selected' : '' ?>>Internship</option>
+            </select>
         </div>
-        
-        <div class="mb-4">
-            <label class="block text-sm font-medium mb-1 dark:text-gray-300" for="meta_description">
-                Meta Description (for SEO)
+        <div>
+            <label class="block text-sm font-medium mb-1 dark:text-gray-300" for="status">
+                Status
             </label>
-            <textarea name="meta_description" id="meta_description" 
-                    class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white" 
-                    rows="2" placeholder="Brief summary of the job posting"><?= e($_POST['meta_description'] ?? '') ?></textarea>
-            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Recommended: 150-160 characters</p>
-        </div>
-
-        <div class="space-y-2">
-            <label class="block text-sm font-medium dark:text-gray-300">Thumbnail Image</label>
-            <div class="flex items-center gap-4">
-                <label class="flex-1">
-                    <input type="file" name="thumbnail" accept="image/*" class="block w-full text-sm text-gray-500 dark:text-gray-400
-                    file:mr-4 file:py-2 file:px-4
-                    file:rounded-md file:border-0
-                    file:text-sm file:font-semibold
-                    file:bg-blue-50 file:text-blue-700 dark:file:bg-blue-900 dark:file:text-blue-200
-                    hover:file:bg-blue-100 dark:hover:file:bg-blue-800
-                    <?= (isset($uploadError) && $uploadError !== '') ? 'border-red-500' : '' ?>">
-                </label>
-            </div>
-            <?php if (isset($uploadError) && $uploadError !== ''): ?>
-            <p class="mt-1 text-xs text-red-500 dark:text-red-400"><?= e($uploadError) ?></p>
-            <?php else: ?>
-            <p class="text-xs text-gray-500 dark:text-gray-400">Max 2MB (JPG, PNG, WEBP). Recommended: 600×400 pixels</p>
-            <?php endif; ?>
+            <select name="status" id="status" class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                <option value="published" <?= (($_POST['status'] ?? 'published') == 'published') ? 'selected' : '' ?>>Published</option>
+                <option value="draft" <?= (($_POST['status'] ?? '') == 'draft') ? 'selected' : '' ?>>Draft</option>
+                <option value="closed" <?= (($_POST['status'] ?? '') == 'closed') ? 'selected' : '' ?>>Closed</option>
+            </select>
         </div>
     </div>
-    <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
-        <h2 class="text-lg font-semibold mb-4 text-gray-800 dark:text-white border-b pb-2">Suggest Books</h2>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-            <div>
-                <label class="block text-sm font-medium mb-1 dark:text-gray-300" for="book_type">
-                    Book Type
-                </label>
-                <select onchange="fetchBooksByCategory(this.value)" name="book_type" id="book_type" class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-                    <option value="">-Select-</option>
-                    <?php
-                        foreach ($bookCategories as $category) {
-                            $selected = (($_POST['book_type'] ?? '') == $category['category_slug']) ? 'selected' : '';
-                            echo "<option value=\"{$category['category_slug']}\" $selected>{$category['category_name']}</option>";
-                        }
-                    ?>
-                </select>
-            </div>
-            <div>
-                <label class="block text-sm font-medium mb-1 dark:text-gray-300" for="select_books">
-                    Select Books (Multiple)
-                </label>
-                <select name="select_books[]" id="select_books" multiple 
-                        class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white h-32">
-                    <option value="">-Select a book type first-</option>
-                </select>
-                <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Hold Ctrl/Cmd to select multiple books</p>
-            </div>
-        </div>
-
-        <div id="selected-books-preview" class="mt-4 p-3 bg-gray-50 dark:bg-gray-700 rounded border border-gray-200 dark:border-gray-600 hidden">
-            <h3 class="text-sm font-medium mb-2 dark:text-gray-300">Selected Books:</h3>
-            <div id="selected-books-list" class="space-y-1"></div>
-        </div>
+    
+    <div class="mb-4">
+        <label class="block text-sm font-medium mb-1 dark:text-gray-300" for="meta_title">
+            Meta Title (for SEO)
+        </label>
+        <input name="meta_title" id="meta_title" 
+               class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white" 
+               value="<?= e($_POST['meta_title'] ?? '') ?>" 
+               placeholder="Recommended: 50-60 characters">
+        <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Appears in search engine results</p>
     </div>
+    
+    <div class="mb-4">
+        <label class="block text-sm font-medium mb-1 dark:text-gray-300" for="meta_description">
+            Meta Description (for SEO)
+        </label>
+        <textarea name="meta_description" id="meta_description" 
+                  class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white" 
+                  rows="2" placeholder="Brief summary of the job posting"><?= e($_POST['meta_description'] ?? '') ?></textarea>
+        <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Recommended: 150-160 characters</p>
+    </div>
+
+    <div class="space-y-2">
+        <label class="block text-sm font-medium dark:text-gray-300">Thumbnail Image</label>
+        <div class="flex items-center gap-4">
+            <label class="flex-1">
+                <input type="file" name="thumbnail" accept="image/*" class="block w-full text-sm text-gray-500 dark:text-gray-400
+                  file:mr-4 file:py-2 file:px-4
+                  file:rounded-md file:border-0
+                  file:text-sm file:font-semibold
+                  file:bg-blue-50 file:text-blue-700 dark:file:bg-blue-900 dark:file:text-blue-200
+                  hover:file:bg-blue-100 dark:hover:file:bg-blue-800
+                  <?= (isset($uploadError) && $uploadError !== '') ? 'border-red-500' : '' ?>">
+            </label>
+        </div>
+        <?php if (isset($uploadError) && $uploadError !== ''): ?>
+        <p class="mt-1 text-xs text-red-500 dark:text-red-400"><?= e($uploadError) ?></p>
+        <?php else: ?>
+        <p class="text-xs text-gray-500 dark:text-gray-400">Max 2MB (JPG, PNG, WEBP). Recommended: 600×400 pixels</p>
+        <?php endif; ?>
+    </div>
+  </div>
   
   <div class="flex justify-end gap-3">
     <button type="reset" class="px-4 py-2 bg-gray-200 text-gray-800 rounded hover:bg-gray-300 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600">
@@ -520,101 +469,6 @@ var_dump($bookTypeLabels);
     }
   });
 
-async function fetchBooksByCategory(categorySlug) {
-    const bookSelect = document.getElementById('select_books');
-    
-    // Clear and show loading
-    bookSelect.innerHTML = '<option value="">Loading books...</option>';
-    bookSelect.disabled = true;
-    
-    if (!categorySlug) {
-        bookSelect.innerHTML = '<option value="">-Select a book type first-</option>';
-        bookSelect.disabled = false;
-        return;
-    }
-
-    try {
-        const response = await fetch(`/get-books.php?categorySlug=${encodeURIComponent(categorySlug)}`);
-        
-        if (!response.ok) {
-            throw new Error(`Failed to fetch books: ${response.status}`);
-        }
-
-        const books = await response.json();
-        
-        // Populate dropdown
-        bookSelect.innerHTML = '<option value="">-Select books-</option>';
-        
-        if (books.length > 0) {
-            books.forEach(book => {
-                const option = document.createElement('option');
-                option.value = book.id;
-                option.textContent = book.title;
-                bookSelect.appendChild(option);
-            });
-        } else {
-            bookSelect.innerHTML = '<option value="">-No books available-</option>';
-        }
-        
-    } catch (error) {
-        console.error('Error fetching books:', error);
-        bookSelect.innerHTML = '<option value="">-Error loading books-</option>';
-    } finally {
-        bookSelect.disabled = false;
-    }
-}
-
-// Function to update selected books preview
-function updateSelectedBooksPreview() {
-    const bookSelect = document.getElementById('select_books');
-    const previewContainer = document.getElementById('selected-books-preview');
-    const selectedBooksList = document.getElementById('selected-books-list');
-    
-    const selectedOptions = Array.from(bookSelect.selectedOptions);
-    
-    if (selectedOptions.length === 0) {
-        previewContainer.classList.add('hidden');
-        return;
-    }
-    
-    // Show preview container
-    previewContainer.classList.remove('hidden');
-    
-    // Update selected books list
-    selectedBooksList.innerHTML = '';
-    
-    selectedOptions.forEach(option => {
-        if (option.value) {
-            const bookItem = document.createElement('div');
-            bookItem.className = 'flex items-center justify-between text-sm p-2 bg-white dark:bg-gray-600 rounded';
-            bookItem.innerHTML = `
-                <span class="dark:text-gray-200">${option.textContent}</span>
-                <button type="button" onclick="deselectBook('${option.value}')" class="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300">
-                    ×
-                </button>
-            `;
-            selectedBooksList.appendChild(bookItem);
-        }
-    });
-}
-
-    // Function to deselect a book
-    function deselectBook(bookId) {
-        const bookSelect = document.getElementById('select_books');
-        const option = bookSelect.querySelector(`option[value="${bookId}"]`);
-        
-        if (option) {
-            option.selected = false;
-            updateSelectedBooksPreview();
-        }
-    }
-
-    // Initialize event listeners when page loads
-    document.addEventListener('DOMContentLoaded', function() {
-        const bookSelect = document.getElementById('select_books');
-        bookSelect.addEventListener('change', updateSelectedBooksPreview);
-    });
-
   // Preview styling
   const style = document.createElement('style');
   style.textContent = `
@@ -625,18 +479,3 @@ function updateSelectedBooksPreview() {
   `;
   document.head.appendChild(style);
 </script>
-<style>
-    #select_books option:checked {
-        background-color: #3b82f6;
-        color: white;
-    }
-
-    .selected-book-item {
-        transition: all 0.2s ease-in-out;
-    }
-
-    .selected-book-item:hover {
-        background-color: #f3f4f6;
-        dark:background-color: #4b5563;
-    }
-</style>
