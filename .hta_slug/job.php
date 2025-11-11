@@ -433,6 +433,8 @@ $shareText = urlencode("Check out this job opportunity: " . $job['job_title'] . 
         </div>
         <?php endif; ?>
 
+
+        
         <!-- Recommended Books Section -->
         <?php if (!empty($recommendedBooks)): ?>
         <div class="mt-8">
