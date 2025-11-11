@@ -7,6 +7,8 @@ $totalJobs = (int)$pdo->query("SELECT COUNT(*) FROM jobs")->fetchColumn();
 $published = (int)$pdo->query("SELECT COUNT(*) FROM jobs WHERE status='published'")->fetchColumn();
 $totalUsers = (int)$pdo->query("SELECT COUNT(*) FROM users")->fetchColumn();
 $totalUpdates = (int)$pdo->query("SELECT COUNT(*) FROM updates")->fetchColumn();
+$totalBooks = (int)$pdo->query("SELECT COUNT(*) FROM books")->fetchColumn();
+$activeBooks = (int)$pdo->query("SELECT COUNT(*) FROM books WHERE status='active'")->fetchColumn();
 $siteTitle = "FromCampus - Admin Dashboard";
 
 // Pagination for jobs
@@ -32,6 +34,18 @@ $updateStmt = $pdo->prepare("SELECT id, title, update_type, created_at FROM upda
 $updateStmt->bindValue(':limit', $updatesPerPage, PDO::PARAM_INT);
 $updateStmt->bindValue(':offset', $updateOffset, PDO::PARAM_INT);
 $updateStmt->execute();
+
+// Pagination for books
+$booksPerPage = 5;
+$bookPage = isset($_GET['bpage']) ? max(1, (int)$_GET['bpage']) : 1;
+$bookOffset = ($bookPage - 1) * $booksPerPage;
+$totalBookPages = ceil($totalBooks / $booksPerPage);
+
+// Fetch books with pagination
+$bookStmt = $pdo->prepare("SELECT id, title, author, book_type, status, created_at FROM books ORDER BY created_at DESC LIMIT :limit OFFSET :offset");
+$bookStmt->bindValue(':limit', $booksPerPage, PDO::PARAM_INT);
+$bookStmt->bindValue(':offset', $bookOffset, PDO::PARAM_INT);
+$bookStmt->execute();
 ?>
 
 <div class="container mx-auto px-4 py-6">
@@ -39,7 +53,7 @@ $updateStmt->execute();
   <p class="text-xl font-bold mb-4 dark:text-white">Welcome Back <?= $_SESSION['admin_name']?></p>
   
   <!-- Stats Cards -->
-  <div class="grid md:grid-cols-4 gap-4 mb-6">
+  <div class="grid md:grid-cols-5 gap-4 mb-6">
     <div class="p-4 rounded bg-white dark:bg-gray-800 shadow">
       <h3 class="font-semibold dark:text-white">Total Jobs</h3>
       <div class="text-3xl dark:text-white"><?= e($totalJobs) ?></div>
@@ -56,21 +70,27 @@ $updateStmt->execute();
       <h3 class="font-semibold dark:text-white">Total Updates</h3>
       <div class="text-3xl dark:text-white"><?= e($totalUpdates) ?></div>
     </div>
+    <div class="p-4 rounded bg-white dark:bg-gray-800 shadow">
+      <h3 class="font-semibold dark:text-white">Total Books</h3>
+      <div class="text-3xl dark:text-white"><?= e($totalBooks) ?></div>
+      <div class="text-sm text-gray-600 dark:text-gray-400 mt-1"><?= e($activeBooks) ?> active</div>
+    </div>
   </div>
 
   <!-- Action Buttons -->
   <div class="mb-6 flex flex-wrap gap-2">
     <a href="add_job" class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors">Add Job</a>
     <a href="add_update" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors">Add Update</a>
+    <a href="add_book" class="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700 transition-colors">Add Book</a>
     <a href="mock_tests" class="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 transition-colors">Manage Mock Tests</a>
     <a href="logout" class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition-colors">Logout</a>
   </div>
 
   <!-- Content Sections -->
-  <div class="grid md:grid-cols-2 gap-6">
+  <div class="grid md:grid-cols-3 gap-6">
     <!-- Jobs Section -->
     <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow">
-      <h2 class="text-xl font-semibold mb-3 dark:text-white">Jobs</h2>
+      <h2 class="text-xl font-semibold mb-3 dark:text-white">Recent Jobs</h2>
       <div class="overflow-x-auto">
         <table class="w-full text-left">
           <thead>
@@ -111,7 +131,7 @@ $updateStmt->execute();
         </div>
         <div class="flex space-x-1">
           <?php if ($jobPage > 1): ?>
-            <a href="?jpage=<?= $jobPage - 1 ?><?= isset($_GET['upage']) ? '&upage=' . $_GET['upage'] : '' ?>" class="px-3 py-1 bg-gray-200 dark:bg-gray-700 dark:text-white rounded hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">Previous</a>
+            <a href="?jpage=<?= $jobPage - 1 ?><?= isset($_GET['upage']) ? '&upage=' . $_GET['upage'] : '' ?><?= isset($_GET['bpage']) ? '&bpage=' . $_GET['bpage'] : '' ?>" class="px-3 py-1 bg-gray-200 dark:bg-gray-700 dark:text-white rounded hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">Previous</a>
           <?php endif; ?>
           
           <?php 
@@ -121,20 +141,24 @@ $updateStmt->execute();
           
           for ($i = $startPage; $i <= $endPage; $i++): 
           ?>
-            <a href="?jpage=<?= $i ?><?= isset($_GET['upage']) ? '&upage=' . $_GET['upage'] : '' ?>" class="px-3 py-1 <?= $i == $jobPage ? 'bg-blue-600 text-white' : 'bg-gray-200 dark:bg-gray-700 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600' ?> rounded transition-colors"><?= $i ?></a>
+            <a href="?jpage=<?= $i ?><?= isset($_GET['upage']) ? '&upage=' . $_GET['upage'] : '' ?><?= isset($_GET['bpage']) ? '&bpage=' . $_GET['bpage'] : '' ?>" class="px-3 py-1 <?= $i == $jobPage ? 'bg-blue-600 text-white' : 'bg-gray-200 dark:bg-gray-700 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600' ?> rounded transition-colors"><?= $i ?></a>
           <?php endfor; ?>
           
           <?php if ($jobPage < $totalJobPages): ?>
-            <a href="?jpage=<?= $jobPage + 1 ?><?= isset($_GET['upage']) ? '&upage=' . $_GET['upage'] : '' ?>" class="px-3 py-1 bg-gray-200 dark:bg-gray-700 dark:text-white rounded hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">Next</a>
+            <a href="?jpage=<?= $jobPage + 1 ?><?= isset($_GET['upage']) ? '&upage=' . $_GET['upage'] : '' ?><?= isset($_GET['bpage']) ? '&bpage=' . $_GET['bpage'] : '' ?>" class="px-3 py-1 bg-gray-200 dark:bg-gray-700 dark:text-white rounded hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">Next</a>
           <?php endif; ?>
         </div>
       </div>
       <?php endif; ?>
+      
+      <div class="mt-4 text-center">
+        <a href="jobs" class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 text-sm font-medium">View All Jobs →</a>
+      </div>
     </div>
 
     <!-- Updates Section -->
     <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow">
-      <h2 class="text-xl font-semibold mb-3 dark:text-white">Updates</h2>
+      <h2 class="text-xl font-semibold mb-3 dark:text-white">Recent Updates</h2>
       <div class="overflow-x-auto">
         <table class="w-full text-left">
           <thead>
@@ -189,7 +213,7 @@ $updateStmt->execute();
         </div>
         <div class="flex space-x-1">
           <?php if ($updatePage > 1): ?>
-            <a href="?upage=<?= $updatePage - 1 ?><?= isset($_GET['jpage']) ? '&jpage=' . $_GET['jpage'] : '' ?>" class="px-3 py-1 bg-gray-200 dark:bg-gray-700 dark:text-white rounded hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">Previous</a>
+            <a href="?upage=<?= $updatePage - 1 ?><?= isset($_GET['jpage']) ? '&jpage=' . $_GET['jpage'] : '' ?><?= isset($_GET['bpage']) ? '&bpage=' . $_GET['bpage'] : '' ?>" class="px-3 py-1 bg-gray-200 dark:bg-gray-700 dark:text-white rounded hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">Previous</a>
           <?php endif; ?>
           
           <?php 
@@ -199,15 +223,124 @@ $updateStmt->execute();
           
           for ($i = $startPage; $i <= $endPage; $i++): 
           ?>
-            <a href="?upage=<?= $i ?><?= isset($_GET['jpage']) ? '&jpage=' . $_GET['jpage'] : '' ?>" class="px-3 py-1 <?= $i == $updatePage ? 'bg-blue-600 text-white' : 'bg-gray-200 dark:bg-gray-700 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600' ?> rounded transition-colors"><?= $i ?></a>
+            <a href="?upage=<?= $i ?><?= isset($_GET['jpage']) ? '&jpage=' . $_GET['jpage'] : '' ?><?= isset($_GET['bpage']) ? '&bpage=' . $_GET['bpage'] : '' ?>" class="px-3 py-1 <?= $i == $updatePage ? 'bg-blue-600 text-white' : 'bg-gray-200 dark:bg-gray-700 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600' ?> rounded transition-colors"><?= $i ?></a>
           <?php endfor; ?>
           
           <?php if ($updatePage < $totalUpdatePages): ?>
-            <a href="?upage=<?= $updatePage + 1 ?><?= isset($_GET['jpage']) ? '&jpage=' . $_GET['jpage'] : '' ?>" class="px-3 py-1 bg-gray-200 dark:bg-gray-700 dark:text-white rounded hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">Next</a>
+            <a href="?upage=<?= $updatePage + 1 ?><?= isset($_GET['jpage']) ? '&jpage=' . $_GET['jpage'] : '' ?><?= isset($_GET['bpage']) ? '&bpage=' . $_GET['bpage'] : '' ?>" class="px-3 py-1 bg-gray-200 dark:bg-gray-700 dark:text-white rounded hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">Next</a>
           <?php endif; ?>
         </div>
       </div>
       <?php endif; ?>
+      
+      <div class="mt-4 text-center">
+        <a href="updates" class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 text-sm font-medium">View All Updates →</a>
+      </div>
+    </div>
+
+    <!-- Books Section -->
+    <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow">
+      <h2 class="text-xl font-semibold mb-3 dark:text-white">Recent Books</h2>
+      <div class="overflow-x-auto">
+        <table class="w-full text-left">
+          <thead>
+            <tr class="border-b dark:border-gray-700">
+              <th class="p-2 dark:text-white">Title</th>
+              <th class="p-2 dark:text-white">Author</th>
+              <th class="p-2 dark:text-white">Category</th>
+              <th class="p-2 dark:text-white">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <?php while ($r = $bookStmt->fetch()): ?>
+            <tr class="border-b dark:border-gray-700">
+              <td class="p-2 line-clamp-1 dark:text-white"><?= e($r['title']) ?></td>
+              <td class="p-2 dark:text-white"><?= e($r['author']) ?></td>
+              <td class="p-2 dark:text-white">
+                <?php 
+                $bookTypeLabels = [
+                  'upsc' => 'UPSC',
+                  'ssc' => 'SSC',
+                  'banking' => 'Banking',
+                  'railway' => 'Railway',
+                  'defense' => 'Defense',
+                  'state_psc' => 'State PSC',
+                  'general_studies' => 'General Studies',
+                  'aptitude' => 'Aptitude',
+                  'reasoning' => 'Reasoning',
+                  'english' => 'English',
+                  'subject_specific' => 'Subject Specific'
+                ];
+                $bookType = $bookTypeLabels[$r['book_type']] ?? ucfirst($r['book_type']);
+                $bookTypeColors = [
+                  'upsc' => 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
+                  'ssc' => 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
+                  'banking' => 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200',
+                  'railway' => 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',
+                  'defense' => 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-200',
+                  'state_psc' => 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200',
+                  'general_studies' => 'bg-pink-100 text-pink-800 dark:bg-pink-900 dark:text-pink-200',
+                  'aptitude' => 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200',
+                  'reasoning' => 'bg-teal-100 text-teal-800 dark:bg-teal-900 dark:text-teal-200',
+                  'english' => 'bg-cyan-100 text-cyan-800 dark:bg-cyan-900 dark:text-cyan-200',
+                  'subject_specific' => 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200'
+                ];
+                $bookColor = $bookTypeColors[$r['book_type']] ?? 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200';
+                ?>
+                <span class="px-2 py-1 text-xs rounded-full <?= $bookColor ?>"><?= e($bookType) ?></span>
+              </td>
+              <td class="p-2">
+                <div class="inline-flex gap-x-2">
+                  <a class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300" href="edit_book/?id=<?= e($r['id']) ?>">Edit</a> |
+                  <a class="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300" href="delete_book?id=<?= e($r['id']) ?>" onclick="return confirm('Delete this book?')">Delete</a>
+                </div>
+              </td>
+            </tr>
+            <?php endwhile; ?>
+          </tbody>
+        </table>
+      </div>
+      
+      <!-- Books Pagination -->
+      <?php if ($totalBookPages > 1): ?>
+      <div class="mt-4 flex justify-between items-center">
+        <div class="text-sm text-gray-600 dark:text-gray-400">
+          Showing <?= $bookOffset + 1 ?>-<?= min($bookOffset + $booksPerPage, $totalBooks) ?> of <?= $totalBooks ?> books
+        </div>
+        <div class="flex space-x-1">
+          <?php if ($bookPage > 1): ?>
+            <a href="?bpage=<?= $bookPage - 1 ?><?= isset($_GET['jpage']) ? '&jpage=' . $_GET['jpage'] : '' ?><?= isset($_GET['upage']) ? '&upage=' . $_GET['upage'] : '' ?>" class="px-3 py-1 bg-gray-200 dark:bg-gray-700 dark:text-white rounded hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">Previous</a>
+          <?php endif; ?>
+          
+          <?php 
+          $startPage = max(1, $bookPage - 2);
+          $endPage = min($totalBookPages, $startPage + 4);
+          $startPage = max(1, $endPage - 4);
+          
+          for ($i = $startPage; $i <= $endPage; $i++): 
+          ?>
+            <a href="?bpage=<?= $i ?><?= isset($_GET['jpage']) ? '&jpage=' . $_GET['jpage'] : '' ?><?= isset($_GET['upage']) ? '&upage=' . $_GET['upage'] : '' ?>" class="px-3 py-1 <?= $i == $bookPage ? 'bg-blue-600 text-white' : 'bg-gray-200 dark:bg-gray-700 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600' ?> rounded transition-colors"><?= $i ?></a>
+          <?php endfor; ?>
+          
+          <?php if ($bookPage < $totalBookPages): ?>
+            <a href="?bpage=<?= $bookPage + 1 ?><?= isset($_GET['jpage']) ? '&jpage=' . $_GET['jpage'] : '' ?><?= isset($_GET['upage']) ? '&upage=' . $_GET['upage'] : '' ?>" class="px-3 py-1 bg-gray-200 dark:bg-gray-700 dark:text-white rounded hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">Next</a>
+          <?php endif; ?>
+        </div>
+      </div>
+      <?php endif; ?>
+      
+      <div class="mt-4 text-center">
+        <a href="books" class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 text-sm font-medium">View All Books →</a>
+      </div>
     </div>
   </div>
 </div>
+
+<style>
+.line-clamp-1 {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+</style>
