@@ -258,37 +258,35 @@ $bookStmt->execute();
               <td class="p-2 dark:text-white"><?= e($r['author']) ?></td>
               <td class="p-2 dark:text-white">
                 <?php 
-                $bookTypeLabels = [
-                  'upsc' => 'UPSC',
-                  'ssc' => 'SSC',
-                  'banking' => 'Banking',
-                  'railway' => 'Railway',
-                  'defense' => 'Defense',
-                  'state_psc' => 'State PSC',
-                  'general_studies' => 'General Studies',
-                  'aptitude' => 'Aptitude',
-                  'reasoning' => 'Reasoning',
-                  'english' => 'English',
-                  'subject_specific' => 'Subject Specific'
+                // Color mapping for Tailwind classes
+                $colorMap = [
+                    'yellow' => 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200',
+                    'red' => 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',
+                    'blue' => 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
+                    'indigo' => 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-200',
+                    'green' => 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
+                    'purple' => 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200',
+                    'gray' => 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200',
+                    'orange' => 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200',
+                    'pink' => 'bg-pink-100 text-pink-800 dark:bg-pink-900 dark:text-pink-200',
+                    'teal' => 'bg-teal-100 text-teal-800 dark:bg-teal-900 dark:text-teal-200'
                 ];
-                $bookType = $bookTypeLabels[$r['book_type']] ?? ucfirst($r['book_type']);
-                $bookTypeColors = [
-                  'upsc' => 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
-                  'ssc' => 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
-                  'banking' => 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200',
-                  'railway' => 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',
-                  'defense' => 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-200',
-                  'state_psc' => 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200',
-                  'general_studies' => 'bg-pink-100 text-pink-800 dark:bg-pink-900 dark:text-pink-200',
-                  'aptitude' => 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200',
-                  'reasoning' => 'bg-teal-100 text-teal-800 dark:bg-teal-900 dark:text-teal-200',
-                  'english' => 'bg-cyan-100 text-cyan-800 dark:bg-cyan-900 dark:text-cyan-200',
-                  'subject_specific' => 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200'
-                ];
-                $bookColor = $bookTypeColors[$r['book_type']] ?? 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200';
+
+                // Find the current book's category
+                $currentCategory = null;
+                foreach ($bookCategories as $category) {
+                    if ($category['category_slug'] === $r['book_type']) {
+                        $currentCategory = $category;
+                        break;
+                    }
+                }
+
+                // Set display values
+                $bookType = $currentCategory ? $currentCategory['category_name'] : ucfirst(str_replace('-', ' ', $r['book_type']));
+                $bookColor = $currentCategory ? ($colorMap[$currentCategory['color']] ?? 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200') : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200';
                 ?>
                 <span class="px-2 py-1 text-xs rounded-full <?= $bookColor ?>"><?= e($bookType) ?></span>
-              </td>
+            </td>
               <td class="p-2">
                 <div class="inline-flex gap-x-2">
                   <a class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300" href="edit_book/?id=<?= e($r['id']) ?>">Edit</a> |

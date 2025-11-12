@@ -128,7 +128,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 // fetch categories for select
 $cats = $pdo->query("SELECT * FROM job_categories ORDER BY category_name ASC")->fetchAll();
 $allBooks = $pdo->query("SELECT * FROM books WHERE status = 'active' ORDER BY created_at ASC")->fetchAll();
-var_dump($bookTypeLabels);
+// var_dump($bookTypeLabels);
 ?>
 
 <!-- Add EasyMDE CSS -->
