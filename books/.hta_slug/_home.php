@@ -34,15 +34,13 @@ $schema = [
     ]
 ];
 
-// Fetch books for different categories
-$upscBooks = $pdo->query("SELECT slug, title, description, author, publisher, book_image, amazon_link, flipkart_link, created_at FROM books WHERE book_type = 'upsc' AND status = 'active' ORDER BY created_at DESC LIMIT 8")->fetchAll();
-$sscBooks = $pdo->query("SELECT slug, title, description, author, publisher, book_image, amazon_link, flipkart_link, created_at FROM books WHERE book_type = 'ssc' AND status = 'active' ORDER BY created_at DESC LIMIT 8")->fetchAll();
-$bankingBooks = $pdo->query("SELECT slug, title, description, author, publisher, book_image, amazon_link, flipkart_link, created_at FROM books WHERE book_type = 'banking' AND status = 'active' ORDER BY created_at DESC LIMIT 8")->fetchAll();
-$railwayBooks = $pdo->query("SELECT slug, title, description, author, publisher, book_image, amazon_link, flipkart_link, created_at FROM books WHERE book_type = 'railway' AND status = 'active' ORDER BY created_at DESC LIMIT 8")->fetchAll();
-$aptitudeBooks = $pdo->query("SELECT slug, title, description, author, publisher, book_image, amazon_link, flipkart_link, created_at FROM books WHERE book_type = 'aptitude' AND status = 'active' ORDER BY created_at DESC LIMIT 8")->fetchAll();
-$reasoningBooks = $pdo->query("SELECT slug, title, description, author, publisher, book_image, amazon_link, flipkart_link, created_at FROM books WHERE book_type = 'reasoning' AND status = 'active' ORDER BY created_at DESC LIMIT 8")->fetchAll();
-$englishBooks = $pdo->query("SELECT slug, title, description, author, publisher, book_image, amazon_link, flipkart_link, created_at FROM books WHERE book_type = 'english' AND status = 'active' ORDER BY created_at DESC LIMIT 8")->fetchAll();
-$generalStudiesBooks = $pdo->query("SELECT slug, title, description, author, publisher, book_image, amazon_link, flipkart_link, created_at FROM books WHERE book_type = 'general_studies' AND status = 'active' ORDER BY created_at DESC LIMIT 8")->fetchAll();
+
+// Fetch books for each category
+$categoryBooks = [];
+foreach ($bookCategories as $category) {
+    $books = $pdo->query("SELECT slug, title, description, author, publisher, book_image, amazon_link, flipkart_link, created_at FROM books WHERE book_type = '" . $category['category_slug'] . "' AND status = 'active' ORDER BY created_at DESC LIMIT 8")->fetchAll();
+    $categoryBooks[$category['category_slug']] = $books;
+}
 
 // Function to check if book is new (within last 7 days)
 function isNewBook($created_at) {
@@ -64,6 +62,24 @@ function getBookImage($book_image, $title) {
     }
     // Return a default book image or placeholder
     return BASE_URL . '/assets/images/default-book-cover.jpg';
+}
+
+// Function to get color classes
+function getColorClasses($color) {
+    $colors = [
+        'blue' => ['bg' => 'from-blue-600 to-blue-700', 'text' => 'text-blue-600', 'dark_text' => 'dark:text-blue-400', 'scrollbar_thumb' => 'blue-300', 'scrollbar_track' => 'blue-100'],
+        'green' => ['bg' => 'from-green-600 to-green-700', 'text' => 'text-green-600', 'dark_text' => 'dark:text-green-400', 'scrollbar_thumb' => 'green-300', 'scrollbar_track' => 'green-100'],
+        'yellow' => ['bg' => 'from-yellow-600 to-yellow-700', 'text' => 'text-yellow-600', 'dark_text' => 'dark:text-yellow-400', 'scrollbar_thumb' => 'yellow-300', 'scrollbar_track' => 'yellow-100'],
+        'red' => ['bg' => 'from-red-600 to-red-700', 'text' => 'text-red-600', 'dark_text' => 'dark:text-red-400', 'scrollbar_thumb' => 'red-300', 'scrollbar_track' => 'red-100'],
+        'purple' => ['bg' => 'from-purple-600 to-purple-700', 'text' => 'text-purple-600', 'dark_text' => 'dark:text-purple-400', 'scrollbar_thumb' => 'purple-300', 'scrollbar_track' => 'purple-100'],
+        'indigo' => ['bg' => 'from-indigo-600 to-indigo-700', 'text' => 'text-indigo-600', 'dark_text' => 'dark:text-indigo-400', 'scrollbar_thumb' => 'indigo-300', 'scrollbar_track' => 'indigo-100'],
+        'pink' => ['bg' => 'from-pink-600 to-pink-700', 'text' => 'text-pink-600', 'dark_text' => 'dark:text-pink-400', 'scrollbar_thumb' => 'pink-300', 'scrollbar_track' => 'pink-100'],
+        'teal' => ['bg' => 'from-teal-600 to-teal-700', 'text' => 'text-teal-600', 'dark_text' => 'dark:text-teal-400', 'scrollbar_thumb' => 'teal-300', 'scrollbar_track' => 'teal-100'],
+        'orange' => ['bg' => 'from-orange-600 to-orange-700', 'text' => 'text-orange-600', 'dark_text' => 'dark:text-orange-400', 'scrollbar_thumb' => 'orange-300', 'scrollbar_track' => 'orange-100'],
+        'gray' => ['bg' => 'from-gray-600 to-gray-700', 'text' => 'text-gray-600', 'dark_text' => 'dark:text-gray-400', 'scrollbar_thumb' => 'gray-300', 'scrollbar_track' => 'gray-100']
+    ];
+    
+    return $colors[$color] ?? $colors['blue'];
 }
 ?>
 
@@ -133,29 +149,35 @@ function getBookImage($book_image, $title) {
             <p class="text-gray-600 dark:text-gray-400 mt-2">Find the best books for competitive exams recommended by experts and toppers</p>
         </div>
 
-        <!-- Four Columns Section -->
+        <!-- Books Grid -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-            <!-- UPSC Books Column -->
+            <?php foreach ($bookCategories as $category): 
+                $colorClasses = getColorClasses($category['color']);
+                $books = $categoryBooks[$category['category_slug']] ?? [];
+            ?>
             <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden flex flex-col border border-gray-200 dark:border-gray-700 transition-all duration-300 hover:shadow-lg">
-                <div class="bg-gradient-to-r from-blue-600 to-blue-700 p-4 flex items-center">
+                <div class="bg-gradient-to-r <?= $colorClasses['bg'] ?> p-4 flex items-center">
                     <div class="bg-white/20 p-2 rounded-lg mr-3">
                         <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clip-rule="evenodd"/>
+                            <path fill-rule="evenodd" d="<?= $category['icon'] ?>" clip-rule="evenodd"/>
                         </svg>
                     </div>
-                    <h2 class="text-lg font-bold text-white">UPSC Books</h2>
+                    <div class="flex-1">
+                        <h2 class="text-lg font-bold text-white"><?= e($category['category_name']) ?></h2>
+                        <p class="text-white/80 text-xs mt-1"><?= e($category['description']) ?></p>
+                    </div>
                 </div>
-                <div class="flex-1 overflow-y-auto max-h-[600px] scrollbar-thin scrollbar-thumb-blue-300 scrollbar-track-blue-100 dark:scrollbar-thumb-blue-700 dark:scrollbar-track-blue-900">
+                <div class="flex-1 overflow-y-auto max-h-[600px] scrollbar-thin scrollbar-thumb-<?= $colorClasses['scrollbar_thumb'] ?> scrollbar-track-<?= $colorClasses['scrollbar_track'] ?> dark:scrollbar-thumb-<?= $colorClasses['scrollbar_thumb'] ?> dark:scrollbar-track-<?= $colorClasses['scrollbar_track'] ?>">
                     <div class="p-4 space-y-4">
-                        <?php if (empty($upscBooks)): ?>
+                        <?php if (empty($books)): ?>
                             <div class="text-center py-8 text-gray-500 dark:text-gray-400">
                                 <svg class="w-12 h-12 mx-auto text-gray-300 dark:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                 </svg>
-                                <p class="mt-2 text-sm">No UPSC books available</p>
+                                <p class="mt-2 text-sm">No books available</p>
                             </div>
                         <?php else: ?>
-                            <?php foreach ($upscBooks as $book): 
+                            <?php foreach ($books as $book): 
                                 $shortDescription = markdownExcerpt($book['description'], $Parsedown, 60);
                                 $bookImage = getBookImage($book['book_image'], $book['title']);
                             ?>
@@ -165,8 +187,8 @@ function getBookImage($book_image, $title) {
                                          class="w-12 h-16 object-cover rounded border dark:border-gray-600 flex-shrink-0">
                                     <div class="flex-1 min-w-0">
                                         <div class="flex justify-between items-start mb-1">
-                                            <h3 class="font-semibold text-sm dark:text-white line-clamp-2 flex-1 group-hover:text-blue-600 dark:group-hover:text-blue-400"><?= e($book['title']) ?></h3>
-                                            <?php if (isNewBook($book['created_at'])) echo blinkTag("NEW", "#3b82f6"); ?>
+                                            <h3 class="font-semibold text-sm dark:text-white line-clamp-2 flex-1 group-hover:<?= $colorClasses['text'] ?> dark:group-hover:<?= $colorClasses['dark_text'] ?>"><?= e($book['title']) ?></h3>
+                                            <?php if (isNewBook($book['created_at'])) echo blinkTag("NEW", $colorClasses['bg']); ?>
                                         </div>
                                         <p class="text-xs text-gray-600 dark:text-gray-400 mb-1">By <?= e($book['author']) ?></p>
                                         <?php if ($book['publisher']): ?>
@@ -177,7 +199,7 @@ function getBookImage($book_image, $title) {
                                 <p class="text-xs text-gray-600 dark:text-gray-300 mt-2 clamp-text"><?= e($shortDescription) ?></p>
                                 <div class="flex items-center justify-between mt-3">
                                     <p class="text-xs text-gray-500 dark:text-gray-500"><?= date('M Y', strtotime($book['created_at'])) ?></p>
-                                    <span class="text-blue-600 dark:text-blue-400 text-xs font-medium flex items-center">
+                                    <span class="<?= $colorClasses['text'] ?> dark:<?= $colorClasses['dark_text'] ?> text-xs font-medium flex items-center">
                                         View Details
                                         <svg class="w-3 h-3 ml-1 transition-transform duration-200 group-hover:translate-x-1" fill="currentColor" viewBox="0 0 20 20">
                                             <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/>
@@ -190,269 +212,7 @@ function getBookImage($book_image, $title) {
                     </div>
                 </div>
             </div>
-
-            <!-- SSC Books Column -->
-            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden flex flex-col border border-gray-200 dark:border-gray-700 transition-all duration-300 hover:shadow-lg">
-                <div class="bg-gradient-to-r from-green-600 to-green-700 p-4 flex items-center">
-                    <div class="bg-white/20 p-2 rounded-lg mr-3">
-                        <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-                        </svg>
-                    </div>
-                    <h2 class="text-lg font-bold text-white">SSC Books</h2>
-                </div>
-                <div class="flex-1 overflow-y-auto max-h-[600px] scrollbar-thin scrollbar-thumb-green-300 scrollbar-track-green-100 dark:scrollbar-thumb-green-700 dark:scrollbar-track-green-900">
-                    <div class="p-4 space-y-4">
-                        <?php if (empty($sscBooks)): ?>
-                            <div class="text-center py-8 text-gray-500 dark:text-gray-400">
-                                <svg class="w-12 h-12 mx-auto text-gray-300 dark:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                </svg>
-                                <p class="mt-2 text-sm">No SSC books available</p>
-                            </div>
-                        <?php else: ?>
-                            <?php foreach ($sscBooks as $book): 
-                                $shortDescription = markdownExcerpt($book['description'], $Parsedown, 60);
-                                $bookImage = getBookImage($book['book_image'], $book['title']);
-                            ?>
-                            <a href="book-details?slug=<?= e($book['slug']) ?>" class="block p-4 border rounded-lg hover:shadow-md transition-all duration-200 dark:border-gray-700 dark:hover:bg-gray-700/50 bg-white dark:bg-gray-800 group">
-                                <div class="flex items-start gap-3 mb-3">
-                                    <img src="<?= e($bookImage) ?>" alt="<?= e($book['title']) ?>" 
-                                         class="w-12 h-16 object-cover rounded border dark:border-gray-600 flex-shrink-0">
-                                    <div class="flex-1 min-w-0">
-                                        <div class="flex justify-between items-start mb-1">
-                                            <h3 class="font-semibold text-sm dark:text-white line-clamp-2 flex-1 group-hover:text-green-600 dark:group-hover:text-green-400"><?= e($book['title']) ?></h3>
-                                            <?php if (isNewBook($book['created_at'])) echo blinkTag("NEW", "#10b981"); ?>
-                                        </div>
-                                        <p class="text-xs text-gray-600 dark:text-gray-400 mb-1">By <?= e($book['author']) ?></p>
-                                        <?php if ($book['publisher']): ?>
-                                        <p class="text-xs text-gray-500 dark:text-gray-500"><?= e($book['publisher']) ?></p>
-                                        <?php endif; ?>
-                                    </div>
-                                </div>
-                                <p class="text-xs text-gray-600 dark:text-gray-300 mt-2 clamp-text"><?= e($shortDescription) ?></p>
-                                <div class="flex items-center justify-between mt-3">
-                                    <p class="text-xs text-gray-500 dark:text-gray-500"><?= date('M Y', strtotime($book['created_at'])) ?></p>
-                                    <span class="text-green-600 dark:text-green-400 text-xs font-medium flex items-center">
-                                        View Details
-                                        <svg class="w-3 h-3 ml-1 transition-transform duration-200 group-hover:translate-x-1" fill="currentColor" viewBox="0 0 20 20">
-                                            <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/>
-                                        </svg>
-                                    </span>
-                                </div>
-                            </a>
-                            <?php endforeach; ?>
-                        <?php endif; ?>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Banking Books Column -->
-            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden flex flex-col border border-gray-200 dark:border-gray-700 transition-all duration-300 hover:shadow-lg">
-                <div class="bg-gradient-to-r from-yellow-600 to-yellow-700 p-4 flex items-center">
-                    <div class="bg-white/20 p-2 rounded-lg mr-3">
-                        <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"/>
-                        </svg>
-                    </div>
-                    <h2 class="text-lg font-bold text-white">Banking Books</h2>
-                </div>
-                <div class="flex-1 overflow-y-auto max-h-[600px] scrollbar-thin scrollbar-thumb-yellow-300 scrollbar-track-yellow-100 dark:scrollbar-thumb-yellow-700 dark:scrollbar-track-yellow-900">
-                    <div class="p-4 space-y-4">
-                        <?php if (empty($bankingBooks)): ?>
-                            <div class="text-center py-8 text-gray-500 dark:text-gray-400">
-                                <svg class="w-12 h-12 mx-auto text-gray-300 dark:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                </svg>
-                                <p class="mt-2 text-sm">No Banking books available</p>
-                            </div>
-                        <?php else: ?>
-                            <?php foreach ($bankingBooks as $book): 
-                                $shortDescription = markdownExcerpt($book['description'], $Parsedown, 60);
-                                $bookImage = getBookImage($book['book_image'], $book['title']);
-                            ?>
-                            <a href="book-details?slug=<?= e($book['slug']) ?>" class="block p-4 border rounded-lg hover:shadow-md transition-all duration-200 dark:border-gray-700 dark:hover:bg-gray-700/50 bg-white dark:bg-gray-800 group">
-                                <div class="flex items-start gap-3 mb-3">
-                                    <img src="<?= e($bookImage) ?>" alt="<?= e($book['title']) ?>" 
-                                         class="w-12 h-16 object-cover rounded border dark:border-gray-600 flex-shrink-0">
-                                    <div class="flex-1 min-w-0">
-                                        <div class="flex justify-between items-start mb-1">
-                                            <h3 class="font-semibold text-sm dark:text-white line-clamp-2 flex-1 group-hover:text-yellow-600 dark:group-hover:text-yellow-400"><?= e($book['title']) ?></h3>
-                                            <?php if (isNewBook($book['created_at'])) echo blinkTag("NEW", "#f59e0b"); ?>
-                                        </div>
-                                        <p class="text-xs text-gray-600 dark:text-gray-400 mb-1">By <?= e($book['author']) ?></p>
-                                        <?php if ($book['publisher']): ?>
-                                        <p class="text-xs text-gray-500 dark:text-gray-500"><?= e($book['publisher']) ?></p>
-                                        <?php endif; ?>
-                                    </div>
-                                </div>
-                                <p class="text-xs text-gray-600 dark:text-gray-300 mt-2 clamp-text"><?= e($shortDescription) ?></p>
-                                <div class="flex items-center justify-between mt-3">
-                                    <p class="text-xs text-gray-500 dark:text-gray-500"><?= date('M Y', strtotime($book['created_at'])) ?></p>
-                                    <span class="text-yellow-600 dark:text-yellow-400 text-xs font-medium flex items-center">
-                                        View Details
-                                        <svg class="w-3 h-3 ml-1 transition-transform duration-200 group-hover:translate-x-1" fill="currentColor" viewBox="0 0 20 20">
-                                            <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/>
-                                        </svg>
-                                    </span>
-                                </div>
-                            </a>
-                            <?php endforeach; ?>
-                        <?php endif; ?>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Railway Books Column -->
-            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden flex flex-col border border-gray-200 dark:border-gray-700 transition-all duration-300 hover:shadow-lg">
-                <div class="bg-gradient-to-r from-red-600 to-red-700 p-4 flex items-center">
-                    <div class="bg-white/20 p-2 rounded-lg mr-3">
-                        <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"/>
-                        </svg>
-                    </div>
-                    <h2 class="text-lg font-bold text-white">Railway Books</h2>
-                </div>
-                <div class="flex-1 overflow-y-auto max-h-[600px] scrollbar-thin scrollbar-thumb-red-300 scrollbar-track-red-100 dark:scrollbar-thumb-red-700 dark:scrollbar-track-red-900">
-                    <div class="p-4 space-y-4">
-                        <?php if (empty($railwayBooks)): ?>
-                            <div class="text-center py-8 text-gray-500 dark:text-gray-400">
-                                <svg class="w-12 h-12 mx-auto text-gray-300 dark:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                </svg>
-                                <p class="mt-2 text-sm">No Railway books available</p>
-                            </div>
-                        <?php else: ?>
-                            <?php foreach ($railwayBooks as $book): 
-                                $shortDescription = markdownExcerpt($book['description'], $Parsedown, 60);
-                                $bookImage = getBookImage($book['book_image'], $book['title']);
-                            ?>
-                            <a href="book-details?slug=<?= e($book['slug']) ?>" class="block p-4 border rounded-lg hover:shadow-md transition-all duration-200 dark:border-gray-700 dark:hover:bg-gray-700/50 bg-white dark:bg-gray-800 group">
-                                <div class="flex items-start gap-3 mb-3">
-                                    <img src="<?= e($bookImage) ?>" alt="<?= e($book['title']) ?>" 
-                                         class="w-12 h-16 object-cover rounded border dark:border-gray-600 flex-shrink-0">
-                                    <div class="flex-1 min-w-0">
-                                        <div class="flex justify-between items-start mb-1">
-                                            <h3 class="font-semibold text-sm dark:text-white line-clamp-2 flex-1 group-hover:text-red-600 dark:group-hover:text-red-400"><?= e($book['title']) ?></h3>
-                                            <?php if (isNewBook($book['created_at'])) echo blinkTag("NEW", "#ef4444"); ?>
-                                        </div>
-                                        <p class="text-xs text-gray-600 dark:text-gray-400 mb-1">By <?= e($book['author']) ?></p>
-                                        <?php if ($book['publisher']): ?>
-                                        <p class="text-xs text-gray-500 dark:text-gray-500"><?= e($book['publisher']) ?></p>
-                                        <?php endif; ?>
-                                    </div>
-                                </div>
-                                <p class="text-xs text-gray-600 dark:text-gray-300 mt-2 clamp-text"><?= e($shortDescription) ?></p>
-                                <div class="flex items-center justify-between mt-3">
-                                    <p class="text-xs text-gray-500 dark:text-gray-500"><?= date('M Y', strtotime($book['created_at'])) ?></p>
-                                    <span class="text-red-600 dark:text-red-400 text-xs font-medium flex items-center">
-                                        View Details
-                                        <svg class="w-3 h-3 ml-1 transition-transform duration-200 group-hover:translate-x-1" fill="currentColor" viewBox="0 0 20 20">
-                                            <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/>
-                                        </svg>
-                                    </span>
-                                </div>
-                            </a>
-                            <?php endforeach; ?>
-                        <?php endif; ?>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Additional Categories Section -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-            <!-- Aptitude Books Column -->
-            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden flex flex-col border border-gray-200 dark:border-gray-700">
-                <div class="bg-gradient-to-r from-purple-600 to-purple-700 p-4">
-                    <h2 class="text-lg font-bold text-white">Aptitude Books</h2>
-                </div>
-                <div class="flex-1 overflow-y-auto max-h-[400px]">
-                    <div class="p-4 space-y-4">
-                        <?php if (empty($aptitudeBooks)): ?>
-                            <div class="text-center py-4 text-gray-500 dark:text-gray-400">
-                                <p class="text-sm">No Aptitude books available</p>
-                            </div>
-                        <?php else: ?>
-                            <?php foreach ($aptitudeBooks as $book): ?>
-                            <a href="book-details?slug=<?= e($book['slug']) ?>" class="block p-3 border rounded hover:shadow transition-all duration-200 dark:border-gray-700 dark:hover:bg-gray-700/50 group">
-                                <h3 class="font-medium text-sm dark:text-white line-clamp-2 group-hover:text-purple-600 dark:group-hover:text-purple-400"><?= e($book['title']) ?></h3>
-                                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">By <?= e($book['author']) ?></p>
-                            </a>
-                            <?php endforeach; ?>
-                        <?php endif; ?>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Reasoning Books Column -->
-            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden flex flex-col border border-gray-200 dark:border-gray-700">
-                <div class="bg-gradient-to-r from-indigo-600 to-indigo-700 p-4">
-                    <h2 class="text-lg font-bold text-white">Reasoning Books</h2>
-                </div>
-                <div class="flex-1 overflow-y-auto max-h-[400px]">
-                    <div class="p-4 space-y-4">
-                        <?php if (empty($reasoningBooks)): ?>
-                            <div class="text-center py-4 text-gray-500 dark:text-gray-400">
-                                <p class="text-sm">No Reasoning books available</p>
-                            </div>
-                        <?php else: ?>
-                            <?php foreach ($reasoningBooks as $book): ?>
-                            <a href="book-details?slug=<?= e($book['slug']) ?>" class="block p-3 border rounded hover:shadow transition-all duration-200 dark:border-gray-700 dark:hover:bg-gray-700/50 group">
-                                <h3 class="font-medium text-sm dark:text-white line-clamp-2 group-hover:text-indigo-600 dark:group-hover:text-indigo-400"><?= e($book['title']) ?></h3>
-                                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">By <?= e($book['author']) ?></p>
-                            </a>
-                            <?php endforeach; ?>
-                        <?php endif; ?>
-                    </div>
-                </div>
-            </div>
-
-            <!-- English Books Column -->
-            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden flex flex-col border border-gray-200 dark:border-gray-700">
-                <div class="bg-gradient-to-r from-pink-600 to-pink-700 p-4">
-                    <h2 class="text-lg font-bold text-white">English Books</h2>
-                </div>
-                <div class="flex-1 overflow-y-auto max-h-[400px]">
-                    <div class="p-4 space-y-4">
-                        <?php if (empty($englishBooks)): ?>
-                            <div class="text-center py-4 text-gray-500 dark:text-gray-400">
-                                <p class="text-sm">No English books available</p>
-                            </div>
-                        <?php else: ?>
-                            <?php foreach ($englishBooks as $book): ?>
-                            <a href="book-details?slug=<?= e($book['slug']) ?>" class="block p-3 border rounded hover:shadow transition-all duration-200 dark:border-gray-700 dark:hover:bg-gray-700/50 group">
-                                <h3 class="font-medium text-sm dark:text-white line-clamp-2 group-hover:text-pink-600 dark:group-hover:text-pink-400"><?= e($book['title']) ?></h3>
-                                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">By <?= e($book['author']) ?></p>
-                            </a>
-                            <?php endforeach; ?>
-                        <?php endif; ?>
-                    </div>
-                </div>
-            </div>
-
-            <!-- General Studies Books Column -->
-            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden flex flex-col border border-gray-200 dark:border-gray-700">
-                <div class="bg-gradient-to-r from-teal-600 to-teal-700 p-4">
-                    <h2 class="text-lg font-bold text-white">General Studies</h2>
-                </div>
-                <div class="flex-1 overflow-y-auto max-h-[400px]">
-                    <div class="p-4 space-y-4">
-                        <?php if (empty($generalStudiesBooks)): ?>
-                            <div class="text-center py-4 text-gray-500 dark:text-gray-400">
-                                <p class="text-sm">No General Studies books available</p>
-                            </div>
-                        <?php else: ?>
-                            <?php foreach ($generalStudiesBooks as $book): ?>
-                            <a href="book-details?slug=<?= e($book['slug']) ?>" class="block p-3 border rounded hover:shadow transition-all duration-200 dark:border-gray-700 dark:hover:bg-gray-700/50 group">
-                                <h3 class="font-medium text-sm dark:text-white line-clamp-2 group-hover:text-teal-600 dark:group-hover:text-teal-400"><?= e($book['title']) ?></h3>
-                                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">By <?= e($book['author']) ?></p>
-                            </a>
-                            <?php endforeach; ?>
-                        <?php endif; ?>
-                    </div>
-                </div>
-            </div>
+            <?php endforeach; ?>
         </div>
     </div>
 </div>
