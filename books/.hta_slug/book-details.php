@@ -33,7 +33,7 @@ function formatDate($date) {
     return date('M d, Y', strtotime($date));
 }
 
-$book_image_url = "/book-image/".$book['book_image'];
+$book_image_url = $book['book_image'];
 // Meta values override
 $pageTitle       = ($book['meta_title'] ?? $book['title']) . ' - ' . APP_NAME;
 $pageDescription = mb_substr(strip_tags($book['meta_description'] ?? $book['description']), 0, 160);
