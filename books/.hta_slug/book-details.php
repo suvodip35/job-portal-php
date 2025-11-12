@@ -33,21 +33,13 @@ function formatDate($date) {
     return date('M d, Y', strtotime($date));
 }
 
-// Function to get book image
-function getBookImage($book_image, $title) {
-    if ($book_image && file_exists(__DIR__ . '/../../' . ltrim($book_image, '/'))) {
-        return BASE_URL . $book_image;
-    }
-    // Return a default book image or placeholder
-    return BASE_URL . '/assets/images/default-book-cover.jpg';
-}
-
+$book_image_url = "/book-image/".$book['book_image'];
 // Meta values override
 $pageTitle       = ($book['meta_title'] ?? $book['title']) . ' - ' . APP_NAME;
 $pageDescription = mb_substr(strip_tags($book['meta_description'] ?? $book['description']), 0, 160);
 $metaTitle       = $book['meta_title'] ?? $book['title'];
 $keywords        = "Book Review, Competitive Exam Books, Study Materials, " . $book['author'] . ", " . $metaTitle;
-$ogImage         = getBookImage($book['book_image'], $book['title']);
+$ogImage         = $book_image_url;
 $canonicalUrl    = "https://fromcampus.com/books/book-details?slug=" . $slug;
 
 $schema = [
@@ -246,7 +238,7 @@ $railwayBooks = $pdo->query("SELECT slug, title, author, created_at FROM books W
         <div class="flex flex-col md:flex-row gap-6 mb-6">
           <!-- Book Cover -->
           <div class="flex-shrink-0">
-            <img src="<?= getBookImage($book['book_image'], $book['title']) ?>" 
+            <img src="<?= $book_image_url ?>" 
                  alt="<?= e($book['title']) ?>" 
                  class="w-48 h-64 object-cover rounded-lg shadow-md border dark:border-gray-600">
           </div>
@@ -337,7 +329,7 @@ $railwayBooks = $pdo->query("SELECT slug, title, author, created_at FROM books W
         <?php foreach ($relatedBooks as $relatedBook): ?>
         <a href="book-details?slug=<?= e($relatedBook['slug']) ?>" class="block p-4 border rounded-lg hover:shadow-md transition-all duration-200 dark:border-gray-700 dark:hover:bg-gray-700/50 group">
           <div class="flex items-start gap-3">
-            <img src="<?= getBookImage($relatedBook['book_image'], $relatedBook['title']) ?>" 
+            <img src="<?= $book_image_url ?>" 
                  alt="<?= e($relatedBook['title']) ?>" 
                  class="w-12 h-16 object-cover rounded border dark:border-gray-600 flex-shrink-0">
             <div class="flex-1 min-w-0">
@@ -375,7 +367,7 @@ $railwayBooks = $pdo->query("SELECT slug, title, author, created_at FROM books W
                 <?php foreach ($latestBooks as $latestBook): ?>
                 <a href="book-details?slug=<?= e($latestBook['slug']) ?>" class="block p-4 border rounded-lg hover:shadow-md transition-all duration-200 dark:border-gray-700 dark:hover:bg-gray-700/50 group">
                     <div class="flex items-start gap-3">
-                        <img src="<?= getBookImage($latestBook['book_image'], $latestBook['title']) ?>" 
+                        <img src="<?= $book_image_url ?>" 
                              alt="<?= e($latestBook['title']) ?>" 
                              class="w-12 h-16 object-cover rounded border dark:border-gray-600 flex-shrink-0">
                         <div class="flex-1 min-w-0">
@@ -431,7 +423,7 @@ $railwayBooks = $pdo->query("SELECT slug, title, author, created_at FROM books W
             <?php foreach ($latestBooks as $latestBook): ?>
               <a href="book-details?slug=<?= e($latestBook['slug']) ?>" class="block p-3 border rounded hover:shadow-sm transition dark:border-gray-700 dark:hover:bg-gray-700 group">
                 <div class="flex items-start gap-2">
-                  <img src="<?= getBookImage($latestBook['book_image'], $latestBook['title']) ?>" 
+                  <img src="<?= $book_image_url ?>" 
                        alt="<?= e($latestBook['title']) ?>" 
                        class="w-10 h-14 object-cover rounded border dark:border-gray-600 flex-shrink-0">
                   <div class="flex-1 min-w-0">

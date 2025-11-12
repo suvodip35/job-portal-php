@@ -446,7 +446,7 @@ $shareText = urlencode("Check out this job opportunity: " . $job['job_title'] . 
             <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden border border-gray-200 dark:border-gray-700 hover:shadow-lg transition duration-300">
               <?php if ($book['book_image']): ?>
               <div class="h-48 overflow-hidden">
-                <img src="<?= e($book['book_image']) ?>" 
+                <img src="/book-image/<?= $book['book_image'] ?>" 
                      alt="<?= e($book['title']) ?>" 
                      class="w-full h-full object-cover hover:scale-105 transition duration-300">
               </div>
