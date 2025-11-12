@@ -238,7 +238,7 @@ $railwayBooks = $pdo->query("SELECT slug, title, author, created_at FROM books W
         <div class="flex flex-col md:flex-row gap-6 mb-6">
           <!-- Book Cover -->
           <div class="flex-shrink-0">
-            <img src="<?= $book_image_url ?>" 
+            <img src="<?= $book_image_url?>" 
                  alt="<?= e($book['title']) ?>" 
                  class="w-48 h-64 object-cover rounded-lg shadow-md border dark:border-gray-600">
           </div>
@@ -367,7 +367,7 @@ $railwayBooks = $pdo->query("SELECT slug, title, author, created_at FROM books W
                 <?php foreach ($latestBooks as $latestBook): ?>
                 <a href="book-details?slug=<?= e($latestBook['slug']) ?>" class="block p-4 border rounded-lg hover:shadow-md transition-all duration-200 dark:border-gray-700 dark:hover:bg-gray-700/50 group">
                     <div class="flex items-start gap-3">
-                        <img src="<?= $book_image_url ?>" 
+                        <img src="<?=$book_image_url?>" 
                              alt="<?= e($latestBook['title']) ?>" 
                              class="w-12 h-16 object-cover rounded border dark:border-gray-600 flex-shrink-0">
                         <div class="flex-1 min-w-0">

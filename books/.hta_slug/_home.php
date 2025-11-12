@@ -177,13 +177,10 @@ function getColorClasses($color) {
                                 <p class="mt-2 text-sm">No books available</p>
                             </div>
                         <?php else: ?>
-                            <?php foreach ($books as $book): 
-                                $shortDescription = markdownExcerpt($book['description'], $Parsedown, 60);
-                                $bookImage = getBookImage($book['book_image'], $book['title']);
-                            ?>
+                            <?php foreach ($books as $book): $shortDescription = markdownExcerpt($book['description'], $Parsedown, 60);?>
                             <a href="book-details?slug=<?= e($book['slug']) ?>" class="block p-4 border rounded-lg hover:shadow-md transition-all duration-200 dark:border-gray-700 dark:hover:bg-gray-700/50 bg-white dark:bg-gray-800 group">
                                 <div class="flex items-start gap-3 mb-3">
-                                    <img src="<?= $bookImage ?>" alt="<?= e($book['title']) ?>" 
+                                    <img src="<?=$book['book_image']?>" alt="<?= e($book['title']) ?>" 
                                          class="w-12 h-16 object-cover rounded border dark:border-gray-600 flex-shrink-0">
                                     <div class="flex-1 min-w-0">
                                         <div class="flex justify-between items-start mb-1">

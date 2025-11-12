@@ -273,3 +273,4 @@
 [2025-11-11 17:47:04] ERROR: [2] Undefined array key "book_type" in /home/suvo/web/jnp.ns77.siliconpin.com/public_html/adminqeIUgwefgWEOAjx/.hta_slug/edit_job.php on line 437
 [2025-11-11 17:47:04] ERROR: [2] Undefined array key "book_type" in /home/suvo/web/jnp.ns77.siliconpin.com/public_html/adminqeIUgwefgWEOAjx/.hta_slug/edit_job.php on line 437
 [2025-11-11 17:47:04] ERROR: [2] Undefined array key "book_type" in /home/suvo/web/jnp.ns77.siliconpin.com/public_html/adminqeIUgwefgWEOAjx/.hta_slug/edit_job.php on line 437
+[2025-11-12 13:59:26] ERROR: [2] Undefined variable $bookTypeLabels in /home/suvo/web/jnp.ns77.siliconpin.com/public_html/adminqeIUgwefgWEOAjx/.hta_slug/add_job.php on line 131
