@@ -217,21 +217,25 @@ function getBookImage($book_image, $title) {
                 Book Category <span class="text-red-500">*</span>
             </label>
             <select name="book_type" id="book_type" 
-                    class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white
-                           <?= (!isset($_POST['book_type']) || ($_POST['book_type'] ?? '') === '') ? 'border-red-500' : '' ?>" required>
-                <option value="">-- Select Category --</option>
-                <option value="upsc" <?= (($_POST['book_type'] ?? $book['book_type']) == 'upsc') ? 'selected' : '' ?>>UPSC Civil Services</option>
-                <option value="ssc" <?= (($_POST['book_type'] ?? $book['book_type']) == 'ssc') ? 'selected' : '' ?>>SSC</option>
-                <option value="banking" <?= (($_POST['book_type'] ?? $book['book_type']) == 'banking') ? 'selected' : '' ?>>Banking</option>
-                <option value="railway" <?= (($_POST['book_type'] ?? $book['book_type']) == 'railway') ? 'selected' : '' ?>>Railway</option>
-                <option value="defense" <?= (($_POST['book_type'] ?? $book['book_type']) == 'defense') ? 'selected' : '' ?>>Defense</option>
-                <option value="state_psc" <?= (($_POST['book_type'] ?? $book['book_type']) == 'state_psc') ? 'selected' : '' ?>>State PSC</option>
-                <option value="general_studies" <?= (($_POST['book_type'] ?? $book['book_type']) == 'general_studies') ? 'selected' : '' ?>>General Studies</option>
-                <option value="aptitude" <?= (($_POST['book_type'] ?? $book['book_type']) == 'aptitude') ? 'selected' : '' ?>>Quantitative Aptitude</option>
-                <option value="reasoning" <?= (($_POST['book_type'] ?? $book['book_type']) == 'reasoning') ? 'selected' : '' ?>>Reasoning</option>
-                <option value="english" <?= (($_POST['book_type'] ?? $book['book_type']) == 'english') ? 'selected' : '' ?>>English</option>
-                <option value="subject_specific" <?= (($_POST['book_type'] ?? $book['book_type']) == 'subject_specific') ? 'selected' : '' ?>>Subject Specific</option>
-            </select>
+                class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white
+                    <?= (!isset($_POST['book_type']) || ($_POST['book_type'] ?? '') === '') ? 'border-red-500' : '' ?>" required>
+            <option value="">-- Select Category --</option>
+            <option value="bank-jobs" <?= (($_POST['book_type'] ?? $book['book_type']) == 'bank-jobs') ? 'selected' : '' ?>>Bank Jobs</option>
+            <option value="railway-jobs" <?= (($_POST['book_type'] ?? $book['book_type']) == 'railway-jobs') ? 'selected' : '' ?>>Railway Jobs</option>
+            <option value="iti-jobs" <?= (($_POST['book_type'] ?? $book['book_type']) == 'iti-jobs') ? 'selected' : '' ?>>ITI Jobs</option>
+            <option value="police-jobs" <?= (($_POST['book_type'] ?? $book['book_type']) == 'police-jobs') ? 'selected' : '' ?>>Police Jobs</option>
+            <option value="army-jobs" <?= (($_POST['book_type'] ?? $book['book_type']) == 'army-jobs') ? 'selected' : '' ?>>Army Jobs</option>
+            <option value="teaching-jobs" <?= (($_POST['book_type'] ?? $book['book_type']) == 'teaching-jobs') ? 'selected' : '' ?>>Teaching Jobs</option>
+            <option value="defence-jobs" <?= (($_POST['book_type'] ?? $book['book_type']) == 'defence-jobs') ? 'selected' : '' ?>>Defence Jobs</option>
+            <option value="engineering-jobs" <?= (($_POST['book_type'] ?? $book['book_type']) == 'engineering-jobs') ? 'selected' : '' ?>>Engineering Jobs</option>
+            <option value="medical-jobs" <?= (($_POST['book_type'] ?? $book['book_type']) == 'medical-jobs') ? 'selected' : '' ?>>Medical Jobs</option>
+            <option value="government-jobs" <?= (($_POST['book_type'] ?? $book['book_type']) == 'government-jobs') ? 'selected' : '' ?>>Government Jobs</option>
+            <option value="private-jobs" <?= (($_POST['book_type'] ?? $book['book_type']) == 'private-jobs') ? 'selected' : '' ?>>Private Jobs</option>
+            <option value="internships" <?= (($_POST['book_type'] ?? $book['book_type']) == 'internships') ? 'selected' : '' ?>>Internships</option>
+            <option value="part-time-jobs" <?= (($_POST['book_type'] ?? $book['book_type']) == 'part-time-jobs') ? 'selected' : '' ?>>Part-Time Jobs</option>
+            <option value="work-from-home" <?= (($_POST['book_type'] ?? $book['book_type']) == 'work-from-home') ? 'selected' : '' ?>>Work From Home</option>
+            <option value="overseas-jobs" <?= (($_POST['book_type'] ?? $book['book_type']) == 'overseas-jobs') ? 'selected' : '' ?>>Overseas Jobs</option>
+        </select>
             <?php if (!isset($_POST['book_type']) || ($_POST['book_type'] ?? '') === ''): ?>
             <p class="mt-1 text-xs text-red-500 dark:text-red-400">Please select a book category</p>
             <?php endif; ?>
