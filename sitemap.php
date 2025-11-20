@@ -27,6 +27,13 @@ echo '<?xml version="1.0" encoding="UTF-8"?>';
     <priority>0.9</priority>
   </url>
 
+  <!-- Books Main Page -->
+  <url>
+    <loc><?= e($base . '/books') ?></loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
 <?php
 // ============================
 // JOBS + AMP JOB URLs
@@ -85,6 +92,34 @@ while ($r = $stmt->fetch()) {
     echo "  <loc>" . e($amp) . "</loc>\n";
     echo "  <lastmod>$lastmod</lastmod>\n";
     echo "  <changefreq>$freq</changefreq>\n";
+    echo "  <priority>0.6</priority>\n";
+    echo "</url>\n";
+    */
+}
+
+// ============================
+// BOOKS URLs
+// ============================
+$stmt = $pdo->query("SELECT slug, created_at FROM books WHERE status='active' ORDER BY created_at DESC LIMIT 2000");
+while ($r = $stmt->fetch()) {
+    $slug = urlencode($r['slug']);
+    $lastmod = date('Y-m-d', strtotime($r['created_at']));
+    $loc = $base . '/books/book-details?slug=' . $slug;
+
+    echo "<url>\n";
+    echo "  <loc>" . e($loc) . "</loc>\n";
+    echo "  <lastmod>$lastmod</lastmod>\n";
+    echo "  <changefreq>monthly</changefreq>\n";
+    echo "  <priority>0.7</priority>\n";
+    echo "</url>\n";
+
+    // OPTIONAL: Books AMP page (only if you have AMP version)
+    /*
+    $amp = $base . '/amp/books/book-details?slug=' . $slug;
+    echo "<url>\n";
+    echo "  <loc>" . e($amp) . "</loc>\n";
+    echo "  <lastmod>$lastmod</lastmod>\n";
+    echo "  <changefreq>monthly</changefreq>\n";
     echo "  <priority>0.6</priority>\n";
     echo "</url>\n";
     */
