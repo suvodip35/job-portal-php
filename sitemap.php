@@ -125,4 +125,26 @@ while ($r = $stmt->fetch()) {
     */
 }
 ?>
+
+<!-- Tools Page -->
+ <url>
+    <loc><?= e($base . '/tools') ?></loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+   <url>
+    <loc><?= e($base . '/tools/image-compressor') ?></loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc><?= e($base . '/tools/todo-list') ?></loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc><?= e($base . '/tools/typing-speed') ?></loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
 </urlset>
