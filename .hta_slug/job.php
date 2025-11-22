@@ -616,11 +616,11 @@ function copyToClipboard(button, text) {
 .animate-pulse {
   animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
-#markdownContent > a {
+#markdownContent  a {
   color: #2477fdff;
   text-decoration: underline;
 }
-#markdownContent > a:hover {
+#markdownContent  a:hover {
   color: #104fb6ff;
   text-decoration: underline;
 }
