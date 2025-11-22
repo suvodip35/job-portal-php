@@ -238,4 +238,30 @@
     color: #e5e7eb; /* Light gray text */
     border: 1px solid #374151;
   }
+
+  #markdownContent {
+  overflow: visible !important;
+}
+
+
+/* This is new applied class if not required remove in future */
+/* Prose class এর override */
+#markdownContent.prose * {
+  overflow: visible !important;
+  white-space: normal !important;
+  word-break: break-word !important;
+}
+
+/* Table natural responsive behaviour */
+#markdownContent table {
+  display: table !important;
+  width: 100% !important;
+  table-layout: auto !important;
+}
+
+#markdownContent th,
+#markdownContent td {
+  white-space: normal !important;
+  word-break: break-word !important;
+}
 </style>
