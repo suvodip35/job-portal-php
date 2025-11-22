@@ -103,6 +103,7 @@
   <meta name="googlebot" content="index, follow">
 
   <meta name="google-adsense-account" content="ca-pub-4941413774457326">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4941413774457326" crossorigin="anonymous"></script>
   <meta property="fb:app_id" content="1469923257657008" />
   <!-- Tailwind CDN for quick production-ready UI; for full production consider building Tailwind -->
   <script src="/assets/tailwind.css"></script>
