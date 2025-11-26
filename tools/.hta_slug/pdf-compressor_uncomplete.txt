@@ -1,0 +1,626 @@
+<?php
+    $toolName = "PDF Compression Simulator – Understand PDF Size Reduction";
+    $toolDesc = "Interactive PDF compression simulator to understand how different settings affect file size. Learn about compression techniques and get realistic size reduction estimates for your PDF files.";
+
+    $pageTitle       = $toolName . " - FromCampus";
+    $pageDescription = mb_substr(strip_tags($toolDesc), 0, 160);
+    $metaTitle       = $toolName;
+
+    $keywords = "pdf compression simulator, pdf size estimator, reduce pdf size, pdf optimizer, learn pdf compression, fromcampus tools";
+
+    $ogImage      = "https://fromcampus.com/assets/tools-image/pdf-compressor.jpg";
+    $canonicalUrl = "https://fromcampus.com/tools/pdf-compressor";
+
+    $schema = [
+        "@context" => "https://schema.org",
+        "@type" => "WebApplication",
+        "name" => $toolName,
+        "url" => $canonicalUrl,
+        "image" => $ogImage,
+        "operatingSystem" => "All",
+        "applicationCategory" => "EducationalApplication",
+        "description" => $toolDesc,
+        "creator" => [
+            "@type" => "Organization",
+            "name" => "FromCampus"
+        ],
+        "offers" => [
+            "@type" => "Offer",
+            "price" => "0",
+            "priceCurrency" => "INR"
+        ]
+    ];
+
+    require_once __DIR__ . '/../../.hta_slug/_header.php';
+?>
+
+<div class="flex items-center justify-center transition-all duration-300">
+    <div class="bg-white dark:bg-gray-800 shadow-2xl rounded-lg p-8 w-full max-w-4xl transition-all duration-300">
+        <h2 class="text-3xl font-semibold mb-2 text-center text-gray-900 dark:text-white">
+            PDF Compression Simulator
+        </h2>
+        <p class="text-center text-gray-600 dark:text-gray-400 mb-6">
+            Understand how PDF compression works and estimate file size reduction
+        </p>
+
+        <!-- File Upload Area -->
+        <div class="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-8 text-center mb-6 transition-all duration-300 hover:border-blue-400 dark:hover:border-blue-500">
+            <input 
+                type="file" 
+                name="pdfInput" 
+                id="pdfInput"
+                class="hidden"
+                accept=".pdf" />
+            
+            <div class="flex flex-col items-center justify-center">
+                <svg class="w-16 h-16 text-gray-400 dark:text-gray-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                <p class="text-lg font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Upload a PDF to analyze compression potential
+                </p>
+                <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">
+                    Your file stays in your browser - no server upload
+                </p>
+                <button 
+                    id="browseBtn"
+                    class="bg-gradient-to-r from-blue-500 to-green-600 hover:from-blue-400 hover:to-green-500 text-white font-bold py-2 px-6 rounded-full transition-all duration-200">
+                    Select PDF File
+                </button>
+            </div>
+        </div>
+
+        <!-- File Info -->
+        <div id="fileInfo" class="hidden bg-gray-50 dark:bg-gray-700 rounded-lg p-4 mb-6">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                    <svg class="w-8 h-8 text-blue-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    <div>
+                        <p id="fileName" class="font-medium text-gray-900 dark:text-white"></p>
+                        <p id="fileSize" class="text-sm text-gray-600 dark:text-gray-400"></p>
+                    </div>
+                </div>
+                <button id="removeFile" class="text-red-500 hover:text-red-700 transition-colors duration-200">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Compression Settings -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <!-- Compression Level -->
+            <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
+                <h3 class="text-lg font-semibold mb-3 text-gray-900 dark:text-white">Compression Level</h3>
+                <div class="space-y-3" id="compressionLevels">
+                    <div class="compression-option">
+                        <input type="radio" id="level1" name="compressionLevel" value="extreme" class="hidden">
+                        <label for="level1" class="flex items-center cursor-pointer w-full p-3 rounded border-2 border-gray-200 dark:border-gray-600 hover:border-blue-400 transition-all duration-200">
+                            <span class="radio-indicator w-4 h-4 border-2 border-gray-400 rounded-full mr-3 flex items-center justify-center">
+                                <span class="w-2 h-2 bg-blue-500 rounded-full hidden"></span>
+                            </span>
+                            <div>
+                                <p class="font-medium text-gray-900 dark:text-white">Extreme Compression</p>
+                                <p class="text-sm text-gray-600 dark:text-gray-400">70-90% size reduction</p>
+                            </div>
+                        </label>
+                    </div>
+                    <div class="compression-option">
+                        <input type="radio" id="level2" name="compressionLevel" value="recommended" class="hidden" checked>
+                        <label for="level2" class="flex items-center cursor-pointer w-full p-3 rounded border-2 border-blue-500 bg-blue-50 dark:bg-blue-900/20 transition-all duration-200">
+                            <span class="radio-indicator w-4 h-4 border-2 border-blue-500 bg-blue-500 rounded-full mr-3 flex items-center justify-center">
+                                <span class="w-2 h-2 bg-white rounded-full"></span>
+                            </span>
+                            <div>
+                                <p class="font-medium text-gray-900 dark:text-white">Recommended</p>
+                                <p class="text-sm text-gray-600 dark:text-gray-400">40-60% size reduction</p>
+                            </div>
+                        </label>
+                    </div>
+                    <div class="compression-option">
+                        <input type="radio" id="level3" name="compressionLevel" value="light" class="hidden">
+                        <label for="level3" class="flex items-center cursor-pointer w-full p-3 rounded border-2 border-gray-200 dark:border-gray-600 hover:border-blue-400 transition-all duration-200">
+                            <span class="radio-indicator w-4 h-4 border-2 border-gray-400 rounded-full mr-3 flex items-center justify-center">
+                                <span class="w-2 h-2 bg-blue-500 rounded-full hidden"></span>
+                            </span>
+                            <div>
+                                <p class="font-medium text-gray-900 dark:text-white">Light Compression</p>
+                                <p class="text-sm text-gray-600 dark:text-gray-400">20-40% size reduction</p>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Advanced Options -->
+            <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
+                <h3 class="text-lg font-semibold mb-3 text-gray-900 dark:text-white">Compression Techniques</h3>
+                <div class="space-y-3">
+                    <div class="flex items-center justify-between p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
+                        <span class="text-gray-700 dark:text-gray-300">Image Optimization</span>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" id="optimizeImages" class="sr-only peer" checked>
+                            <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+                        </label>
+                    </div>
+                    <div class="flex items-center justify-between p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
+                        <span class="text-gray-700 dark:text-gray-300">Remove Metadata</span>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" id="removeMetadata" class="sr-only peer" checked>
+                            <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+                        </label>
+                    </div>
+                    <div class="flex items-center justify-between p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
+                        <span class="text-gray-700 dark:text-gray-300">Font Optimization</span>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" id="fontOptimization" class="sr-only peer" checked>
+                            <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Section -->
+        <div id="resultsSection" class="hidden">
+            <!-- Results Summary -->
+            <div class="bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-900/20 dark:to-blue-900/20 rounded-lg p-6 mb-6 border border-green-200 dark:border-green-800">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Compression Analysis Complete</h3>
+                        <p class="text-gray-700 dark:text-gray-300">Based on your settings, here's the estimated size reduction:</p>
+                    </div>
+                    <div class="text-right">
+                        <p id="savingsAmount" class="text-2xl font-bold text-green-600 dark:text-green-400">0 KB saved</p>
+                        <p id="savingsPercentage" class="text-gray-600 dark:text-gray-400">0% reduction</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Size Comparison -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
+                    <h3 class="text-lg font-semibold mb-3 text-gray-900 dark:text-white">Original PDF</h3>
+                    <div class="bg-white dark:bg-gray-800 rounded border border-gray-200 dark:border-gray-600 p-4">
+                        <div id="originalPreview" class="flex items-center justify-center min-h-[200px]">
+                            <p class="text-gray-500 dark:text-gray-400 text-center">PDF preview will appear here</p>
+                        </div>
+                    </div>
+                    <div class="mt-3 text-center">
+                        <p id="originalSize" class="text-lg font-semibold text-gray-900 dark:text-white">0 KB</p>
+                        <p class="text-sm text-gray-600 dark:text-gray-400">Original Size</p>
+                    </div>
+                </div>
+
+                <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
+                    <h3 class="text-lg font-semibold mb-3 text-gray-900 dark:text-white">Estimated Compressed</h3>
+                    <div class="bg-white dark:bg-gray-800 rounded border border-gray-200 dark:border-gray-600 p-4">
+                        <div id="compressedPreview" class="flex items-center justify-center min-h-[200px]">
+                            <div class="text-center">
+                                <svg class="w-12 h-12 text-green-500 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                <p class="text-green-600 font-semibold">Size Reduction Achieved</p>
+                                <p class="text-gray-600 text-sm mt-1">Based on compression settings</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-3 text-center">
+                        <p id="compressedSize" class="text-lg font-semibold text-gray-900 dark:text-white">0 KB</p>
+                        <p class="text-sm text-gray-600 dark:text-gray-400">Estimated Size</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex flex-col sm:flex-row gap-4">
+                <button 
+                    id="analyzeBtn"
+                    class="flex-1 bg-gradient-to-r from-blue-500 to-green-600 hover:from-blue-400 hover:to-green-500 text-white font-bold py-3 px-6 rounded-full transition-all duration-200">
+                    <span class="flex items-center justify-center">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        Get Compression Report
+                    </span>
+                </button>
+                
+                <a 
+                    href="#compression-info"
+                    class="flex-1 justify-center bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-400 hover:to-pink-500 text-white font-bold py-3 px-6 rounded-full text-center transition-all duration-200">
+                    Learn About PDF Compression
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Educational Section -->
+<div id="compression-info" class="mt-8 p-6 bg-gray-100 dark:bg-gray-700 rounded-lg shadow">
+    <h3 class="text-2xl font-bold mb-6 text-gray-900 dark:text-white text-center">
+        Understanding PDF Compression
+    </h3>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div class="bg-white dark:bg-gray-800 rounded-lg p-6">
+            <h4 class="text-lg font-semibold mb-3 text-gray-900 dark:text-white">How Real PDF Compression Works</h4>
+            <ul class="space-y-2 text-gray-700 dark:text-gray-300">
+                <li class="flex items-start">
+                    <svg class="w-5 h-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    <span><strong>Image Optimization:</strong> Reduce image quality, resize, and convert to efficient formats</span>
+                </li>
+                <li class="flex items-start">
+                    <svg class="w-5 h-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    <span><strong>Font Subsetting:</strong> Include only used characters from fonts</span>
+                </li>
+                <li class="flex items-start">
+                    <svg class="w-5 h-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    <span><strong>Object Compression:</strong> Compress PDF objects and streams</span>
+                </li>
+                <li class="flex items-start">
+                    <svg class="w-5 h-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    <span><strong>Metadata Removal:</strong> Strip unnecessary metadata and comments</span>
+                </li>
+            </ul>
+        </div>
+        
+        <div class="bg-white dark:bg-gray-800 rounded-lg p-6">
+            <h4 class="text-lg font-semibold mb-3 text-gray-900 dark:text-white">Tools for Real PDF Compression</h4>
+            <ul class="space-y-2 text-gray-700 dark:text-gray-300">
+                <li class="flex items-start">
+                    <svg class="w-5 h-5 text-blue-500 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                    </svg>
+                    <span><strong>Adobe Acrobat Pro:</strong> Professional PDF compression with quality control</span>
+                </li>
+                <li class="flex items-start">
+                    <svg class="w-5 h-5 text-blue-500 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                    </svg>
+                    <span><strong>Online Tools:</strong> SmallPDF, iLovePDF, PDF24</span>
+                </li>
+                <li class="flex items-start">
+                    <svg class="w-5 h-5 text-blue-500 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                    </svg>
+                    <span><strong>Command Line:</strong> Ghostscript, QPDF</span>
+                </li>
+                <li class="flex items-start">
+                    <svg class="w-5 h-5 text-blue-500 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                    </svg>
+                    <span><strong>Programming Libraries:</strong> Python, Java, .NET PDF libraries</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- PDF.js library -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+<script>
+    // Set up PDF.js worker
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
+
+    let currentPdfFile = null;
+
+    // DOM Elements
+    const pdfInput = document.getElementById('pdfInput');
+    const browseBtn = document.getElementById('browseBtn');
+    const fileInfo = document.getElementById('fileInfo');
+    const fileName = document.getElementById('fileName');
+    const fileSize = document.getElementById('fileSize');
+    const removeFile = document.getElementById('removeFile');
+    const analyzeBtn = document.getElementById('analyzeBtn');
+    const resultsSection = document.getElementById('resultsSection');
+    const originalSize = document.getElementById('originalSize');
+    const compressedSize = document.getElementById('compressedSize');
+    const savingsAmount = document.getElementById('savingsAmount');
+    const savingsPercentage = document.getElementById('savingsPercentage');
+
+    // Initialize radio buttons and checkboxes
+    function initializeControls() {
+        // Radio buttons - custom implementation
+        const radioButtons = document.querySelectorAll('input[type="radio"][name="compressionLevel"]');
+        const radioLabels = document.querySelectorAll('.compression-option label');
+        
+        radioLabels.forEach(label => {
+            label.addEventListener('click', function(e) {
+                const radioId = this.getAttribute('for');
+                const radio = document.getElementById(radioId);
+                
+                // Uncheck all radios
+                radioButtons.forEach(r => r.checked = false);
+                
+                // Remove selected styles from all labels
+                radioLabels.forEach(l => {
+                    l.classList.remove('border-blue-500', 'bg-blue-50', 'dark:bg-blue-900/20');
+                    const indicator = l.querySelector('.radio-indicator');
+                    indicator.classList.remove('border-blue-500', 'bg-blue-500');
+                    indicator.querySelector('span').classList.add('hidden');
+                });
+                
+                // Check the clicked radio
+                radio.checked = true;
+                
+                // Add selected styles to clicked label
+                this.classList.add('border-blue-500', 'bg-blue-50', 'dark:bg-blue-900/20');
+                const indicator = this.querySelector('.radio-indicator');
+                indicator.classList.add('border-blue-500', 'bg-blue-500');
+                indicator.querySelector('span').classList.remove('hidden');
+
+                // If we have a file, update analysis
+                if (currentPdfFile) {
+                    updateCompressionAnalysis();
+                }
+            });
+        });
+
+        // Checkboxes
+        const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+        checkboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                // If we have a file, update analysis
+                if (currentPdfFile) {
+                    updateCompressionAnalysis();
+                }
+            });
+        });
+
+        // Set initial state for recommended option
+        document.getElementById('level2').checked = true;
+    }
+
+    // Event Listeners
+    browseBtn.addEventListener('click', () => pdfInput.click());
+    pdfInput.addEventListener('change', handleFileSelect);
+    removeFile.addEventListener('click', clearFile);
+    analyzeBtn.addEventListener('click', generateCompressionReport);
+
+    // Initialize controls on load
+    document.addEventListener('DOMContentLoaded', initializeControls);
+
+    // Drag and drop functionality
+    const dropArea = document.querySelector('.border-dashed');
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        dropArea.addEventListener(eventName, preventDefaults, false);
+    });
+
+    function preventDefaults(e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+
+    ['dragenter', 'dragover'].forEach(eventName => {
+        dropArea.addEventListener(eventName, highlight, false);
+    });
+
+    ['dragleave', 'drop'].forEach(eventName => {
+        dropArea.addEventListener(eventName, unhighlight, false);
+    });
+
+    function highlight() {
+        dropArea.classList.add('border-blue-400', 'bg-blue-50', 'dark:bg-blue-900/20');
+    }
+
+    function unhighlight() {
+        dropArea.classList.remove('border-blue-400', 'bg-blue-50', 'dark:bg-blue-900/20');
+    }
+
+    dropArea.addEventListener('drop', handleDrop, false);
+
+    function handleDrop(e) {
+        const dt = e.dataTransfer;
+        const files = dt.files;
+        if (files.length > 0 && files[0].type === 'application/pdf') {
+            pdfInput.files = files;
+            handleFileSelect();
+        }
+    }
+
+    function handleFileSelect() {
+        const file = pdfInput.files[0];
+        if (!file) return;
+
+        if (file.type !== 'application/pdf') {
+            alert('Please select a PDF file.');
+            return;
+        }
+
+        if (file.size > 50 * 1024 * 1024) {
+            alert('File size must be less than 50MB.');
+            return;
+        }
+
+        currentPdfFile = file;
+        displayFileInfo(file);
+        loadPdfPreview(file);
+        updateCompressionAnalysis();
+        resultsSection.classList.remove('hidden');
+    }
+
+    function displayFileInfo(file) {
+        fileName.textContent = file.name;
+        fileSize.textContent = formatFileSize(file.size);
+        originalSize.textContent = formatFileSize(file.size);
+        fileInfo.classList.remove('hidden');
+    }
+
+    function clearFile() {
+        pdfInput.value = '';
+        currentPdfFile = null;
+        fileInfo.classList.add('hidden');
+        resultsSection.classList.add('hidden');
+        document.getElementById('originalPreview').innerHTML = '<p class="text-gray-500 dark:text-gray-400 text-center">PDF preview will appear here</p>';
+    }
+
+    async function loadPdfPreview(file) {
+        try {
+            const arrayBuffer = await file.arrayBuffer();
+            
+            // Try to load PDF for preview
+            const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+            const page = await pdf.getPage(1);
+            const viewport = page.getViewport({ scale: 0.5 });
+            
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+            canvas.height = viewport.height;
+            canvas.width = viewport.width;
+            
+            await page.render({
+                canvasContext: context,
+                viewport: viewport
+            }).promise;
+            
+            document.getElementById('originalPreview').innerHTML = '';
+            document.getElementById('originalPreview').appendChild(canvas);
+        } catch (error) {
+            console.error('Error loading PDF preview:', error);
+            document.getElementById('originalPreview').innerHTML = 
+                '<p class="text-red-500 text-center p-4">Error loading PDF preview. The file may be corrupted or encrypted.</p>';
+        }
+    }
+
+    function updateCompressionAnalysis() {
+        if (!currentPdfFile) return;
+
+        // Get compression settings
+        const compressionLevel = document.querySelector('input[name="compressionLevel"]:checked').value;
+        const optimizeImages = document.getElementById('optimizeImages').checked;
+        const removeMetadata = document.getElementById('removeMetadata').checked;
+        const fontOptimization = document.getElementById('fontOptimization').checked;
+
+        // Calculate compression ratio based on settings
+        let compressionRatio = calculateCompressionRatio(compressionLevel, optimizeImages, removeMetadata, fontOptimization);
+        
+        const originalSizeBytes = currentPdfFile.size;
+        const compressedSizeBytes = Math.floor(originalSizeBytes * compressionRatio);
+        
+        // Update UI
+        updateResults(originalSizeBytes, compressedSizeBytes);
+    }
+
+    function calculateCompressionRatio(level, optimizeImages, removeMetadata, fontOptimization) {
+        let ratio;
+        
+        // Base ratio based on compression level
+        switch(level) {
+            case 'extreme':
+                ratio = 0.3; // 70% reduction
+                break;
+            case 'recommended':
+                ratio = 0.6; // 40% reduction
+                break;
+            case 'light':
+                ratio = 0.8; // 20% reduction
+                break;
+            default:
+                ratio = 0.6;
+        }
+
+        // Apply additional compression based on options
+        if (optimizeImages) {
+            ratio *= 0.85; // 15% additional reduction
+        }
+        
+        if (removeMetadata) {
+            ratio *= 0.95; // 5% additional reduction
+        }
+        
+        if (fontOptimization) {
+            ratio *= 0.90; // 10% additional reduction
+        }
+
+        return ratio;
+    }
+
+    function updateResults(originalSizeBytes, compressedSizeBytes) {
+        const originalFormatted = formatFileSize(originalSizeBytes);
+        const compressedFormatted = formatFileSize(compressedSizeBytes);
+        
+        originalSize.textContent = originalFormatted;
+        compressedSize.textContent = compressedFormatted;
+        
+        const savingsBytes = originalSizeBytes - compressedSizeBytes;
+        const savingsPercent = ((savingsBytes / originalSizeBytes) * 100).toFixed(1);
+        
+        savingsAmount.textContent = `${formatFileSize(savingsBytes)} saved`;
+        savingsPercentage.textContent = `${savingsPercent}% reduction`;
+    }
+
+    async function generateCompressionReport() {
+        if (!currentPdfFile) return;
+
+        // Get current settings
+        const compressionLevel = document.querySelector('input[name="compressionLevel"]:checked').value;
+        const optimizeImages = document.getElementById('optimizeImages').checked;
+        const removeMetadata = document.getElementById('removeMetadata').checked;
+        const fontOptimization = document.getElementById('fontOptimization').checked;
+
+        const originalSizeBytes = currentPdfFile.size;
+        const compressionRatio = calculateCompressionRatio(compressionLevel, optimizeImages, removeMetadata, fontOptimization);
+        const compressedSizeBytes = Math.floor(originalSizeBytes * compressionRatio);
+        const savingsPercent = ((1 - compressionRatio) * 100).toFixed(1);
+
+        // Create a detailed report
+        const reportContent = `
+PDF Compression Analysis Report
+===============================
+
+File: ${currentPdfFile.name}
+Original Size: ${formatFileSize(originalSizeBytes)}
+Compression Level: ${compressionLevel.charAt(0).toUpperCase() + compressionLevel.slice(1)}
+
+Compression Settings Applied:
+- Image Optimization: ${optimizeImages ? 'Yes' : 'No'}
+- Metadata Removal: ${removeMetadata ? 'Yes' : 'No'}
+- Font Optimization: ${fontOptimization ? 'Yes' : 'No'}
+
+Estimated Results:
+- Compressed Size: ${formatFileSize(compressedSizeBytes)}
+- Size Reduction: ${formatFileSize(originalSizeBytes - compressedSizeBytes)}
+- Percentage Saved: ${savingsPercent}%
+
+Note: This is an estimation based on compression algorithms.
+Real PDF compression requires server-side processing with specialized tools.
+
+Generated by FromCampus PDF Compression Simulator
+        `.trim();
+
+        // Create and download the report
+        const blob = new Blob([reportContent], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `compression_report_${currentPdfFile.name.replace('.pdf', '')}.txt`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+
+        // Show success message
+        alert('Compression report downloaded! Check your downloads folder.');
+    }
+
+    function formatFileSize(bytes) {
+        if (bytes === 0) return '0 Bytes';
+        
+        const k = 1024;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    }
+</script>
