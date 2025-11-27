@@ -147,4 +147,14 @@ while ($r = $stmt->fetch()) {
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
+  <url>
+    <loc><?= e($base . '/tools/lettercase-converter') ?></loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc><?= e($base . '/tools/qr-code-generator') ?></loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
 </urlset>
