@@ -1,4 +1,30 @@
 <?php 
+
+  $pageTitle = "Privacy Policy | FromCampus - Job Notification Portal";
+  $pageDescription = "Read the official Privacy Policy of FromCampus. Learn how we collect, store, and protect user data including preferences and saved jobs using browser local storage.";
+  $keywords = "Privacy Policy, User Data, Local Storage Data, Saved Jobs Policy, FromCampus Privacy";
+  $author = "FromCampus";
+  $ogImage = "https://fromcampus.com/assets/logo/FromCampus_Color_text.png";
+  $canonicalUrl = "https://fromcampus.com/privacy-policy";
+
+  $schema = [
+      "@context" => "https://schema.org",
+      "@type" => "WebPage",
+      "name" => "Privacy Policy - FromCampus",
+      "url" => "https://fromcampus.com/privacy-policy",
+      "description" => "Official Privacy Policy of FromCampus explaining how user data like saved jobs and browser local storage is used and protected.",
+      "keywords" => "Privacy Policy, User Data, Local Storage Data, Saved Jobs Policy, FromCampus",
+      "publisher" => [
+          "@type" => "Organization",
+          "name" => "FromCampus",
+          "url" => "https://fromcampus.com/",
+          "logo" => [
+              "@type" => "ImageObject",
+              "url" => "https://fromcampus.com/assets/logo/FromCampus_Color_text.png"
+          ]
+      ]
+  ];
+
   require_once('_header.php');
 ?>
 <main class="max-w-4xl mx-auto px-4 py-10">

@@ -1,4 +1,34 @@
 <?php
+    $pageTitle = "Contact Us | FromCampus - Job Notification Portal";
+    $pageDescription = "Need help or have a suggestion? Contact FromCampus for support, feedback, or collaboration inquiries.";
+    $keywords = "Contact FromCampus, Support, Feedback, Job Portal Contact";
+    $author = "FromCampus";
+    $ogImage = "https://fromcampus.com/assets/logo/FromCampus_Color_text.png";
+    $canonicalUrl = "https://fromcampus.com/contact";
+
+    $schema = [
+        "@context" => "https://schema.org",
+        "@type" => "ContactPage",
+        "name" => "Contact FromCampus",
+        "url" => "https://fromcampus.com/contact",
+        "description" => "Reach out to FromCampus for support, feedback, or collaboration requests.",
+        "contactPoint" => [
+            "@type" => "ContactPoint",
+            "contactType" => "customer support",
+            "email" => "support@fromcampus.com",
+            "availableLanguage" => ["en", "hi", "bn"]
+        ],
+        "publisher" => [
+            "@type" => "Organization",
+            "name" => "FromCampus",
+            "url" => "https://fromcampus.com/",
+            "logo" => [
+                "@type" => "ImageObject",
+                "url" => "https://fromcampus.com/assets/logo/FromCampus_Color_text.png"
+            ]
+        ]
+    ];
+
 require_once('_header.php');
 
 $err = '';

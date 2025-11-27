@@ -1,4 +1,30 @@
 <?php 
+
+  $pageTitle = "Terms & Conditions | FromCampus - Job Notification Portal";
+  $pageDescription = "Read the official Terms and Conditions of FromCampus. Understand allowable use of job listings, content, and saved job features.";
+  $keywords = "Terms and Conditions, Website Rules, Usage Policy, Job Portal Rules, FromCampus Terms";
+  $author = "FromCampus";
+  $ogImage = "https://fromcampus.com/assets/logo/FromCampus_Color_text.png";
+  $canonicalUrl = "https://fromcampus.com/terms";
+
+  $schema = [
+      "@context" => "https://schema.org",
+      "@type" => "WebPage",
+      "name" => "Terms & Conditions - FromCampus",
+      "url" => "https://fromcampus.com/terms",
+      "description" => "Official Terms & Conditions of FromCampus including usage rules for job listings and saved job features.",
+      "keywords" => "Terms and Conditions, Usage Rules, Job Portal Terms, FromCampus Policies",
+      "publisher" => [
+          "@type" => "Organization",
+          "name" => "FromCampus",
+          "url" => "https://fromcampus.com/",
+          "logo" => [
+              "@type" => "ImageObject",
+              "url" => "https://fromcampus.com/assets/logo/FromCampus_Color_text.png"
+          ]
+      ]
+  ];
+
   require_once('_header.php');
 ?>
 <main class="max-w-4xl mx-auto px-4 py-10">

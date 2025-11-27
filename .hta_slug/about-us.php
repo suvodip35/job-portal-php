@@ -1,4 +1,29 @@
 <?php 
+
+  $pageTitle = "About FromCampus - Job Notification & Career Updates";
+  $pageDescription = "FromCampus is a job notification platform helping students and job seekers stay updated with Government, Private, ITI, Railway, and engineering jobs.";
+  $keywords = "About FromCampus, Job Portal, Govt Job Updates, Career Notification, Job Alerts";
+  $author = "FromCampus";
+  $ogImage = "https://fromcampus.com/assets/logo/FromCampus_Color_text.png";
+  $canonicalUrl = "https://fromcampus.com/about-us";
+
+  $schema = [
+      "@context" => "https://schema.org",
+      "@type" => "AboutPage",
+      "name" => "About FromCampus",
+      "url" => "https://fromcampus.com/about-us",
+      "description" => "Learn about FromCampus and how we help job seekers stay updated with verified job notifications across multiple sectors.",
+      "publisher" => [
+          "@type" => "Organization",
+          "name" => "FromCampus",
+          "url" => "https://fromcampus.com/",
+          "logo" => [
+              "@type" => "ImageObject",
+              "url" => "https://fromcampus.com/assets/logo/FromCampus_Color_text.png"
+          ]
+      ]
+  ];
+
   require_once('_header.php');
 ?>
 <main class="max-w-4xl mx-auto px-4 py-10">
