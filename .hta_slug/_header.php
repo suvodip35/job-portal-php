@@ -1,4 +1,30 @@
 <?php
+  $file = 'counter.txt';
+
+    // Cookie name
+    $cookieName = "viewed_page";
+
+    // যদি আগে cookie না থাকে তাহলে count বাড়ানো হবে
+    if(!isset($_COOKIE[$cookieName])) {
+
+        // Cookie set for 24 hours
+        setcookie($cookieName, true, time() + 86400, "/");
+
+        // File read + increment
+        if(!file_exists($file)) {
+            file_put_contents($file, 0);
+        }
+
+        $count = (int) file_get_contents($file);
+        $count++;
+        file_put_contents($file, $count);
+
+    } else {
+        // Cookie থাকলে কাউন্ট বাড়বে না
+        $count = (int) file_get_contents($file);
+    }
+
+    // echo "Total Views: " . $count;
   // error handler function
   function setupErrorLogger($logFile = __DIR__ . '/error_files.txt') {
       // Set timezone for accurate timestamps
