@@ -49,6 +49,14 @@ $tools = [
         'alt' => 'QR Code Generator'
     ],
     [
+        'name' => 'Letter Case Converter',
+        'description' => 'Convert text between uppercase, lowercase, sentence case, title case and more. Format text instantly.',
+        'image' => '/assets/tools-image/letter-case-converter.jpg',
+        'url' => '/tools/lettercase-converter',
+        'button_color' => 'bg-indigo-500 hover:bg-indigo-600',
+        'alt' => 'Letter Case Converter'
+    ],
+    [
         'name' => 'To-Do List',
         'description' => 'Add, edit, complete, and manage tasks efficiently. Drag & drop, filtering, and auto-save included.',
         'image' => '/assets/tools-image/todo-list.jpg',
