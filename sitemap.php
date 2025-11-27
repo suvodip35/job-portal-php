@@ -157,4 +157,10 @@ while ($r = $stmt->fetch()) {
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
+  <!-- Review page -->
+  <url>
+    <loc><?= e($base . '/review') ?></loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
 </urlset>
