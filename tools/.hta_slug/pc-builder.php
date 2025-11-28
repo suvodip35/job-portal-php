@@ -177,8 +177,8 @@ const COMPONENT_DB = {
             integratedGpu: false, 
             tier: 'budget',
             affiliateLinks: {
-                amazon: 'https://amazon.in/dp/B09VCHR1VY',
-                flipkart: 'https://dl.flipkart.com/s/op!je7uuN'
+                amazon: '',
+                flipkart: ''
             }
         },
         { 
@@ -191,8 +191,8 @@ const COMPONENT_DB = {
             integratedGpu: false, 
             tier: 'budget',
             affiliateLinks: {
-                amazon: 'https://amazon.in/dp/B09NPJDPSS',
-                flipkart: 'https://dl.flipkart.com/s/op!XYZ123'
+                amazon: '',
+                flipkart: ''
             }
         },
         { 
@@ -205,7 +205,7 @@ const COMPONENT_DB = {
             integratedGpu: true, 
             tier: 'mid',
             affiliateLinks: {
-                amazon: 'https://amazon.in/dp/B0BCF7V2C8'
+                amazon: '8'
             }
         },
         { 
@@ -218,7 +218,7 @@ const COMPONENT_DB = {
             integratedGpu: false, 
             tier: 'mid',
             affiliateLinks: {
-                amazon: 'https://amazon.in/dp/B0CKVD9S53'
+                amazon: '3'
             }
         },
         { 
@@ -231,7 +231,7 @@ const COMPONENT_DB = {
             integratedGpu: true, 
             tier: 'high',
             affiliateLinks: {
-                amazon: 'https://amazon.in/dp/B0D1234567'
+                amazon: '7'
             }
         },
         { 
@@ -244,8 +244,8 @@ const COMPONENT_DB = {
             integratedGpu: true, 
             tier: 'high',
             affiliateLinks: {
-                amazon: 'https://amazon.in/dp/B0D7654321',
-                flipkart: 'https://dl.flipkart.com/s/op!ABC789'
+                amazon: '',
+                flipkart: ''
             }
         },
     ],
@@ -259,7 +259,7 @@ const COMPONENT_DB = {
             size: 'mATX', 
             wifi: false,
             affiliateLinks: {
-                amazon: 'https://amazon.in/dp/B08RXY5PXY'
+                amazon: 'Y'
             }
         },
         { 
@@ -271,8 +271,8 @@ const COMPONENT_DB = {
             size: 'mATX', 
             wifi: false,
             affiliateLinks: {
-                amazon: 'https://amazon.in/dp/B0BPB4T6K7',
-                flipkart: 'https://dl.flipkart.com/s/op!DEF456'
+                amazon: '',
+                flipkart: ''
             }
         },
         { 
@@ -284,7 +284,7 @@ const COMPONENT_DB = {
             size: 'mATX', 
             wifi: true,
             affiliateLinks: {
-                amazon: 'https://amazon.in/dp/B0BG3V4P3J'
+                amazon: 'J'
             }
         },
         { 
@@ -296,7 +296,7 @@ const COMPONENT_DB = {
             size: 'ATX', 
             wifi: true,
             affiliateLinks: {
-                amazon: 'https://amazon.in/dp/B0BQ5V7V7V'
+                amazon: 'V'
             }
         },
         { 
@@ -308,7 +308,7 @@ const COMPONENT_DB = {
             size: 'ATX', 
             wifi: true,
             affiliateLinks: {
-                amazon: 'https://amazon.in/dp/B0D2345678'
+                amazon: '8'
             }
         },
         { 
@@ -320,8 +320,8 @@ const COMPONENT_DB = {
             size: 'ATX', 
             wifi: true,
             affiliateLinks: {
-                amazon: 'https://amazon.in/dp/B0D8765432',
-                flipkart: 'https://dl.flipkart.com/s/op!GHI789'
+                amazon: '',
+                flipkart: ''
             }
         },
     ],
@@ -333,8 +333,8 @@ const COMPONENT_DB = {
             type: 'DDR4', 
             capacity: 16,
             affiliateLinks: {
-                amazon: 'https://amazon.in/dp/B08TJJQJ7J',
-                flipkart: 'https://dl.flipkart.com/s/op!JKL123'
+                amazon: '',
+                flipkart: ''
             }
         },
         { 
@@ -344,7 +344,7 @@ const COMPONENT_DB = {
             type: 'DDR4', 
             capacity: 32,
             affiliateLinks: {
-                amazon: 'https://amazon.in/dp/B0143UM4TC'
+                amazon: 'C'
             }
         },
         { 
@@ -354,8 +354,8 @@ const COMPONENT_DB = {
             type: 'DDR5', 
             capacity: 32,
             affiliateLinks: {
-                amazon: 'https://amazon.in/dp/B0B5GNR7P7',
-                flipkart: 'https://dl.flipkart.com/s/op!MNO456'
+                amazon: '',
+                flipkart: ''
             }
         },
         { 
@@ -365,7 +365,7 @@ const COMPONENT_DB = {
             type: 'DDR5', 
             capacity: 64,
             affiliateLinks: {
-                amazon: 'https://amazon.in/dp/B0B6GV4W6W'
+                amazon: 'W'
             }
         },
     ],
@@ -377,7 +377,7 @@ const COMPONENT_DB = {
             watts: 132, 
             tier: 'budget',
             affiliateLinks: {
-                amazon: 'https://amazon.in/dp/B09G5JNKW6'
+                amazon: '6'
             }
         },
         { 
@@ -387,8 +387,8 @@ const COMPONENT_DB = {
             watts: 170, 
             tier: 'budget',
             affiliateLinks: {
-                amazon: 'https://amazon.in/dp/B08W8DGK3X',
-                flipkart: 'https://dl.flipkart.com/s/op!PQR789'
+                amazon: '',
+                flipkart: ''
             }
         },
         { 
@@ -398,7 +398,7 @@ const COMPONENT_DB = {
             watts: 115, 
             tier: 'mid',
             affiliateLinks: {
-                amazon: 'https://amazon.in/dp/B0C8JQH6J6'
+                amazon: '6'
             }
         },
         { 
@@ -408,7 +408,7 @@ const COMPONENT_DB = {
             watts: 245, 
             tier: 'mid',
             affiliateLinks: {
-                amazon: 'https://amazon.in/dp/B0CG9K6J7J'
+                amazon: 'J'
             }
         },
         { 
@@ -418,7 +418,7 @@ const COMPONENT_DB = {
             watts: 220, 
             tier: 'high',
             affiliateLinks: {
-                amazon: 'https://amazon.in/dp/B0D3456789'
+                amazon: '9'
             }
         },
         { 
@@ -428,8 +428,8 @@ const COMPONENT_DB = {
             watts: 450, 
             tier: 'high',
             affiliateLinks: {
-                amazon: 'https://amazon.in/dp/B0D9876543',
-                flipkart: 'https://dl.flipkart.com/s/op!STU123'
+                amazon: '',
+                flipkart: ''
             }
         },
     ],
@@ -440,7 +440,7 @@ const COMPONENT_DB = {
             price: 3200, 
             type: 'NVMe Gen3',
             affiliateLinks: {
-                amazon: 'https://amazon.in/dp/B08KFRFL8F'
+                amazon: 'F'
             }
         },
         { 
@@ -449,8 +449,8 @@ const COMPONENT_DB = {
             price: 5600, 
             type: 'NVMe Gen3',
             affiliateLinks: {
-                amazon: 'https://amazon.in/dp/B0B25L5GGP',
-                flipkart: 'https://dl.flipkart.com/s/op!VWX456'
+                amazon: '',
+                flipkart: ''
             }
         },
         { 
@@ -459,7 +459,7 @@ const COMPONENT_DB = {
             price: 9500, 
             type: 'NVMe Gen4',
             affiliateLinks: {
-                amazon: 'https://amazon.in/dp/B0BGHH3G4G'
+                amazon: 'G'
             }
         },
         { 
@@ -468,7 +468,7 @@ const COMPONENT_DB = {
             price: 16500, 
             type: 'NVMe Gen4',
             affiliateLinks: {
-                amazon: 'https://amazon.in/dp/B0B7CKV6V6'
+                amazon: '6'
             }
         },
     ],
@@ -480,7 +480,7 @@ const COMPONENT_DB = {
             watts: 550, 
             modular: false,
             affiliateLinks: {
-                amazon: 'https://amazon.in/dp/B08R5R7C7C'
+                amazon: 'C'
             }
         },
         { 
@@ -490,8 +490,8 @@ const COMPONENT_DB = {
             watts: 650, 
             modular: false,
             affiliateLinks: {
-                amazon: 'https://amazon.in/dp/B08R5R7C7D',
-                flipkart: 'https://dl.flipkart.com/s/op!YZA789'
+                amazon: '',
+                flipkart: ''
             }
         },
         { 
@@ -501,7 +501,7 @@ const COMPONENT_DB = {
             watts: 750, 
             modular: true,
             affiliateLinks: {
-                amazon: 'https://amazon.in/dp/B0B4V4G4V4'
+                amazon: '4'
             }
         },
         { 
@@ -511,7 +511,7 @@ const COMPONENT_DB = {
             watts: 1000, 
             modular: true,
             affiliateLinks: {
-                amazon: 'https://amazon.in/dp/B0C1D2E3F4'
+                amazon: '4'
             }
         },
     ],
@@ -523,8 +523,8 @@ const COMPONENT_DB = {
             size: 'ATX', 
             type: 'budget',
             affiliateLinks: {
-                amazon: 'https://amazon.in/dp/B08T5T6T7T',
-                flipkart: 'https://dl.flipkart.com/s/op!BCD123'
+                amazon: '',
+                flipkart: ''
             }
         },
         { 
@@ -534,7 +534,7 @@ const COMPONENT_DB = {
             size: 'ATX', 
             type: 'budget',
             affiliateLinks: {
-                amazon: 'https://amazon.in/dp/B08T8T9T0T'
+                amazon: 'T'
             }
         },
         { 
@@ -544,7 +544,7 @@ const COMPONENT_DB = {
             size: 'ATX', 
             type: 'mid',
             affiliateLinks: {
-                amazon: 'https://amazon.in/dp/B0B1C2D3E4'
+                amazon: '4'
             }
         },
         { 
@@ -554,8 +554,8 @@ const COMPONENT_DB = {
             size: 'ATX', 
             type: 'high',
             affiliateLinks: {
-                amazon: 'https://amazon.in/dp/B0B5C6D7E8',
-                flipkart: 'https://dl.flipkart.com/s/op!EFG456'
+                amazon: '',
+                flipkart: ''
             }
         },
     ]
