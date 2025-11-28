@@ -575,6 +575,11 @@ $shareText = urlencode("Check out this job opportunity: " . $job['job_title'] . 
 </script>
 
 <script>
+  // Target Blank to open links in new tab
+  document.querySelectorAll('#markdownContent a').forEach(link => {
+      link.setAttribute('target', '_blank');
+      link.setAttribute('rel', 'noopener noreferrer');
+  });
 // Show actual content and hide placeholder once page is fully loaded
 document.addEventListener('DOMContentLoaded', function() {
   // Small delay to ensure all content is rendered
@@ -615,14 +620,6 @@ function copyToClipboard(button, text) {
 
 .animate-pulse {
   animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
-#markdownContent  a {
-  color: #2477fdff;
-  text-decoration: underline;
-}
-#markdownContent  a:hover {
-  color: #104fb6ff;
-  text-decoration: underline;
 }
 </style>
 <?php 

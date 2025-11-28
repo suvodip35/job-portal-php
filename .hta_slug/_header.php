@@ -290,4 +290,12 @@
   white-space: normal !important;
   word-break: break-word !important;
 }
+#markdownContent  a {
+  color: #2477fdff;
+  text-decoration: underline;
+}
+#markdownContent  a:hover {
+  color: #104fb6ff;
+  text-decoration: underline;
+}
 </style>

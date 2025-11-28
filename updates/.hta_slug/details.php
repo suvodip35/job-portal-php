@@ -490,6 +490,11 @@ $ansKeyUpdates = $pdo->query("SELECT slug, title, created_at FROM updates WHERE 
 </script>
 
 <script>
+    // Target Blank to open links in new tab
+    document.querySelectorAll('#markdownContent a').forEach(link => {
+        link.setAttribute('target', '_blank');
+        link.setAttribute('rel', 'noopener noreferrer');
+    });
 // Show actual content and hide placeholder once page is fully loaded
 document.addEventListener('DOMContentLoaded', function() {
   // Small delay to ensure all content is rendered
