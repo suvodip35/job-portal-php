@@ -32,6 +32,14 @@ $tools = [
         'button_color' => 'bg-pink-500 hover:bg-pink-600',
         'alt' => 'Image Compressor'
     ],
+    [
+        'name' => 'PC Builder',
+        'description' => 'Build your own PC with the latest components. Choose from CPU, GPU, RAM, Storage, and more.',
+        'image' => '/assets/tools-image/pc-builder.jpg',
+        'url' => '/tools/pc-builder',
+        'button_color' => 'bg-blue-500 hover:bg-blue-600',
+        'alt' => 'PC Builder'
+    ],
     // [
     //     'name' => 'PDF Compressor',
     //     'description' => 'Reduce PDF file size while maintaining quality. Perfect for documents, forms, and email attachments.',
