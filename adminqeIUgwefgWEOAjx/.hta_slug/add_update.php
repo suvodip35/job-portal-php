@@ -3,39 +3,101 @@ require_once __DIR__ . '/../../.hta_slug/_header.php';
 
 require_admin();
 $err = '';
-$success = ''; 
+$success = '';
 
+/* ------------------------------------------
+   THUMBNAIL UPLOAD HANDLER (ADDED)
+------------------------------------------ */
+function handleThumbnailUpload() {
+    if (!isset($_FILES['thumbnail']) || $_FILES['thumbnail']['error'] === UPLOAD_ERR_NO_FILE) {
+        return null; // optional thumbnail
+    }
+
+    $uploadDir = __DIR__ . '/../../thumbnails/';
+    if (!file_exists($uploadDir)) mkdir($uploadDir, 0755, true);
+
+    $file = $_FILES['thumbnail'];
+
+    // Upload errors
+    if ($file['error'] !== UPLOAD_ERR_OK) {
+        if ($file['error'] === UPLOAD_ERR_INI_SIZE || $file['error'] === UPLOAD_ERR_FORM_SIZE) {
+            return ['error' => 'File size too large. Max 2MB allowed.'];
+        }
+        return ['error' => 'File upload error: ' . $file['error']];
+    }
+
+    // Size check (2MB max)
+    if ($file['size'] > 2 * 1024 * 1024) {
+        return ['error' => 'Thumbnail exceeds 2MB limit.'];
+    }
+
+    // Validate extension
+    $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+    $allowed = ['jpg', 'jpeg', 'png', 'webp'];
+
+    if (!in_array($ext, $allowed)) {
+        return ['error' => 'Invalid file type. Allowed: JPG, JPEG, PNG, WEBP'];
+    }
+
+    // Unique filename
+    $filename = uniqid() . "." . $ext;
+    $destination = $uploadDir . $filename;
+
+    // Compress & resize
+    if (compressImage($file['tmp_name'], $destination, 80, 600, 400)) {
+        return '/thumbnails/' . $filename;
+    }
+
+    return ['error' => 'Failed to save the thumbnail file.'];
+}
+
+/* ------------------------------------------
+   FORM SUBMISSION
+------------------------------------------ */
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     csrf_check($_POST['csrf_token'] ?? '');
+
     $title = trim($_POST['title'] ?? '');
     $update_type = $_POST['update_type'] ?? '';
     $description = trim($_POST['description'] ?? '');
     $link = trim($_POST['link'] ?? '');
+    $meta_title = trim($_POST['meta_title'] ?? '');
+    $meta_desc = trim($_POST['meta_description'] ?? '');
+
     $base_slug = slugify($title);
     $slug = unique_slug($pdo, 'updates', 'slug', $base_slug);
+
     $errors = [];
-    
-    if ($title === '') {
-        $errors[] = "Title is required.";
-    }
-    
-    if ($update_type === '') {
-        $errors[] = "Update type is required.";
-    }
-    
-    if ($description === '') {
-        $errors[] = "Description is required.";
-    }
-    
+
+    // Validation
+    if ($title === '') $errors[] = "Title is required.";
+    if ($update_type === '') $errors[] = "Update type is required.";
+    if ($description === '') $errors[] = "Description is required.";
+
     if (!empty($link) && !filter_var($link, FILTER_VALIDATE_URL)) {
-        $errors[] = "Invalid URL format for the link.";
+        $errors[] = "Invalid URL format.";
     }
+
+    // Thumbnail Upload
+    $thumbnailResult = handleThumbnailUpload();
+    $thumbnail = null;
+    $uploadError = '';
+
+    if (is_array($thumbnailResult) && isset($thumbnailResult['error'])) {
+        $uploadError = $thumbnailResult['error'];
+        $errors[] = "Thumbnail error: " . $uploadError;
+    } else {
+        $thumbnail = $thumbnailResult;
+    }
+
     if (empty($errors)) {
-      $stmt = $pdo->prepare("INSERT INTO updates (title, slug, update_type, description, link, meta_title, meta_description) VALUES (?,?,?,?,?,?,?)");
-      $stmt->execute([$title, $slug, $update_type, $description, $link, $_POST['meta_title'], $_POST['meta_description']]);
+        $stmt = $pdo->prepare("INSERT INTO updates (title, slug, update_type, description, link, meta_title, meta_description, thumbnail) VALUES (?,?,?,?,?,?,?,?)");
+
+        $stmt->execute([ $title, $slug, $update_type, $description, $link, $meta_title, $meta_desc, $thumbnail ]);
+
         $success = "Update added successfully!";
     } else {
-        $err = implode('<br>', $errors);
+        $err = implode("<br>", $errors);
     }
 }
 ?>
@@ -48,138 +110,85 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <?php if ($err): ?>
 <div class="container mx-auto p-4 mb-6 bg-red-50 border-l-4 border-red-500 text-red-700 rounded-r dark:bg-red-900/30 dark:border-red-400 dark:text-red-200">
-    <div class="flex items-start">
-        <svg class="w-5 h-5 mr-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
-        </svg>
-        <div>
-            <p class="font-medium">Please fix the following issues:</p>
-            <div class="mt-1 text-sm"><?= $err ?></div>
-        </div>
-    </div>
+    <p class="font-medium">Please fix the following issues:</p>
+    <div class="mt-1 text-sm"><?= $err ?></div>
 </div>
 <?php endif; ?>
 
 <?php if ($success): ?>
 <div class="container mx-auto p-4 mb-6 bg-green-50 border-l-4 border-green-500 text-green-700 rounded-r dark:bg-green-900/30 dark:border-green-400 dark:text-green-200">
-    <div class="flex items-start">
-        <svg class="w-5 h-5 mr-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
-        </svg>
-        <div>
-            <p class="font-medium">Success!</p>
-            <div class="mt-1 text-sm"><?= $success ?></div>
-        </div>
-    </div>
+    <p class="font-medium">Success!</p>
+    <div class="mt-1 text-sm"><?= $success ?></div>
 </div>
 <?php endif; ?>
 
-<form method="post" class="space-y-6 container mx-auto" accept-charset="UTF-8">
+<form method="post" class="space-y-6 container mx-auto" enctype="multipart/form-data" accept-charset="UTF-8">
   <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
-  
+
   <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
-    <h2 class="text-lg font-semibold mb-4 text-gray-800 dark:text-white border-b pb-2">Update Information</h2>
     
+    <h2 class="text-lg font-semibold mb-4 text-gray-800 dark:text-white border-b pb-2">Update Information</h2>
+
+    <!-- Title -->
     <div class="mb-4">
-        <label class="block text-sm font-medium mb-1 dark:text-gray-300" for="title">
+        <label class="block text-sm font-medium mb-1 dark:text-gray-300">
             Title <span class="text-red-500">*</span>
         </label>
-        <input required name="title" id="title" 
-               class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white 
-                      <?= (isset($_POST['title']) && trim($_POST['title']) === '') ? 'border-red-500' : '' ?>"
-               value="<?= e($_POST['title'] ?? '') ?>" 
-               placeholder="e.g., UPSC Civil Services Preliminary Exam 2023 Notification">
-        <?php if (isset($_POST['title']) && trim($_POST['title']) === ''): ?>
-        <p class="mt-1 text-xs text-red-500 dark:text-red-400">Please provide a title</p>
-        <?php endif; ?>
+        <input name="title" class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white" value="<?= e($_POST['title'] ?? '') ?>" placeholder="Enter update title">
     </div>
-    
+
+    <!-- Update Type -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
         <div>
-            <label class="block text-sm font-medium mb-1 dark:text-gray-300" for="update_type">
-                Update Type <span class="text-red-500">*</span>
-            </label>
-            <select name="update_type" id="update_type" 
-                    class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white
-                           <?= (!isset($_POST['update_type']) || $_POST['update_type'] === '') ? 'border-red-500' : '' ?>" required>
+            <label class="block text-sm font-medium dark:text-gray-300">Update Type *</label>
+            <select name="update_type" class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white">
                 <option value="">-- Select Type --</option>
-                <option value="exam" <?= (($_POST['update_type'] ?? '') == 'exam') ? 'selected' : '' ?>>Exam</option>
-                <option value="ans_key" <?= (($_POST['update_type'] ?? '') == 'ans_key') ? 'selected' : '' ?>>Answer Key</option>
-                <option value="result" <?= (($_POST['update_type'] ?? '') == 'result') ? 'selected' : '' ?>>Result</option>
-                <option value="syllabus" <?= (($_POST['update_type'] ?? '') == 'syllabus') ? 'selected' : '' ?>>Syllabus</option>
+                <option value="exam">Exam</option>
+                <option value="ans_key">Answer Key</option>
+                <option value="result">Result</option>
+                <option value="syllabus">Syllabus</option>
             </select>
-            <?php if (!isset($_POST['update_type']) || $_POST['update_type'] === ''): ?>
-            <p class="mt-1 text-xs text-red-500 dark:text-red-400">Please select an update type</p>
-            <?php endif; ?>
         </div>
+
+        <!-- Official Link -->
         <div>
-            <label class="block text-sm font-medium mb-1 dark:text-gray-300" for="link">
-                Official Link (Optional)
-            </label>
-            <input type="url" name="link" id="link" 
-                   class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white
-                          <?= (isset($_POST['link']) && !filter_var($_POST['link'], FILTER_VALIDATE_URL) && $_POST['link'] !== '') ? 'border-red-500' : '' ?>" 
-                   value="<?= e($_POST['link'] ?? '') ?>" 
-                   placeholder="https://...">
-            <?php if (isset($_POST['link']) && !filter_var($_POST['link'], FILTER_VALIDATE_URL) && $_POST['link'] !== ''): ?>
-            <p class="mt-1 text-xs text-red-500 dark:text-red-400">Please enter a valid URL</p>
-            <?php endif; ?>
+            <label class="block text-sm font-medium dark:text-gray-300">Official Link (Optional)</label>
+            <input name="link" type="url" class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white" value="<?= e($_POST['link'] ?? '') ?>" placeholder="https://...">
         </div>
-
-        <div class="mb-4">
-          <label class="block text-sm font-medium mb-1 dark:text-gray-300" for="meta_title">
-              Meta Title
-          </label>
-          <input type="text" name="meta_title" id="meta_title" 
-                class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white
-                        <?= (isset($_POST['meta_title']) && trim($_POST['meta_title']) === '') ? 'border-red-500' : '' ?>"
-                value="<?= e($_POST['meta_title'] ?? '') ?>" 
-                placeholder="Enter meta title here...">
-          <?php if (isset($_POST['meta_title']) && trim($_POST['meta_title']) === ''): ?>
-          <p class="mt-1 text-xs text-red-500 dark:text-red-400">Please provide a meta title</p>
-          <?php endif; ?>
-      </div>
-
-      <div class="mb-4">
-          <label class="block text-sm font-medium mb-1 dark:text-gray-300" for="meta_description">
-              Meta Description
-          </label>
-          <textarea name="meta_description" id="meta_description" 
-                    class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white
-                          <?= (!isset($_POST['meta_description']) || trim($_POST['meta_description'] ?? '') === '') ? 'border-red-500' : '' ?>" 
-                    rows="6" placeholder="Enter meta description here..."><?= e($_POST['meta_description'] ?? '') ?></textarea>
-          <?php if (!isset($_POST['meta_description']) || trim($_POST['meta_description'] ?? '') === ''): ?>
-          <p class="mt-1 text-xs text-red-500 dark:text-red-400">Please provide a meta description</p>
-          <?php endif; ?>
-      </div>
     </div>
-    
+
+    <!-- Meta Title -->
     <div class="mb-4">
-        <label class="block text-sm font-medium mb-1 dark:text-gray-300" for="markdown-editor">
-            Description (Markdown supported) <span class="text-red-500">*</span>
-        </label>
-        <textarea id="markdown-editor" name="description" 
-                  class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white
-                         <?= (!isset($_POST['description']) || trim($_POST['description'] ?? '') === '') ? 'border-red-500' : '' ?>" 
-                  rows="6" placeholder="Provide detailed information about the update..."><?= e($_POST['description'] ?? '') ?></textarea>
-        <?php if (!isset($_POST['description']) || trim($_POST['description'] ?? '') === ''): ?>
-        <p class="mt-1 text-xs text-red-500 dark:text-red-400">Please provide a description</p>
-        <?php endif; ?>
-        <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Supports Markdown formatting</p>
+        <label class="block text-sm font-medium dark:text-gray-300">Meta Title</label>
+        <input name="meta_title" class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white" value="<?= e($_POST['meta_title'] ?? '') ?>">
+    </div>
+
+    <!-- Meta Description -->
+    <div class="mb-4">
+        <label class="block text-sm font-medium dark:text-gray-300">Meta Description</label>
+        <textarea name="meta_description" class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white" rows="3"><?= e($_POST['meta_description'] ?? '') ?></textarea>
+    </div>
+
+    <!-- Thumbnail Upload -->
+    <div class="mb-4">
+        <label class="block text-sm font-medium dark:text-gray-300">Thumbnail Image (Optional)</label>
+        <input type="file" name="thumbnail" accept="image/*" class="block w-full text-sm text-gray-500 dark:text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 dark:file:bg-blue-900 dark:file:text-blue-200">
+        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Max 2MB • JPG, PNG, WEBP • Recommended size: 600×400</p>
+    </div>
+
+    <!-- Description Editor -->
+    <div class="mb-4">
+        <label class="block text-sm font-medium dark:text-gray-300">Description *</label>
+        <textarea id="markdown-editor" name="description" class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white" rows="6"><?= e($_POST['description'] ?? '') ?></textarea>
+        <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Supports Markdown</p>
     </div>
   </div>
-  
+
   <div class="flex justify-end gap-3">
-    <button type="reset" class="px-4 py-2 bg-gray-200 text-gray-800 rounded hover:bg-gray-300 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600">
-        Reset Form
-    </button>
-    <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 flex items-center">
-        <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-        </svg>
-        Save Update
-    </button>
+    <button type="reset" class="px-4 py-2 bg-gray-200 text-gray-800 rounded">Reset</button>
+    <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded">Save Update</button>
   </div>
+
 </form>
 
 <script>

@@ -274,3 +274,6 @@
 [2025-11-11 17:47:04] ERROR: [2] Undefined array key "book_type" in /home/suvo/web/jnp.ns77.siliconpin.com/public_html/adminqeIUgwefgWEOAjx/.hta_slug/edit_job.php on line 437
 [2025-11-11 17:47:04] ERROR: [2] Undefined array key "book_type" in /home/suvo/web/jnp.ns77.siliconpin.com/public_html/adminqeIUgwefgWEOAjx/.hta_slug/edit_job.php on line 437
 [2025-11-12 13:59:26] ERROR: [2] Undefined variable $bookTypeLabels in /home/suvo/web/jnp.ns77.siliconpin.com/public_html/adminqeIUgwefgWEOAjx/.hta_slug/add_job.php on line 131
+[2025-12-12 19:17:06] EXCEPTION: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'meta_title' in 'INSERT INTO' in /home/suvo/web/jnp.ns77.siliconpin.com/public_html/adminqeIUgwefgWEOAjx/.hta_slug/add_update.php on line 94
+[2025-12-12 19:24:24] FATAL: file_get_contents(counter.txt): Failed to open stream: No such file or directory in /home/suvo/web/jnp.ns77.siliconpin.com/public_html/.hta_slug/_header.php on line 24
+[2025-12-12 19:24:27] FATAL: file_get_contents(counter.txt): Failed to open stream: No such file or directory in /home/suvo/web/jnp.ns77.siliconpin.com/public_html/.hta_slug/_header.php on line 24

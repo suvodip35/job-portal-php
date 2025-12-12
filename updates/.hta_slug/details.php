@@ -35,10 +35,10 @@ $pageTitle       = ($update['meta_title'] ?? $update['title']) . ' - ' . APP_NAM
 $pageDescription = mb_substr(strip_tags($update['meta_description'] ?? $update['description']), 0, 160);
 $metaTitle       = $update['meta_title'] ?? $update['title'];
 $keywords        = "Exam Updates, Admit Card, Result, Govt Notice, " . $metaTitle;
-$ogImage         = "https://fromcampus.com/assets/logo/FromCampus_Color_text.png";
+$ogImage         = BASE_URL . $update['thumbnail'] ? $update['thumbnail'] : "assets/logo/FromCampus_Color_text.png";;
 $canonicalUrl    = "https://fromcampus.com/updates/details?slug=" . $slug;
 
-$schema = [
+$schema = [ 
   "@context" => "https://schema.org",
   "@type" => "NewsArticle",
   "mainEntityOfPage" => [
@@ -47,7 +47,7 @@ $schema = [
   ],
   "headline" => $update['meta_title'] ?? $update['title'],
   "description" => strip_tags($update['meta_description'] ?? $update['description']),
-  "image" => "https://fromcampus.com/assets/logo/FromCampus_Color_text.png",
+  "image" => !empty($update['thumbnail']) ? $ogImageURIPrefix.$update['thumbnail'] : "https://fromcampus.com/assets/logo/FromCampus_Color_text.png",
   "author" => [
     "@type" => "Organization",
     "name" => "FromCampus"
@@ -57,7 +57,7 @@ $schema = [
     "name" => "FromCampus",
     "logo" => [
       "@type" => "ImageObject",
-      "url" => "https://fromcampus.com/assets/logo/FromCampus_Color_text.png"
+      "url" => !empty($update['thumbnail']) ? $ogImageURIPrefix.$update['thumbnail'] : "https://fromcampus.com/assets/logo/FromCampus_Color_text.png"
     ]
   ],
   "datePublished" => date('c', strtotime($update['created_at']))
