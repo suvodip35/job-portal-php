@@ -188,7 +188,20 @@ $ansKeyUpdates = $pdo->query("SELECT slug, title, created_at FROM updates WHERE 
 
         <!-- Title -->
         <h1 class="text-2xl font-bold text-gray-900 dark:text-white mb-4"><?= e($update['title']) ?></h1>
+        <?php if ($update['thumbnail']): ?>
+          <div class="w-full h-80 overflow-hidden">
+            <div class="w-full aspect-[16/9] relative overflow-hidden rounded">
+              <!-- blurred background from same image -->
+              <div class="absolute inset-0">
+                <img src="<?= e($update['thumbnail']) ?>" fetchpriority="high" alt="" class="w-full h-full object-cover blur-lg scale-110" />
+              </div>
 
+              <!-- main image (object-contain) -->
+              <img src="<?= e($update['thumbnail']) ?>" fetchpriority="high" alt="<?= e($update['title']) ?>" class="relative w-full h-full object-contain" />
+            </div>
+
+          </div>
+        <?php endif; ?>
         <!-- Date -->
         <?php if ($update['created_at']): ?>
           <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">
