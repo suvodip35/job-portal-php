@@ -21,8 +21,15 @@ $schema = [
             "@type" => "ImageObject",
             "url" => "https://fromcampus.com/assets/logo/FromCampus_Color_text.png"
         ]
+    ],
+    "sameAs" => [
+        "https://www.facebook.com/fromcampus",
+        "linkedin.com/company/fromcampus",
+        // "https://www.instagram.com/YourInstaURL",
+        // "https://twitter.com/YourTwitterURL"
     ]
 ];
+
 
 require_once('_header.php');
 
