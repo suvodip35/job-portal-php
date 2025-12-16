@@ -287,6 +287,7 @@
 [2025-12-12 19:58:45] FATAL: file_get_contents(counter.txt): Failed to open stream: No such file or directory in /home/suvo/web/jnp.ns77.siliconpin.com/public_html/.hta_slug/_header.php on line 24
 [2025-12-12 20:00:02] FATAL: file_get_contents(counter.txt): Failed to open stream: No such file or directory in /home/suvo/web/jnp.ns77.siliconpin.com/public_html/.hta_slug/_header.php on line 24
 [2025-12-12 20:00:38] FATAL: file_get_contents(counter.txt): Failed to open stream: No such file or directory in /home/suvo/web/jnp.ns77.siliconpin.com/public_html/.hta_slug/_header.php on line 24
+<<<<<<< HEAD
 [2025-12-13 10:33:24] FATAL: Undefined variable $ogImageURIPrefix in /home/suvo/web/fromcampus.com/public_html/updates/.hta_slug/details.php on line 60
 [2025-12-13 10:33:36] FATAL: Undefined variable $ogImageURIPrefix in /home/suvo/web/fromcampus.com/public_html/updates/.hta_slug/details.php on line 60
 [2025-12-13 10:40:57] FATAL: Undefined variable $ogImageURIPrefix in /home/suvo/web/fromcampus.com/public_html/updates/.hta_slug/details.php on line 60
@@ -340,3 +341,6 @@
 [2025-12-16 17:04:28] FATAL: Undefined variable $ogImageURIPrefix in /home/suvo/web/fromcampus.com/public_html/updates/.hta_slug/details.php on line 60
 [2025-12-16 17:14:55] FATAL: Undefined variable $ogImageURIPrefix in /home/suvo/web/fromcampus.com/public_html/updates/.hta_slug/details.php on line 60
 [2025-12-16 17:56:01] EXCEPTION: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'job_id' in 'WHERE' in /home/suvo/web/fromcampus.com/public_html/.hta_config/functions.php on line 41
+=======
+[2025-12-13 10:31:06] FATAL: file_get_contents(counter.txt): Failed to open stream: No such file or directory in /home/suvo/web/jnp.ns77.siliconpin.com/public_html/.hta_slug/_header.php on line 24
+>>>>>>> 158b9ea5075bc64e16590703d18027cd2942ee50
