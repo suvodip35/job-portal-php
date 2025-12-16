@@ -36,7 +36,7 @@ $pageTitle       = ($update['meta_title'] ?? $update['title']) . ' - ' . APP_NAM
 $pageDescription = mb_substr(strip_tags($update['meta_description'] ?? $update['description']), 0, 160);
 $metaTitle       = $update['meta_title'] ?? $update['title'];
 $keywords        = "Exam Updates, Admit Card, Result, Govt Notice, " . $metaTitle;
-$ogImage         = BASE_URL . $update['thumbnail'] ? $update['thumbnail'] : "assets/logo/FromCampus_Color_text.png";;
+$ogImage         = $ogImageURIPrefix ."/thumbnails/". $update['thumbnail'] ? $update['thumbnail'] : "assets/logo/FromCampus_Color_text.png";;
 $canonicalUrl    = "https://fromcampus.com/updates/details?slug=" . $slug;
 
 $schema = [ 
