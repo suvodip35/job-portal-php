@@ -287,3 +287,56 @@
 [2025-12-12 19:58:45] FATAL: file_get_contents(counter.txt): Failed to open stream: No such file or directory in /home/suvo/web/jnp.ns77.siliconpin.com/public_html/.hta_slug/_header.php on line 24
 [2025-12-12 20:00:02] FATAL: file_get_contents(counter.txt): Failed to open stream: No such file or directory in /home/suvo/web/jnp.ns77.siliconpin.com/public_html/.hta_slug/_header.php on line 24
 [2025-12-12 20:00:38] FATAL: file_get_contents(counter.txt): Failed to open stream: No such file or directory in /home/suvo/web/jnp.ns77.siliconpin.com/public_html/.hta_slug/_header.php on line 24
+[2025-12-13 10:33:24] FATAL: Undefined variable $ogImageURIPrefix in /home/suvo/web/fromcampus.com/public_html/updates/.hta_slug/details.php on line 60
+[2025-12-13 10:33:36] FATAL: Undefined variable $ogImageURIPrefix in /home/suvo/web/fromcampus.com/public_html/updates/.hta_slug/details.php on line 60
+[2025-12-13 10:40:57] FATAL: Undefined variable $ogImageURIPrefix in /home/suvo/web/fromcampus.com/public_html/updates/.hta_slug/details.php on line 60
+[2025-12-13 11:52:24] FATAL: Undefined variable $ogImageURIPrefix in /home/suvo/web/fromcampus.com/public_html/updates/.hta_slug/details.php on line 60
+[2025-12-13 11:54:17] FATAL: Undefined variable $ogImageURIPrefix in /home/suvo/web/fromcampus.com/public_html/updates/.hta_slug/details.php on line 60
+[2025-12-13 11:55:06] FATAL: Undefined variable $ogImageURIPrefix in /home/suvo/web/fromcampus.com/public_html/updates/.hta_slug/details.php on line 60
+[2025-12-13 12:50:07] FATAL: Undefined variable $ogImageURIPrefix in /home/suvo/web/fromcampus.com/public_html/updates/.hta_slug/details.php on line 60
+[2025-12-13 14:36:25] FATAL: Undefined variable $ogImageURIPrefix in /home/suvo/web/fromcampus.com/public_html/updates/.hta_slug/details.php on line 60
+[2025-12-14 02:50:40] FATAL: Undefined variable $ogImageURIPrefix in /home/suvo/web/fromcampus.com/public_html/updates/.hta_slug/details.php on line 60
+[2025-12-14 03:35:38] FATAL: Undefined variable $ogImageURIPrefix in /home/suvo/web/fromcampus.com/public_html/updates/.hta_slug/details.php on line 60
+[2025-12-14 13:18:37] FATAL: Undefined variable $ogImageURIPrefix in /home/suvo/web/fromcampus.com/public_html/updates/.hta_slug/details.php on line 60
+[2025-12-14 15:49:10] FATAL: Undefined variable $ogImageURIPrefix in /home/suvo/web/fromcampus.com/public_html/updates/.hta_slug/details.php on line 60
+[2025-12-14 20:12:57] FATAL: Undefined variable $ogImageURIPrefix in /home/suvo/web/fromcampus.com/public_html/updates/.hta_slug/details.php on line 60
+[2025-12-14 22:29:09] FATAL: Undefined variable $ogImageURIPrefix in /home/suvo/web/fromcampus.com/public_html/updates/.hta_slug/details.php on line 60
+[2025-12-14 22:30:10] FATAL: Undefined variable $ogImageURIPrefix in /home/suvo/web/fromcampus.com/public_html/updates/.hta_slug/details.php on line 60
+[2025-12-14 22:37:05] FATAL: Undefined variable $ogImageURIPrefix in /home/suvo/web/fromcampus.com/public_html/updates/.hta_slug/details.php on line 60
+[2025-12-14 22:40:11] FATAL: Undefined variable $ogImageURIPrefix in /home/suvo/web/fromcampus.com/public_html/updates/.hta_slug/details.php on line 60
+[2025-12-14 22:40:32] FATAL: Undefined variable $ogImageURIPrefix in /home/suvo/web/fromcampus.com/public_html/updates/.hta_slug/details.php on line 60
+[2025-12-14 23:00:14] FATAL: Undefined variable $ogImageURIPrefix in /home/suvo/web/fromcampus.com/public_html/updates/.hta_slug/details.php on line 60
+[2025-12-15 13:27:52] FATAL: Undefined variable $ogImageURIPrefix in /home/suvo/web/fromcampus.com/public_html/updates/.hta_slug/details.php on line 60
+[2025-12-15 13:27:52] FATAL: Undefined variable $ogImageURIPrefix in /home/suvo/web/fromcampus.com/public_html/updates/.hta_slug/details.php on line 60
+[2025-12-15 14:04:41] FATAL: Undefined variable $ogImageURIPrefix in /home/suvo/web/fromcampus.com/public_html/updates/.hta_slug/details.php on line 60
+[2025-12-15 15:39:45] FATAL: Undefined variable $ogImageURIPrefix in /home/suvo/web/fromcampus.com/public_html/updates/.hta_slug/details.php on line 60
+[2025-12-15 16:05:14] FATAL: Undefined variable $ogImageURIPrefix in /home/suvo/web/fromcampus.com/public_html/updates/.hta_slug/details.php on line 60
+[2025-12-15 21:35:08] FATAL: Undefined variable $ogImageURIPrefix in /home/suvo/web/fromcampus.com/public_html/updates/.hta_slug/details.php on line 60
+[2025-12-15 21:56:40] FATAL: Undefined variable $ogImageURIPrefix in /home/suvo/web/fromcampus.com/public_html/updates/.hta_slug/details.php on line 60
+[2025-12-15 22:03:24] FATAL: Undefined variable $ogImageURIPrefix in /home/suvo/web/fromcampus.com/public_html/updates/.hta_slug/details.php on line 60
+[2025-12-15 22:03:28] FATAL: Undefined variable $ogImageURIPrefix in /home/suvo/web/fromcampus.com/public_html/updates/.hta_slug/details.php on line 60
+[2025-12-16 00:32:23] EXCEPTION: SQLSTATE[HY093]: Invalid parameter number: mixed named and positional parameters in /home/suvo/web/fromcampus.com/public_html/.hta_slug/_home.php on line 170
+[2025-12-16 00:32:24] EXCEPTION: SQLSTATE[HY093]: Invalid parameter number: mixed named and positional parameters in /home/suvo/web/fromcampus.com/public_html/.hta_slug/_home.php on line 170
+[2025-12-16 00:32:24] EXCEPTION: SQLSTATE[HY093]: Invalid parameter number: mixed named and positional parameters in /home/suvo/web/fromcampus.com/public_html/.hta_slug/_home.php on line 170
+[2025-12-16 02:46:55] EXCEPTION: SQLSTATE[HY093]: Invalid parameter number: mixed named and positional parameters in /home/suvo/web/fromcampus.com/public_html/.hta_slug/_home.php on line 170
+[2025-12-16 04:44:19] FATAL: Undefined variable $ogImageURIPrefix in /home/suvo/web/fromcampus.com/public_html/updates/.hta_slug/details.php on line 60
+[2025-12-16 08:00:06] FATAL: Undefined variable $ogImageURIPrefix in /home/suvo/web/fromcampus.com/public_html/updates/.hta_slug/details.php on line 60
+[2025-12-16 08:15:24] FATAL: Undefined variable $ogImageURIPrefix in /home/suvo/web/fromcampus.com/public_html/updates/.hta_slug/details.php on line 60
+[2025-12-16 08:50:52] FATAL: Undefined variable $ogImageURIPrefix in /home/suvo/web/fromcampus.com/public_html/updates/.hta_slug/details.php on line 60
+[2025-12-16 10:27:04] FATAL: Undefined variable $ogImageURIPrefix in /home/suvo/web/fromcampus.com/public_html/updates/.hta_slug/details.php on line 60
+[2025-12-16 10:27:33] FATAL: Undefined variable $ogImageURIPrefix in /home/suvo/web/fromcampus.com/public_html/updates/.hta_slug/details.php on line 60
+[2025-12-16 10:36:02] FATAL: Undefined variable $ogImageURIPrefix in /home/suvo/web/fromcampus.com/public_html/updates/.hta_slug/details.php on line 60
+[2025-12-16 11:31:43] FATAL: Undefined variable $ogImageURIPrefix in /home/suvo/web/fromcampus.com/public_html/updates/.hta_slug/details.php on line 60
+[2025-12-16 12:59:20] FATAL: Undefined variable $ogImageURIPrefix in /home/suvo/web/fromcampus.com/public_html/updates/.hta_slug/details.php on line 60
+[2025-12-16 13:15:43] FATAL: Undefined variable $ogImageURIPrefix in /home/suvo/web/fromcampus.com/public_html/updates/.hta_slug/details.php on line 60
+[2025-12-16 13:15:48] FATAL: Undefined variable $ogImageURIPrefix in /home/suvo/web/fromcampus.com/public_html/updates/.hta_slug/details.php on line 60
+[2025-12-16 14:41:04] FATAL: Undefined variable $ogImageURIPrefix in /home/suvo/web/fromcampus.com/public_html/updates/.hta_slug/details.php on line 60
+[2025-12-16 15:06:36] EXCEPTION: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'job_id' in 'WHERE' in /home/suvo/web/fromcampus.com/public_html/.hta_config/functions.php on line 41
+[2025-12-16 15:06:44] EXCEPTION: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'job_id' in 'WHERE' in /home/suvo/web/fromcampus.com/public_html/.hta_config/functions.php on line 41
+[2025-12-16 15:19:02] EXCEPTION: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'job_id' in 'WHERE' in /home/suvo/web/fromcampus.com/public_html/.hta_config/functions.php on line 41
+[2025-12-16 16:28:41] FATAL: Undefined variable $ogImageURIPrefix in /home/suvo/web/fromcampus.com/public_html/updates/.hta_slug/details.php on line 60
+[2025-12-16 16:38:46] FATAL: Undefined variable $ogImageURIPrefix in /home/suvo/web/fromcampus.com/public_html/updates/.hta_slug/details.php on line 60
+[2025-12-16 17:03:34] FATAL: Undefined variable $ogImageURIPrefix in /home/suvo/web/fromcampus.com/public_html/updates/.hta_slug/details.php on line 60
+[2025-12-16 17:04:28] FATAL: Undefined variable $ogImageURIPrefix in /home/suvo/web/fromcampus.com/public_html/updates/.hta_slug/details.php on line 60
+[2025-12-16 17:14:55] FATAL: Undefined variable $ogImageURIPrefix in /home/suvo/web/fromcampus.com/public_html/updates/.hta_slug/details.php on line 60
+[2025-12-16 17:56:01] EXCEPTION: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'job_id' in 'WHERE' in /home/suvo/web/fromcampus.com/public_html/.hta_config/functions.php on line 41
