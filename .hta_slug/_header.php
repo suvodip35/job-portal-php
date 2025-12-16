@@ -69,7 +69,14 @@
   $pageDescription= $pageDescription?? $metaDesc;
   $keywords       = $keywords       ?? "Government JOBS, ITI JOBS, Railway Jobs, Engineer";
   $author         = $author         ?? "FromCampus";
-  $ogImage        = !empty($job['thumbnail']) ? $ogImageURIPrefix . $job['thumbnail'] : "https://fromcampus.com/assets/logo/FromCampus_Color_text.png";
+  if (!empty($job['thumbnail'])) {
+    $ogImage = $ogImageURIPrefix . $job['thumbnail'];
+  } elseif (!empty($update['thumbnail'])) {
+      $ogImage = $ogImageURIPrefix . $update['thumbnail'];
+  } else {
+      $ogImage = "https://fromcampus.com/assets/logo/FromCampus_Color_text.png";
+  }
+
   $canonicalUrl   = $canonicalUrl   ?? BASE_URL;
   $ampHtmlCanonical = $ampHtmlCanonical ?? "https://fromcampus.com/amp/job";
 // echo $ogImage;
