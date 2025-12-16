@@ -6,6 +6,7 @@ if (!$slug) {
     echo "<script>window.location.href='/'</script>";
     exit;
 }
+$ogImageURIPrefix = 'https://fromcampus.com';
 // echo "<script>console.log('Slug: " . $slug . "');</script>";
 // Fetch update details
 $stmt = $pdo->prepare("SELECT * FROM updates WHERE slug = :slug LIMIT 1");
@@ -29,7 +30,7 @@ function isNewJob($posted_date) {
 function formatDate($date) {
     return date('M d, Y', strtotime($date));
 }
-
+ 
 // Meta values override
 $pageTitle       = ($update['meta_title'] ?? $update['title']) . ' - ' . APP_NAME;
 $pageDescription = mb_substr(strip_tags($update['meta_description'] ?? $update['description']), 0, 160);
