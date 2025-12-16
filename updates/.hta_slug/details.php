@@ -38,7 +38,6 @@ $metaTitle       = $update['meta_title'] ?? $update['title'];
 $keywords        = "Exam Updates, Admit Card, Result, Govt Notice, " . $metaTitle;
 $ogImage         = $ogImageURIPrefix ."/thumbnails/". $update['thumbnail'] ? $update['thumbnail'] : "assets/logo/FromCampus_Color_text.png";;
 $canonicalUrl    = "https://fromcampus.com/updates/details?slug=" . $slug;
-echo $ogImage;
 $schema = [ 
   "@context" => "https://schema.org",
   "@type" => "NewsArticle",
