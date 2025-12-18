@@ -453,10 +453,16 @@ $shareText = urlencode("Check out this job opportunity: " . $job['job_title'] . 
                 <h4 class="font-bold text-lg dark:text-white mb-2 line-clamp-2"><?= e($book['title']) ?></h4>
                 <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">By <?= e($book['author']) ?></p>
                 
-                <?php if (!empty($book['description'])): ?>
-                <p class="text-sm text-gray-700 dark:text-gray-300 mb-4 line-clamp-3">
-                  <?= e(mb_substr(strip_tags($book['description']), 0, 100)) ?>...
-                </p>
+                <?php
+                  if (!empty($book['description'])) {
+                      $html = $Parsedown->text($book['description']);
+                      $plainText = trim(html_entity_decode(strip_tags($html)));
+                      $excerpt = mb_strlen($plainText) > 100 ? mb_substr($plainText, 0, 100) . '...' : $plainText;
+                  }
+                ?>
+
+                <?php if (!empty($excerpt)): ?>
+                  <p class="text-sm text-gray-700 dark:text-gray-300 mb-4"><?= e($excerpt) ?></p>
                 <?php endif; ?>
                 
                 <div class="flex gap-2">
