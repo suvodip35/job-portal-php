@@ -464,16 +464,16 @@ $shareText = urlencode("Check out this job opportunity: " . $job['job_title'] . 
                 <?php if (!empty($excerpt)): ?>
                   <p class="text-sm text-gray-700 dark:text-gray-300 mb-4"><?= e($excerpt) ?></p>
                 <?php endif; ?>
-                
                 <div class="flex gap-2">
                   <?php if (!empty($book['amazon_link'])): ?>
-                  <a href="<?= e($book['amazon_link']) ?>" target="_blank" rel="noopener" class="flex-1 bg-yellow-500 hover:bg-yellow-600 text-white text-center py-2 px-3 rounded text-sm font-medium transition">Amazon</a>
+                  <a href="<?= e($book['amazon_link']) ?>" target="_blank" rel="noopener" class="flex-1 bg-[#ffa41c] hover:bg-yellow-600 text-white text-center py-2 px-2 rounded text-sm font-medium transition">Buy on Amazon</a>
                   <?php endif; ?>
                   
                   <?php if (!empty($book['flipkart_link'])): ?>
-                  <a href="<?= e($book['flipkart_link']) ?>" target="_blank" rel="noopener" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white text-center py-2 px-3 rounded text-sm font-medium transition">Flipkart</a>
+                  <a href="<?= e($book['flipkart_link']) ?>" target="_blank" rel="noopener" class="flex-1 bg-[#fb641b] hover:bg-orange-600 text-white text-center py-2 px-2 rounded text-sm font-medium transition"> Buy on Flipkart</a>
                   <?php endif; ?>
                 </div>
+                <a href="/books/book-details?slug=<?= e($book['slug']) ?>" class="mt-2 flex bg-blue-600 hover:bg-blue-700 text-white justify-center text-center py-2 px-3 rounded text-sm font-medium transition" >Book Details</a>
               </div>
             </div>
             <?php endforeach; ?>
