@@ -62,7 +62,7 @@ $salaryMax = isset($_GET['smax']) ? (int)$_GET['smax'] : 0;
 
 // Pagination
 $page   = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
-$perPage= 12;
+$perPage= 15;
 $offset = ($page - 1) * $perPage;
 
 // Marquee (latest 20)
