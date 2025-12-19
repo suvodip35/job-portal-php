@@ -1,5 +1,5 @@
 .hta_config/config.php
-error_files.txt
+.hta_slug/error_files.txt
 robots.txt
 thumbnails
 counter.txt
