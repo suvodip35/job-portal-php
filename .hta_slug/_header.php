@@ -1,5 +1,5 @@
 <?php
-  $file = 'counter.txt';
+  $file = $_SERVER['DOCUMENT_ROOT'] . '/counter.txt';
 
     // Cookie name
     $cookieName = "viewed_page";
