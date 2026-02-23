@@ -7,11 +7,20 @@ RewriteRule ^(.*)$ https://%1/$1 [R=301,L]
 # Redirect sitemap.xml to sitemap.php
 RewriteRule ^sitemap\.xml$ sitemap.php [L]
 
+# ===== IMPORTANT: Don't rewrite static assets =====
+RewriteRule ^assets/ - [L]
+RewriteRule ^thumbnails/ - [L]
+RewriteRule ^book-image/ - [L]
+RewriteRule ^s-assets/ - [L]
+RewriteRule ^logo/ - [L]
+RewriteRule ^tools-image/ - [L]
+
 # Only rewrite if the file/folder does NOT exist
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*)$ index.php [L]
 
+# Cache static files
 <FilesMatch "\.(ico|jpg|jpeg|png|gif|webp|avif|css|js)$">
   Header set Cache-Control "max-age=31536000, public"
 </FilesMatch>
