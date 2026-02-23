@@ -280,7 +280,7 @@ $shareText = urlencode("Check out this job opportunity: " . $job['job_title'] . 
     <nav class="flex px-4" aria-label="Breadcrumb">
       <ol class="inline-flex items-center space-x-1 md:space-x-3 line-clamp-1">
         <li class="inline-flex items-center">
-          <a href="<?= BASE_URL ?>" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white">
+          <a href="<?= BASE_URL ?>" title="Home Page" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white">
             <svg class="w-3 h-3 mr-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
               <path d="m19.707 9.293-2-2-7-7a1 1 0 0 0-1.414 0l-7 7-2 2a1 1 0 0 0 1.414 1.414L2 10.414V18a2 2 0 0 0 2 2h3a1 1 0 0 0 1-1v-4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v4a1 1 0 0 0 1 1h3a2 2 0 0 0 2-2v-7.586l.293.293a1 1 0 0 0 1.414-1.414Z"/>
             </svg>
@@ -466,14 +466,14 @@ $shareText = urlencode("Check out this job opportunity: " . $job['job_title'] . 
                 <?php endif; ?>
                 <div class="flex gap-2">
                   <?php if (!empty($book['amazon_link'])): ?>
-                  <a href="<?= e($book['amazon_link']) ?>" target="_blank" rel="noopener" class="flex-1 bg-[#ffa41c] hover:bg-yellow-600 text-white text-center py-2 px-2 rounded text-sm font-medium transition">Buy on Amazon</a>
+                  <a href="<?= e($book['amazon_link']) ?>" target="_blank" rel="noopener" title="Buy on Amazon for <?= e($book['title']) ?>" class="flex-1 bg-[#ffa41c] hover:bg-yellow-600 text-white text-center py-2 px-2 rounded text-sm font-medium transition">Buy on Amazon</a>
                   <?php endif; ?>
                   
                   <?php if (!empty($book['flipkart_link'])): ?>
                   <a href="<?= e($book['flipkart_link']) ?>" target="_blank" rel="noopener" class="flex-1 bg-[#fb641b] hover:bg-orange-600 text-white text-center py-2 px-2 rounded text-sm font-medium transition"> Buy on Flipkart</a>
                   <?php endif; ?>
                 </div>
-                <a href="/books/book-details?slug=<?= e($book['slug']) ?>" class="mt-2 flex bg-blue-600 hover:bg-blue-700 text-white justify-center text-center py-2 px-3 rounded text-sm font-medium transition" >Book Details</a>
+                <a href="/books/book-details?slug=<?= e($book['slug']) ?>" title="Book Details for <?= e($book['title']) ?>" class="mt-2 flex bg-blue-600 hover:bg-blue-700 text-white justify-center text-center py-2 px-3 rounded text-sm font-medium transition" >Book Details</a>
               </div>
             </div>
             <?php endforeach; ?>
@@ -483,7 +483,7 @@ $shareText = urlencode("Check out this job opportunity: " . $job['job_title'] . 
         
         <div class="mt-8 flex justify-between">
           <?php if (!empty($job['apply_url'])): ?>
-            <a aria-label="Apply now for <?php e($job['job_title']) ?>" href="<?= e($job['apply_url']) ?>" target="_blank" rel="noopener" class="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+            <a aria-label="Apply now for <?php e($job['job_title']) ?>" title="Apply now for <?php e($job['job_title']) ?>" href="<?= e($job['apply_url']) ?>" target="_blank" rel="noopener" class="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
               Apply Now
               <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
@@ -491,7 +491,7 @@ $shareText = urlencode("Check out this job opportunity: " . $job['job_title'] . 
             </a>
           <?php endif; ?>
           <?php if (!empty($job['document_link'])): ?>
-            <a aria-label="Documentation for <?php e($job['job_title']) ?>" href="<?= e($job['document_link']) ?>" target="_blank" rel="noopener" class="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+            <a aria-label="Documentation for <?php e($job['job_title']) ?>" title="Documentation for <?php e($job['job_title']) ?>" href="<?= e($job['document_link']) ?>" target="_blank" rel="noopener" class="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
               Documentation
               <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
