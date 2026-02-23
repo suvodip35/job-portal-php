@@ -85,6 +85,7 @@
 <!DOCTYPE html>
 <html lang="en" class="">
 <head>
+  <link rel="stylesheet" href="/assets/css/tailwind.css">
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-7JQW8FVNQ2"></script>
   <script>
@@ -138,8 +139,6 @@
   <meta name="google-adsense-account" content="ca-pub-4941413774457326">
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4941413774457326" crossorigin="anonymous"></script>
   <meta property="fb:app_id" content="1469923257657008" />
-  <!-- Tailwind CDN for quick production-ready UI; for full production consider building Tailwind -->
-  <script src="/assets/tailwind.css"></script>
 
 </head>
 <body class="bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 antialiased">
