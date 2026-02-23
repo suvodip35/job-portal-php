@@ -139,7 +139,7 @@
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4941413774457326" crossorigin="anonymous"></script>
   <meta property="fb:app_id" content="1469923257657008" />
   <!-- Tailwind CDN for quick production-ready UI; for full production consider building Tailwind -->
-  <script src="/assets/tailwind.css"></script>
+  <link rel="stylesheet" href="/assets/css/tailwind.css">
 
 </head>
 <body class="bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 antialiased">
