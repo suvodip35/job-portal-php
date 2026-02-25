@@ -85,16 +85,6 @@
 <!DOCTYPE html>
 <html lang="en" class="">
 <head>
-  <link rel="stylesheet" href="/assets/css/tailwind.css?v=1.0.4" />
-  <!-- Google tag (gtag.js) -->
-  <script src="https://www.googletagmanager.com/gtag/js?id=G-7JQW8FVNQ2" async></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-
-    gtag('config', 'G-7JQW8FVNQ2');
-  </script>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <link rel="icon" href="/favicon.ico" />
@@ -129,6 +119,18 @@
   <meta property="og:locale" content="en_IN">
   <meta property="og:locale" content="bn_IN">
   <meta property="og:locale" content="hi_IN">
+
+  <link rel="stylesheet" href="/assets/css/tailwind.css?v=1.0.4" />
+  <!-- Google tag (gtag.js) -->
+  <script src="https://www.googletagmanager.com/gtag/js?id=G-7JQW8FVNQ2" async></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-7JQW8FVNQ2');
+  </script>
+  
   <!-- Canonical URL -->
   <link rel="canonical" href="<?php echo htmlspecialchars($canonicalUrl); ?>">
   <link rel="amphtml" href="<?= $ampHtmlCanonical ?>">
