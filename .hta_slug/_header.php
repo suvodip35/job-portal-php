@@ -90,7 +90,7 @@
     <link rel="stylesheet" href="/assets/css/tailwind.css?v=1.0.4">
   </noscript>
   <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-7JQW8FVNQ2"></script>
+  <script src="https://www.googletagmanager.com/gtag/js?id=G-7JQW8FVNQ2" async></script>
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
