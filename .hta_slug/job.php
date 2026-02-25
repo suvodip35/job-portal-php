@@ -317,14 +317,11 @@ $shareText = urlencode("Check out this job opportunity: " . $job['job_title'] . 
         <div class="w-full aspect-[16/9] relative overflow-hidden rounded">
           <!-- blurred background from same image -->
           <div class="absolute inset-0">
-            <img src="<?= e($job['thumbnail']) ?>" fetchpriority="high" alt="" class="w-full h-full object-cover blur-lg scale-110" />
+            <img src="<?= e($job['thumbnail']) ?>" fetchpriority="high" alt="<?= e($job['job_title']) ?>" width="800" height="450" loading="eager" class="w-full h-full object-cover blur-lg scale-110" />
           </div>
 
           <!-- main image (object-contain) -->
-          <img src="<?= e($job['thumbnail']) ?>" 
-              fetchpriority="high"
-              alt="<?= e($job['job_title']) ?>" 
-              class="relative w-full h-full object-contain" />
+          <img src="<?= e($job['thumbnail']) ?>" fetchpriority="high" alt="<?= e($job['job_title']) ?>" class="relative w-full h-full object-contain" width="800" height="450" loading="eager" />
         </div>
 
       </div>

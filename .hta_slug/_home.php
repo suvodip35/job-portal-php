@@ -372,13 +372,13 @@ $currentUpdates = $updatesStmt->fetchAll();
     <div class="marquee-wrap">
       <div class="marquee-content">
         <?php foreach ($marqueeJobs as $i=>$mj): ?>
-          <a class="marquee-link" href="<?= BASE_URL ?>job?slug=<?= e($mj['job_title_slug']) ?>">
+          <a class="marquee-link" href="<?= BASE_URL ?>job?slug=<?= e($mj['job_title_slug']) ?>" aria-label="<?= e($mj['job_title']) ?>" title="<?= e($mj['job_title']) ?>">
             <?= e($mj['job_title']) ?>
           </a><?= $i<count($marqueeJobs)-1 ? ' • ' : '' ?>
         <?php endforeach; ?>
         <!-- Duplicate for seamless loop -->
         <?php foreach ($marqueeJobs as $i=>$mj): ?>
-          <a class="marquee-link" href="<?= BASE_URL ?>job?slug=<?= e($mj['job_title_slug']) ?>">
+          <a class="marquee-link" href="<?= BASE_URL ?>job?slug=<?= e($mj['job_title_slug']) ?>" aria-label="<?= e($mj['job_title']) ?>" title="<?= e($mj['job_title']) ?>">
             <?= e($mj['job_title']) ?>
           </a><?= $i<count($marqueeJobs)-1 ? ' • ' : '' ?>
         <?php endforeach; ?>
@@ -402,7 +402,7 @@ $currentUpdates = $updatesStmt->fetchAll();
           <?php foreach ($latestUpdates as $lu): ?>
           <li class="flex items-start gap-2">
             <span class="inline-block mt-0.5 w-1.5 h-1.5 rounded-full bg-blue-600"></span>
-            <a href="<?= BASE_URL ?>job?slug=<?= e($lu['job_title_slug']) ?>" class="text-sm hover:underline line-clamp-2">
+            <a href="<?= BASE_URL ?>job?slug=<?= e($lu['job_title_slug']) ?>" title="<?= e($lu['job_title']) ?>" aria-label="<?= e($lu['job_title']) ?>" class="text-sm hover:underline line-clamp-2">
               <?= e($lu['job_title']) ?>
               <span class="block text-xs text-gray-500 mt-0.5"><?= date('M d', strtotime($lu['posted_date'])) ?></span>
             </a>
@@ -453,23 +453,23 @@ $currentUpdates = $updatesStmt->fetchAll();
 
         <div class="grid grid-cols-2 gap-3 mt-3">
           <div>
-            <label class="block text-xs mb-1">Salary Min</label>
-            <input type="number" name="smin" value="<?= e((string)$salaryMin) ?>" class="w-full px-3 py-2 border rounded dark:bg-gray-800 dark:border-gray-700"/>
+            <label for="smin" class="block text-xs mb-1">Salary Min</label>
+            <input type="number" name="smin" id="smin" value="<?= e((string)$salaryMin) ?>" class="w-full px-3 py-2 border rounded dark:bg-gray-800 dark:border-gray-700"/>
           </div>
           <div>
-            <label class="block text-xs mb-1">Salary Max</label>
-            <input type="number" name="smax" value="<?= e((string)$salaryMax) ?>" class="w-full px-3 py-2 border rounded dark:bg-gray-800 dark:border-gray-700"/>
+            <label for="smax" class="block text-xs mb-1">Salary Max</label>
+            <input type="number" name="smax" id="smax" value="<?= e((string)$salaryMax) ?>" class="w-full px-3 py-2 border rounded dark:bg-gray-800 dark:border-gray-700"/>
           </div>
         </div>
 
         <label for="sort" class="block text-xs mb-1 mt-3">Sort</label>
-        <select name="sort" class="w-full px-3 py-2 border rounded dark:bg-gray-800 dark:border-gray-700">
+        <select name="sort" id="sort" class="w-full px-3 py-2 border rounded dark:bg-gray-800 dark:border-gray-700">
           <option value="recent"    <?= $sort==='recent'?'selected':'' ?>>Recent first</option>
           <option value="last_date" <?= $sort==='last_date'?'selected':'' ?>>Closest last date</option>
         </select>
 
         <div class="flex gap-3 mt-4">
-          <a href="<?= BASE_URL ?>?cat=<?= e($activeTab) ?>" class="flex-1 px-3 py-2 border rounded hover:bg-gray-100 dark:hover:bg-gray-800 text-center">Reset</a>
+          <a href="<?= BASE_URL ?>?cat=<?= e($activeTab) ?>" aria-label="Reset filters" title="Reset filters" class="flex-1 px-3 py-2 border rounded hover:bg-gray-100 dark:hover:bg-gray-800 text-center">Reset</a>
           <button type="submit" class="flex-1 px-3 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Apply</button>
         </div>
       </form>
@@ -497,10 +497,10 @@ $currentUpdates = $updatesStmt->fetchAll();
         </div>
         <!-- Same filter form as sidebar -->
         <form method="get" class="space-y-3">
-          <input type="hidden" name="cat" value="<?= e($activeTab) ?>">
+          <input id="cat" type="hidden" name="cat" value="<?= e($activeTab) ?>">
           
-          <input name="search" value="<?= e($search) ?>" placeholder="Keyword" class="w-full px-3 py-2 border rounded dark:bg-gray-800 dark:border-gray-700"/>
-          <select name="location" <?= e($location) ?> class="w-full mb-3 px-3 py-2 border rounded dark:bg-gray-800 dark:border-gray-700">
+          <input title="Keyword" name="search" value="<?= e($search) ?>" placeholder="Keyword" class="w-full px-3 py-2 border rounded dark:bg-gray-800 dark:border-gray-700"/>
+          <select title="Location" name="location" <?= e($location) ?> class="w-full mb-3 px-3 py-2 border rounded dark:bg-gray-800 dark:border-gray-700">
             <option value="">-- Select State --</option>
             <?php foreach ($indianStates as $slug => $name): ?>
               <option value="<?= htmlspecialchars($slug) ?>">
@@ -526,18 +526,18 @@ $currentUpdates = $updatesStmt->fetchAll();
               <option value="internship" <?= $jobType==='internship'?'selected':'' ?>>Internship</option>
             </select>
             
-            <input type="number" name="smin" value="<?= e((string)$salaryMin) ?>" placeholder="Salary Min" class="w-full px-3 py-2 border rounded dark:bg-gray-800 dark:border-gray-700"/>
+            <input title="Salary Minimum" type="number" name="smin" value="<?= e((string)$salaryMin) ?>" placeholder="Salary Min" class="w-full px-3 py-2 border rounded dark:bg-gray-800 dark:border-gray-700"/>
             
-            <input type="number" name="smax" value="<?= e((string)$salaryMax) ?>" placeholder="Salary Max" class="w-full px-3 py-2 border rounded dark:bg-gray-800 dark:border-gray-700"/>
+            <input title="Salary Maximum" type="number" name="smax" value="<?= e((string)$salaryMax) ?>" placeholder="Salary Max" class="w-full px-3 py-2 border rounded dark:bg-gray-800 dark:border-gray-700"/>
           </div>
           <label for="sort" class="sr-only">Sort By</label>
-          <select name="sort" class="w-full px-3 py-2 border rounded dark:bg-gray-800 dark:border-gray-700">
+          <select name="sort" id="sort" class="w-full px-3 py-2 border rounded dark:bg-gray-800 dark:border-gray-700">
             <option value="recent"    <?= $sort==='recent'?'selected':'' ?>>Recent first</option>
             <option value="last_date" <?= $sort==='last_date'?'selected':'' ?>>Closest last date</option>
           </select>
 
           <div class="flex gap-3 pt-2">
-            <a href="<?= BASE_URL ?>?cat=<?= e($activeTab) ?>" class="flex-1 px-3 py-2 border rounded text-center">Reset</a>
+            <a href="<?= BASE_URL ?>?cat=<?= e($activeTab) ?>" title="Reset Filters" aria-label="Reset filters" class="flex-1 px-3 py-2 border rounded text-center">Reset</a>
             <button type="submit" class="flex-1 px-3 py-2 bg-blue-600 text-white rounded">Apply</button>
           </div>
         </form>
@@ -552,7 +552,7 @@ $currentUpdates = $updatesStmt->fetchAll();
         <?php $cur='All'; foreach($CATEGORY_TABS as $t){ if($t['slug']===$activeTab){ $cur=$t['label']; break; } } ?>
         <?= e($cur) ?> Jobs — <?= e($total) ?> found
       </h1>
-      <a href="<?= BASE_URL ?>saved-jobs" class="text-sm px-3 py-1.5 rounded bg-amber-200 text-amber-900 hover:bg-amber-300" id="savedCountBtn">
+      <a href="<?= BASE_URL ?>saved-jobs" aria-label="Saved Jobs" title="Saved Jobs" class="text-sm px-3 py-1.5 rounded bg-amber-200 text-amber-900 hover:bg-amber-300" id="savedCountBtn">
         Saved (<span id="savedCount">0</span>)
       </a>
     </div>
@@ -571,7 +571,7 @@ $currentUpdates = $updatesStmt->fetchAll();
           <div class="p-3">
             <div class="flex justify-between items-start gap-3">
               <div class="min-w-0">
-                <a href="<?= BASE_URL ?>job?slug=<?= e($job['job_title_slug']) ?>">
+                <a href="<?= BASE_URL ?>job?slug=<?= e($job['job_title_slug']) ?>" title="<?= e($job['job_title']) ?>" aria-label="<?= e($job['job_title']) ?>">
                   <h1 class="text-lg font-semibold text-blue-600 group-hover:underline truncate"><?= e($job['job_title']) ?></h1>
                 </a>
                 <p class="text-sm text-gray-600 dark:text-gray-300 mt-0.5 truncate">🏢 <?= e($job['company_name']) ?> • 📍 <?= e($job['location']) ?></p>
@@ -595,7 +595,7 @@ $currentUpdates = $updatesStmt->fetchAll();
               </div>
 
             <div class="mt-4 flex justify-between items-center">
-              <a class="px-3 py-1.5 bg-blue-600 text-white rounded hover:bg-blue-700" href="<?= BASE_URL ?>job?slug=<?= e($job['job_title_slug']) ?>">Details</a>
+              <a class="px-3 py-1.5 bg-blue-600 text-white rounded hover:bg-blue-700" href="<?= BASE_URL ?>job?slug=<?= e($job['job_title_slug']) ?>" title="Details for <?= e($job['job_title']) ?>" aria-label="Details for <?= e($job['job_title']) ?>">Details</a>
               <div class="flex items-center gap-3">
                 <button class="save-btn text-sm px-2 py-1 border rounded hover:bg-gray-100 dark:hover:bg-gray-700" data-slug="<?= e($job['job_title_slug']) ?>">★ Save</button>
                 <span class="text-xs text-gray-500"><?= date('M d, Y', strtotime($job['posted_date'])) ?></span>
@@ -618,7 +618,7 @@ $currentUpdates = $updatesStmt->fetchAll();
         ?>
       </div>
     <?php endif; ?>
-    <button aria-label="Open drawer menu" id="openDrawer"class="fixed bottom-20 right-4 md:right-20  px-4 py-2 text-sm rounded-full shadow-lg bg-blue-600 text-white dark:bg-gray-800 dark:border-gray-700 flex flex-col items-center justify-center space-x-2 w-16 h-16 rounded-full">
+    <button aria-label="Open drawer menu" title="Open drawer menu" id="openDrawer"class="fixed bottom-20 right-4 md:right-20  px-4 py-2 text-sm rounded-full shadow-lg bg-blue-600 text-white dark:bg-gray-800 dark:border-gray-700 flex flex-col items-center justify-center space-x-2 w-16 h-16 rounded-full">
       <svg width="20px" height="20px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <title>Filter</title> <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"> <g id="Filter"> <rect id="Rectangle" fill-rule="nonzero" x="0" y="0" width="24" height="24"> </rect> <line x1="4" y1="5" x2="16" y2="5" id="Path" stroke="#ffffff" stroke-width="2" stroke-linecap="round"> </line> <line x1="4" y1="12" x2="10" y2="12" id="Path" stroke="#ffffff" stroke-width="2" stroke-linecap="round"> </line> <line x1="14" y1="12" x2="20" y2="12" id="Path" stroke="#ffffff" stroke-width="2" stroke-linecap="round"> </line> <line x1="8" y1="19" x2="20" y2="19" id="Path" stroke="#ffffff" stroke-width="2" stroke-linecap="round"> </line> <circle id="Oval" stroke="#ffffff" stroke-width="2" stroke-linecap="round" cx="18" cy="5" r="2"> </circle> <circle id="Oval" stroke="#ffffff" stroke-width="2" stroke-linecap="round" cx="12" cy="12" r="2"> </circle> <circle id="Oval" stroke="#ffffff" stroke-width="2" stroke-linecap="round" cx="6" cy="19" r="2"> </circle> </g> </g> </g></svg>  
       Filters
     </button>
@@ -633,7 +633,7 @@ $currentUpdates = $updatesStmt->fetchAll();
                   </svg>
                   Current Updates
               </h2>
-              <a href="<?= BASE_URL ?>updates" class="text-blue-600 dark:text-blue-300 hover:underline font-medium flex items-center gap-1">
+              <a href="<?= BASE_URL ?>updates" title="View All Updates" class="text-blue-600 dark:text-blue-300 hover:underline font-medium flex items-center gap-1">
                   View All <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
               </a>
           </div>
@@ -665,7 +665,7 @@ $currentUpdates = $updatesStmt->fetchAll();
                   <div class="p-3 space-y-3 max-h-80 overflow-y-auto scroll-container">
                       <div class="scroll-inner">
                           <?php foreach ($filteredUpdates as $update): ?>
-                          <a href="<?= BASE_URL ?>updates/details?slug=<?= e($update['slug']) ?>" class="block p-2 border rounded hover:shadow-md transition dark:border-gray-700 dark:hover:bg-gray-700">
+                          <a href="<?= BASE_URL ?>updates/details?slug=<?= e($update['slug']) ?>" target="_blank" title="<?= e($update['title']) ?>" aria-label="<?= e($update['title']) ?>" class="block p-2 border rounded hover:shadow-md transition dark:border-gray-700 dark:hover:bg-gray-700">
                               <div class="flex justify-between items-start">
                                   <h4 class="text-sm font-medium dark:text-white line-clamp-2 flex-1"><?= e($update['title']) ?></h4>
                                   <?php if (strtotime($update['created_at']) > strtotime('-2 days')): ?>
