@@ -85,10 +85,7 @@
 <!DOCTYPE html>
 <html lang="en" class="">
 <head>
-  <link rel="preload" href="/assets/css/tailwind.css?v=1.0.4" as="style" onload="this.onload=null;this.rel='stylesheet'">
-  <noscript>
-    <link rel="stylesheet" href="/assets/css/tailwind.css?v=1.0.4">
-  </noscript>
+  <link rel="stylesheet" href="/assets/css/tailwind.css?v=1.0.4" />
   <!-- Google tag (gtag.js) -->
   <script src="https://www.googletagmanager.com/gtag/js?id=G-7JQW8FVNQ2" async></script>
   <script>
