@@ -565,7 +565,7 @@ $currentUpdates = $updatesStmt->fetchAll();
         <article aria-label="<?= e($job['job_title']) ?>" onclick="location.href='<?= BASE_URL ?>job?slug=<?= e($job['job_title_slug']) ?>'" class="group border cursor-pointer rounded-2xl bg-white dark:bg-gray-800 shadow hover:shadow-2xl transition overflow-hidden w-full">
           <?php if (!empty($job['thumbnail'])): ?>
           <div class="w-full aspect-[16/9] overflow-hidden rounded">
-            <img src="<?= e($job['thumbnail']) ?>" fetchpriority="high"  alt="<?= e($job['job_title']) ?>" class="w-full h-full object-cover" />
+            <img src="<?= e($job['thumbnail']) ?>" fetchpriority="high"  alt="<?= e($job['job_title']) ?>" class="w-full h-full object-cover" width="600" height="400" loading="lazy" decoding="async" />
           </div>
           <?php endif; ?>
           <div class="p-3">
