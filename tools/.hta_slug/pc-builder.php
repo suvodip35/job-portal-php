@@ -666,7 +666,7 @@ function renderStep(stepIndex) {
                     : isCompatible 
                         ? 'border-gray-200 dark:border-gray-600 hover:border-purple-300 dark:hover:border-purple-700 hover:shadow-md' 
                         : 'border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-900/20 opacity-60 cursor-not-allowed'
-            }" 
+            }" style="${isSelected ? 'border: 1px solid #7c3aed !important;' : ''}"
             onclick="${isCompatible ? `selectComponent('${step}', '${product.id}')` : ''}">
                 <div class="flex justify-between items-start mb-2">
                     <h3 class="font-semibold text-lg">${product.name}</h3>
