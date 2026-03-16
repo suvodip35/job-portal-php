@@ -232,78 +232,125 @@
 
 </script>
 <style>
-  #markdownContent > h2 {
-    font-size: 22px;
-    font-weight: bold;
-    margin-top: 20px;
-    margin-bottom: 20px;
-  }
-  .job-description table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 0.95rem;
-    border: 1px solid #d1d5db; /* Light mode border */
-  }
-
-  /* Light Mode */
-  .job-description th {
-    font-weight: 600;
-    padding: 0.3rem 1rem;
-    border: 1px solid #d1d5db; /* Light border */
-    text-align: left;
-  }
-
-  .job-description td {
-    padding: 0.3rem 1rem;
-    border: 1px solid #d1d5db;
-  }
-
-  /* 🌙 Dark Mode */
-  .dark .job-description table {
-    border: 1px solid #ffffffff; /* gray-700 */
-  }
-
-  #markdownContent > .dark .job-description th {
-    color: #f9fafb; /* White text */
-    border: 1px solid #374151;
-  }
-
-  #markdownContent > .dark .job-description td {
-    color: #e5e7eb; /* Light gray text */
-    border: 1px solid #374151;
-  }
-
-  #markdownContent {
+ /* Markdown Container */
+#markdownContent {
   overflow: visible !important;
+  line-height: 1.7;
+  font-size: 16px;
 }
 
+/* Headings */
+#markdownContent h1 { font-size: 32px; font-weight: 700; margin: 20px 0; }
+#markdownContent h2 { font-size: 26px; font-weight: 700; margin: 18px 0; }
+#markdownContent h3 { font-size: 22px; font-weight: 600; margin: 16px 0; }
+#markdownContent h4 { font-size: 20px; font-weight: 600; margin: 14px 0; }
+#markdownContent h5 { font-size: 18px; font-weight: 600; margin: 12px 0; }
+#markdownContent h6 { font-size: 16px; font-weight: 600; margin: 10px 0; }
 
-/* This is new applied class if not required remove in future */
-/* Prose class এর override */
-#markdownContent.prose * {
-  overflow: visible !important;
-  white-space: normal !important;
-  word-break: break-word !important;
+/* Paragraph */
+#markdownContent p {
+  margin-bottom: 14px;
 }
 
-/* Table natural responsive behaviour */
+/* Lists */
+#markdownContent ul,
+#markdownContent ol {
+  margin-left: 20px;
+  margin-bottom: 14px;
+}
+
+#markdownContent li {
+  margin-bottom: 6px;
+}
+
+/* Links */
+#markdownContent a {
+  color: #2477fd;
+  text-decoration: underline;
+}
+
+#markdownContent a:hover {
+  color: #104fb6;
+}
+
+/* Blockquote */
+#markdownContent blockquote {
+  border-left: 4px solid #d1d5db;
+  padding-left: 12px;
+  margin: 16px 0;
+  color: #4b5563;
+}
+
+/* Code inline */
+#markdownContent code {
+  background: #f3f4f6;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+
+/* Code block */
+#markdownContent pre {
+  background: #111827;
+  color: #f9fafb;
+  padding: 14px;
+  border-radius: 6px;
+  overflow-x: auto;
+}
+
+/* Tables */
 #markdownContent table {
-  display: table !important;
-  width: 100% !important;
-  table-layout: auto !important;
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0;
 }
 
 #markdownContent th,
 #markdownContent td {
-  white-space: normal !important;
-  word-break: break-word !important;
+  border: 1px solid #d1d5db;
+  padding: 8px 12px;
+  text-align: left;
+  word-break: break-word;
 }
-#markdownContent  a {
-  color: #2477fdff;
-  text-decoration: underline;
+
+#markdownContent th {
+  font-weight: 600;
 }
-#markdownContent  a:hover {
-  color: #104fb6ff;
-  text-decoration: underline;
+
+/* Images */
+#markdownContent img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 6px;
+  margin: 10px 0;
+}
+
+/* Horizontal rule */
+#markdownContent hr {
+  border: none;
+  border-top: 1px solid #e5e7eb;
+  margin: 20px 0;
+}
+
+/* DARK MODE */
+.dark #markdownContent {
+  color: #e5e7eb;
+}
+
+.dark #markdownContent code {
+  background: #374151;
+}
+
+.dark #markdownContent pre {
+  background: #020617;
+}
+
+.dark #markdownContent th,
+.dark #markdownContent td {
+  border: 1px solid #374151;
+}
+
+.dark #markdownContent blockquote {
+  border-left: 4px solid #374151;
 }
 </style>
