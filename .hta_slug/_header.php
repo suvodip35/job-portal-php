@@ -233,254 +233,210 @@
 </script>
 <style>
 
-/* ================================
+/* =========================
    Markdown Container
-================================ */
-#markdownContent {
-  font-size: 16px;
-  line-height: 1.7;
-  overflow: visible !important;
-  word-break: break-word;
+========================= */
+
+#markdownContent{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  font-size:16px;
+  line-height:1.7;
+  word-wrap:break-word;
 }
 
-/* Reset spacing */
-#markdownContent * {
-  box-sizing: border-box;
+#markdownContent *{
+  box-sizing:border-box;
 }
 
-/* ================================
-   Headings
-================================ */
+/* =========================
+   Responsive Headings
+========================= */
 
 #markdownContent h1,
 #markdownContent h2,
 #markdownContent h3,
 #markdownContent h4,
 #markdownContent h5,
-#markdownContent h6 {
-  font-weight: 700;
-  line-height: 1.3;
-  margin-top: 28px;
-  margin-bottom: 12px;
+#markdownContent h6{
+  font-weight:600;
+  margin-top:28px;
+  margin-bottom:16px;
+  line-height:1.25;
 }
 
-#markdownContent h1 {
-  font-size: 32px;
-  border-bottom: 1px solid #e5e7eb;
-  padding-bottom: 6px;
+#markdownContent h1{
+  font-size:clamp(28px,4vw,36px);
+  border-bottom:1px solid #eaecef;
+  padding-bottom:.3em;
 }
 
-#markdownContent h2 {
-  font-size: 26px;
-  border-bottom: 1px solid #e5e7eb;
-  padding-bottom: 4px;
+#markdownContent h2{
+  font-size:clamp(24px,3vw,30px);
+  border-bottom:1px solid #eaecef;
+  padding-bottom:.3em;
 }
 
-#markdownContent h3 {
-  font-size: 22px;
-}
+#markdownContent h3{font-size:clamp(20px,2.4vw,24px);}
+#markdownContent h4{font-size:clamp(18px,2vw,20px);}
+#markdownContent h5{font-size:clamp(16px,1.6vw,18px);}
+#markdownContent h6{font-size:clamp(14px,1.2vw,16px);}
 
-#markdownContent h4 {
-  font-size: 20px;
-}
-
-#markdownContent h5 {
-  font-size: 18px;
-}
-
-#markdownContent h6 {
-  font-size: 16px;
-}
-
-/* ================================
+/* =========================
    Paragraph
-================================ */
+========================= */
 
-#markdownContent p {
-  margin-bottom: 16px;
+#markdownContent p{
+  margin-top:0;
+  margin-bottom:16px;
 }
 
-/* ================================
-   Strong / Bold
-================================ */
-
-#markdownContent strong {
-  font-weight: 600;
-}
-
-/* ================================
-   Emphasis / Italic
-================================ */
-
-#markdownContent em {
-  font-style: italic;
-}
-
-/* ================================
+/* =========================
    Links
-================================ */
+========================= */
 
-#markdownContent a {
-  color: #2477fd;
-  text-decoration: underline;
+#markdownContent a{
+  color:#0366d6;
+  text-decoration:none;
 }
 
-#markdownContent a:hover {
-  color: #104fb6;
+#markdownContent a:hover{
+  text-decoration:underline;
 }
 
-/* ================================
+/* =========================
    Lists
-================================ */
+========================= */
 
 #markdownContent ul,
-#markdownContent ol {
-  margin-bottom: 16px;
-  padding-left: 22px;
+#markdownContent ol{
+  padding-left:2em;
+  margin-top:0;
+  margin-bottom:16px;
 }
 
-#markdownContent ul {
-  list-style: disc;
+#markdownContent li{
+  margin-bottom:4px;
 }
 
-#markdownContent ol {
-  list-style: decimal;
-}
-
-#markdownContent li {
-  margin-bottom: 6px;
-}
-
-#markdownContent li > ul,
-#markdownContent li > ol {
-  margin-top: 6px;
-}
-
-/* ================================
+/* =========================
    Blockquote
-================================ */
+========================= */
 
-#markdownContent blockquote {
-  border-left: 4px solid #d1d5db;
-  padding-left: 14px;
-  margin: 16px 0;
-  color: #4b5563;
-  font-style: italic;
+#markdownContent blockquote{
+  margin:0 0 16px 0;
+  padding:0 1em;
+  color:#6a737d;
+  border-left:.25em solid #dfe2e5;
 }
 
-/* ================================
+/* =========================
    Horizontal Rule
-================================ */
+========================= */
 
-#markdownContent hr {
-  border: none;
-  border-top: 1px solid #e5e7eb;
-  margin: 26px 0;
+#markdownContent hr{
+  height:.25em;
+  margin:24px 0;
+  background-color:#e1e4e8;
+  border:0;
 }
 
-/* ================================
-   Images
-================================ */
+/* =========================
+   Inline Code
+========================= */
 
-#markdownContent img {
-  max-width: 100%;
-  height: auto;
-  border-radius: 6px;
-  margin: 12px 0;
+#markdownContent code{
+  font-family:SFMono-Regular,Consolas,"Liberation Mono",Menlo,monospace;
+  padding:.2em .4em;
+  font-size:85%;
+  background-color:rgba(27,31,35,.05);
+  border-radius:3px;
 }
 
-/* ================================
-   Code Inline
-================================ */
-
-#markdownContent code {
-  background: #f3f4f6;
-  padding: 2px 6px;
-  border-radius: 4px;
-  font-size: 0.9em;
-  font-family: monospace;
-}
-
-/* ================================
+/* =========================
    Code Block
-================================ */
+========================= */
 
-#markdownContent pre {
-  background: #111827;
-  color: #f9fafb;
-  padding: 16px;
-  border-radius: 8px;
-  overflow-x: auto;
-  margin: 18px 0;
+#markdownContent pre{
+  padding:16px;
+  overflow:auto;
+  font-size:85%;
+  line-height:1.45;
+  background-color:#f6f8fa;
+  border-radius:6px;
 }
 
-#markdownContent pre code {
-  background: transparent;
-  padding: 0;
+#markdownContent pre code{
+  background:transparent;
+  padding:0;
 }
 
-/* ================================
-   Tables
-================================ */
+/* =========================
+   Tables (Scrollable)
+========================= */
 
-#markdownContent table {
-  width: 100%;
-  border-collapse: collapse;
-  margin: 18px 0;
-  display: block;
-  overflow-x: auto;
+#markdownContent table{
+  border-spacing:0;
+  border-collapse:collapse;
+  margin-bottom:16px;
+  width:100%;
+  display:block;
+  overflow-x:auto;
+  max-width:100%;
 }
 
-#markdownContent th,
-#markdownContent td {
-  border: 1px solid #d1d5db;
-  padding: 10px 12px;
-  text-align: left;
-  vertical-align: top;
+#markdownContent table th,
+#markdownContent table td{
+  padding:6px 13px;
+  border:1px solid #dfe2e5;
+  white-space:nowrap;
 }
 
-#markdownContent th {
-  font-weight: 600;
-  background: #f9fafb;
+#markdownContent table th{
+  font-weight:600;
 }
 
-/* ================================
+/* =========================
+   Images
+========================= */
+
+#markdownContent img{
+  max-width:100%;
+  box-sizing:border-box;
+}
+
+/* =========================
    DARK MODE
-================================ */
+========================= */
 
-.dark #markdownContent {
-  color: #e5e7eb;
+.dark #markdownContent{
+  color:#e6edf3;
 }
 
 .dark #markdownContent h1,
-.dark #markdownContent h2 {
-  border-bottom: 1px solid #374151;
+.dark #markdownContent h2{
+  border-bottom:1px solid #30363d;
 }
 
-.dark #markdownContent hr {
-  border-top: 1px solid #374151;
+.dark #markdownContent blockquote{
+  color:#8b949e;
+  border-left:.25em solid #30363d;
 }
 
-.dark #markdownContent blockquote {
-  border-left: 4px solid #374151;
-  color: #9ca3af;
+.dark #markdownContent hr{
+  background-color:#30363d;
 }
 
-.dark #markdownContent code {
-  background: #374151;
+.dark #markdownContent code{
+  background-color:rgba(110,118,129,.4);
 }
 
-.dark #markdownContent pre {
-  background: #020617;
+.dark #markdownContent pre{
+  background-color:#161b22;
 }
 
-.dark #markdownContent th {
-  background: #111827;
-}
-
-.dark #markdownContent th,
-.dark #markdownContent td {
-  border: 1px solid #374151;
+.dark #markdownContent table th,
+.dark #markdownContent table td{
+  border:1px solid #30363d;
 }
 
 </style>
