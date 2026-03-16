@@ -314,6 +314,14 @@
   margin-bottom:16px;
 }
 
+#markdownContent ul{
+  list-style-type: disc;
+}
+
+#markdownContent ol{
+  list-style-type: decimal;
+}
+
 #markdownContent li{
   margin-bottom:4px;
 }
