@@ -232,38 +232,94 @@
 
 </script>
 <style>
- /* Markdown Container */
+
+/* ================================
+   Markdown Container
+================================ */
 #markdownContent {
-  overflow: visible !important;
+  font-size: 16px;
   line-height: 1.7;
+  overflow: visible !important;
+  word-break: break-word;
+}
+
+/* Reset spacing */
+#markdownContent * {
+  box-sizing: border-box;
+}
+
+/* ================================
+   Headings
+================================ */
+
+#markdownContent h1,
+#markdownContent h2,
+#markdownContent h3,
+#markdownContent h4,
+#markdownContent h5,
+#markdownContent h6 {
+  font-weight: 700;
+  line-height: 1.3;
+  margin-top: 28px;
+  margin-bottom: 12px;
+}
+
+#markdownContent h1 {
+  font-size: 32px;
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 6px;
+}
+
+#markdownContent h2 {
+  font-size: 26px;
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 4px;
+}
+
+#markdownContent h3 {
+  font-size: 22px;
+}
+
+#markdownContent h4 {
+  font-size: 20px;
+}
+
+#markdownContent h5 {
+  font-size: 18px;
+}
+
+#markdownContent h6 {
   font-size: 16px;
 }
 
-/* Headings */
-#markdownContent h1 { font-size: 32px; font-weight: 700; margin: 20px 0; }
-#markdownContent h2 { font-size: 26px; font-weight: 700; margin: 18px 0; }
-#markdownContent h3 { font-size: 22px; font-weight: 600; margin: 16px 0; }
-#markdownContent h4 { font-size: 20px; font-weight: 600; margin: 14px 0; }
-#markdownContent h5 { font-size: 18px; font-weight: 600; margin: 12px 0; }
-#markdownContent h6 { font-size: 16px; font-weight: 600; margin: 10px 0; }
+/* ================================
+   Paragraph
+================================ */
 
-/* Paragraph */
 #markdownContent p {
-  margin-bottom: 14px;
+  margin-bottom: 16px;
 }
 
-/* Lists */
-#markdownContent ul,
-#markdownContent ol {
-  margin-left: 20px;
-  margin-bottom: 14px;
+/* ================================
+   Strong / Bold
+================================ */
+
+#markdownContent strong {
+  font-weight: 600;
 }
 
-#markdownContent li {
-  margin-bottom: 6px;
+/* ================================
+   Emphasis / Italic
+================================ */
+
+#markdownContent em {
+  font-style: italic;
 }
 
-/* Links */
+/* ================================
+   Links
+================================ */
+
 #markdownContent a {
   color: #2477fd;
   text-decoration: underline;
@@ -273,68 +329,141 @@
   color: #104fb6;
 }
 
-/* Blockquote */
-#markdownContent blockquote {
-  border-left: 4px solid #d1d5db;
-  padding-left: 12px;
-  margin: 16px 0;
-  color: #4b5563;
+/* ================================
+   Lists
+================================ */
+
+#markdownContent ul,
+#markdownContent ol {
+  margin-bottom: 16px;
+  padding-left: 22px;
 }
 
-/* Code inline */
+#markdownContent ul {
+  list-style: disc;
+}
+
+#markdownContent ol {
+  list-style: decimal;
+}
+
+#markdownContent li {
+  margin-bottom: 6px;
+}
+
+#markdownContent li > ul,
+#markdownContent li > ol {
+  margin-top: 6px;
+}
+
+/* ================================
+   Blockquote
+================================ */
+
+#markdownContent blockquote {
+  border-left: 4px solid #d1d5db;
+  padding-left: 14px;
+  margin: 16px 0;
+  color: #4b5563;
+  font-style: italic;
+}
+
+/* ================================
+   Horizontal Rule
+================================ */
+
+#markdownContent hr {
+  border: none;
+  border-top: 1px solid #e5e7eb;
+  margin: 26px 0;
+}
+
+/* ================================
+   Images
+================================ */
+
+#markdownContent img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 6px;
+  margin: 12px 0;
+}
+
+/* ================================
+   Code Inline
+================================ */
+
 #markdownContent code {
   background: #f3f4f6;
   padding: 2px 6px;
   border-radius: 4px;
   font-size: 0.9em;
+  font-family: monospace;
 }
 
-/* Code block */
+/* ================================
+   Code Block
+================================ */
+
 #markdownContent pre {
   background: #111827;
   color: #f9fafb;
-  padding: 14px;
-  border-radius: 6px;
+  padding: 16px;
+  border-radius: 8px;
   overflow-x: auto;
+  margin: 18px 0;
 }
 
-/* Tables */
+#markdownContent pre code {
+  background: transparent;
+  padding: 0;
+}
+
+/* ================================
+   Tables
+================================ */
+
 #markdownContent table {
   width: 100%;
   border-collapse: collapse;
-  margin: 16px 0;
+  margin: 18px 0;
+  display: block;
+  overflow-x: auto;
 }
 
 #markdownContent th,
 #markdownContent td {
   border: 1px solid #d1d5db;
-  padding: 8px 12px;
+  padding: 10px 12px;
   text-align: left;
-  word-break: break-word;
+  vertical-align: top;
 }
 
 #markdownContent th {
   font-weight: 600;
+  background: #f9fafb;
 }
 
-/* Images */
-#markdownContent img {
-  max-width: 100%;
-  height: auto;
-  border-radius: 6px;
-  margin: 10px 0;
-}
+/* ================================
+   DARK MODE
+================================ */
 
-/* Horizontal rule */
-#markdownContent hr {
-  border: none;
-  border-top: 1px solid #e5e7eb;
-  margin: 20px 0;
-}
-
-/* DARK MODE */
 .dark #markdownContent {
   color: #e5e7eb;
+}
+
+.dark #markdownContent h1,
+.dark #markdownContent h2 {
+  border-bottom: 1px solid #374151;
+}
+
+.dark #markdownContent hr {
+  border-top: 1px solid #374151;
+}
+
+.dark #markdownContent blockquote {
+  border-left: 4px solid #374151;
+  color: #9ca3af;
 }
 
 .dark #markdownContent code {
@@ -345,12 +474,13 @@
   background: #020617;
 }
 
+.dark #markdownContent th {
+  background: #111827;
+}
+
 .dark #markdownContent th,
 .dark #markdownContent td {
   border: 1px solid #374151;
 }
 
-.dark #markdownContent blockquote {
-  border-left: 4px solid #374151;
-}
 </style>
