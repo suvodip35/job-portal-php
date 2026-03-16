@@ -334,8 +334,8 @@
 ========================= */
 
 #markdownContent hr{
-  height:.25em;
-  margin:24px 0;
+  height: 1px;
+  margin:20px 0;
   background-color:#e1e4e8;
   border:0;
 }
