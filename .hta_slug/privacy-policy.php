@@ -1,9 +1,9 @@
 <?php 
-
-  $pageTitle = "Privacy Policy | FromCampus - Job Notification Portal";
-  $pageDescription = "Read the official Privacy Policy of FromCampus. Learn how we collect, store, and protect user data including preferences and saved jobs using browser local storage.";
-  $keywords = "Privacy Policy, User Data, Local Storage Data, Saved Jobs Policy, FromCampus Privacy";
-  $author = "FromCampus";
+  // SEO Optimized Meta Tags
+  $pageTitle = "Privacy Policy | FromCampus - Data Protection & User Privacy";
+  $pageDescription = "Official Privacy Policy of FromCampus. Learn how we handle your data, our use of cookies, Google AdSense compliance, and how your saved jobs are stored locally.";
+  $keywords = "Privacy Policy FromCampus, Job Portal Privacy, Google AdSense Cookies, Data Protection, Saved Jobs Local Storage";
+  $author = "FromCampus Team";
   $ogImage = "https://fromcampus.com/assets/logo/FromCampus_Color_text.png";
   $canonicalUrl = "https://fromcampus.com/privacy-policy";
 
@@ -12,8 +12,7 @@
       "@type" => "WebPage",
       "name" => "Privacy Policy - FromCampus",
       "url" => "https://fromcampus.com/privacy-policy",
-      "description" => "Official Privacy Policy of FromCampus explaining how user data like saved jobs and browser local storage is used and protected.",
-      "keywords" => "Privacy Policy, User Data, Local Storage Data, Saved Jobs Policy, FromCampus",
+      "description" => "Detailed Privacy Policy of FromCampus regarding user data, Google AdSense, and browser storage usage.",
       "publisher" => [
           "@type" => "Organization",
           "name" => "FromCampus",
@@ -28,63 +27,49 @@
   require_once('_header.php');
 ?>
 <main class="max-w-4xl mx-auto px-4 py-10">
-  <h1 class="text-3xl font-bold mb-6">Privacy Policy</h1>
+  <h1 class="text-3xl font-bold mb-6 text-gray-900 dark:text-white border-b-2 border-indigo-500 inline-block">Privacy Policy</h1>
 
-  <div class="space-y-4 text-gray-700 dark:text-gray-300 leading-relaxed">
+  <div class="space-y-6 text-gray-700 dark:text-gray-300 leading-relaxed text-base">
 
-    <p>Your privacy is important to us. This Privacy Policy explains how FromCampus.com collects, uses, and protects your information when you visit or interact with our website.</p>
+    <p>At <strong>FromCampus.com</strong>, accessible from <a href="https://fromcampus.com/" class="text-indigo-600 hover:underline">https://fromcampus.com/</a>, one of our main priorities is the privacy of our visitors. This Privacy Policy document contains types of information that is collected and recorded by FromCampus and how we use it.</p>
 
-    <h2 class="text-xl font-semibold mt-6">Information We Collect</h2>
-    <p>We do not require users to register or create an account. However, we may collect the following information:</p>
+    <h2 class="text-2xl font-semibold mt-8 text-gray-900 dark:text-white">1. Information Collection and Use</h2>
+    <p>We believe in minimal data collection to ensure a safe browsing experience. The information we may collect includes:</p>
     <ul class="list-disc pl-6 space-y-2">
-      <li>Basic interaction data such as IP address, device type, and browsing activity (through analytics tools).</li>
-      <li>Email address (only if you voluntarily submit via contact form or newsletter subscription).</li>
-      <li>Saved job bookmarks — stored locally in your browser using local storage. This data is <strong>not stored or accessed by us.</strong></li>
+        <li><strong>Log Files:</strong> FromCampus follows a standard procedure of using log files. These files log visitors when they visit websites. This includes IP addresses, browser type, Internet Service Provider (ISP), date/time stamp, and referring/exit pages.</li>
+        <li><strong>Voluntary Data:</strong> If you contact us directly via our <a href="/contact" class="text-indigo-600 hover:underline">Contact Form</a>, we may receive your name, email address, and the contents of the message you send.</li>
+        <li><strong>Local Storage:</strong> To enhance your experience (e.g., "Saved Jobs" feature), we use browser <strong>Local Storage</strong>. This data remains on your device and is never uploaded to our servers.</li>
     </ul>
 
-    <h2 class="text-xl font-semibold mt-6">Use of Cookies & Local Storage</h2>
-    <p>
-      We may use cookies and browser storage to improve user experience, such as remembering bookmarked job posts or preferences.
-      You may disable cookies anytime from your browser settings, though some features may not work properly.
-    </p>
+    <h2 class="text-2xl font-semibold mt-8 text-gray-900 dark:text-white">2. Google DoubleClick DART Cookie</h2>
+    <p>Google is one of the third-party vendors on our site. It also uses cookies, known as DART cookies, to serve ads to our site visitors based upon their visit to our site and other sites on the internet. However, visitors may choose to decline the use of DART cookies by visiting the Google ad and content network Privacy Policy.</p>
 
-    <h2 class="text-xl font-semibold mt-6">How We Use Your Information</h2>
+    <h2 class="text-2xl font-semibold mt-8 text-gray-900 dark:text-white">3. Advertising Partners Privacy Policies</h2>
+    <p>Third-party ad servers or ad networks use technologies like cookies, JavaScript, or Web Beacons that are used in their respective advertisements and links that appear on FromCampus. They automatically receive your IP address when this occurs.</p>
+    <p><strong>Note:</strong> FromCampus has no access to or control over these cookies that are used by third-party advertisers.</p>
+
+    <h2 class="text-2xl font-semibold mt-8 text-gray-900 dark:text-white">4. GDPR & CCPA Data Protection Rights</h2>
+    <p>We want to make sure you are fully aware of all of your data protection rights. Every user is entitled to the following:</p>
     <ul class="list-disc pl-6 space-y-2">
-      <li>To improve website functionality and user experience.</li>
-      <li>To provide relevant job updates, articles, and notifications.</li>
-      <li>To analyze website performance and user engagement using tools such as Google Analytics.</li>
+        <li><strong>The right to access:</strong> You have the right to request copies of your personal data.</li>
+        <li><strong>The right to rectification:</strong> You have the right to request that we correct any information you believe is inaccurate.</li>
+        <li><strong>The right to erasure:</strong> You have the right to request that we erase your personal data, under certain conditions.</li>
     </ul>
 
-    <h2 class="text-xl font-semibold mt-6">Third-Party Services</h2>
-    <p>
-      Our website may use third-party tools such as Google Analytics, Google AdSense, and affiliate links. These third parties may collect anonymized data to serve ads or analyze traffic.
-      We do not control how third parties use this data, and users should review their policies for more details.
-    </p>
+    <h2 class="text-2xl font-semibold mt-8 text-gray-900 dark:text-white">5. Children's Information</h2>
+    <p>Another part of our priority is adding protection for children while using the internet. We do not knowingly collect any Personal Identifiable Information from children under the age of 13. If you think your child provided this kind of information on our website, we strongly encourage you to contact us immediately.</p>
 
-    <h2 class="text-xl font-semibold mt-6">Data Sharing</h2>
-    <p>
-      We do not sell, trade, or share your personal information with anyone, except when legally required or when integrating third-party services mentioned above.
-    </p>
+    <h2 class="text-2xl font-semibold mt-8 text-gray-900 dark:text-white">6. Consent</h2>
+    <p>By using our website, you hereby consent to our Privacy Policy and agree to its <a href="/terms" class="text-indigo-600 hover:underline">Terms and Conditions</a>.</p>
 
-    <h2 class="text-xl font-semibold mt-6">Your Rights</h2>
-    <ul class="list-disc pl-6 space-y-2">
-      <li>You may request deletion of any voluntarily submitted information (such as email).</li>
-      <li>You may turn off cookies or clear browser storage anytime.</li>
-      <li>You may unsubscribe from newsletter emails (if subscribed).</li>
-    </ul>
+    <div class="bg-gray-100 dark:bg-gray-800 p-6 rounded-lg mt-10 border-l-4 border-indigo-600">
+        <h2 class="text-xl font-bold mb-2">Contact Our Privacy Team</h2>
+        <p>If you have additional questions or require more information about our Privacy Policy, do not hesitate to contact us:</p>
+        <p class="mt-2 font-medium">📧 <strong>Email:</strong> teamfromcampus@gmail.com</p>
+        <p class="mt-1 font-medium">📍 <strong>Location:</strong> West Bengal, India</p>
+    </div>
 
-    <h2 class="text-xl font-semibold mt-6">Changes to This Policy</h2>
-    <p>
-      We may update this Privacy Policy from time to time. Continued use of our website means you accept the updated policy.
-    </p>
-
-    <h2 class="text-xl font-semibold mt-6">Contact Us</h2>
-    <p>If you have any questions about this Privacy Policy, you can reach us at:</p>
-    <p class="font-medium">📧 teamfromcampus@gmail.com</p>
-
-    <p class="mt-6 font-semibold">Last Updated: <?= date('F j, Y') ?></p>
-
+    <p class="mt-6 text-sm italic">Last Updated: <?php echo date('F j, Y'); ?></p>
   </div>
 </main>
-
 <?php require_once "_footer.php"; ?>

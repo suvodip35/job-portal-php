@@ -689,6 +689,44 @@ $currentUpdates = $updatesStmt->fetchAll();
           </div>
       </div>
     <?php endif; ?>
+    <section class="max-w-7xl mx-auto px-4 py-12 mt-10 border-t border-gray-200 dark:border-gray-800">
+      <div class="prose prose-indigo max-w-none text-gray-700 dark:text-gray-300">
+          <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+              FromCampus: Your Trusted Gateway to Latest Govt Jobs & Career Updates 2026
+          </h2>
+          
+          <p class="mb-4 text-justify">
+              Welcome to <strong>FromCampus</strong>, India's dedicated job notification portal for students, freshers, and experienced professionals. In today's fast-paced world, staying updated with the right <strong>recruitment notifications</strong> is the first step toward a successful career. Our mission is to provide accurate, verified, and timely information about the latest vacancies across various sectors in India.
+          </p>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-6">
+              <div>
+                  <h3 class="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-2">Government & Public Sector Jobs</h3>
+                  <p class="text-sm text-justify">
+                      We specialize in tracking <strong>Central Govt Jobs</strong> and <strong>State Government Recruitment</strong>. From <strong>Railway (RRB)</strong>, <strong>SSC</strong>, and <strong>Banking (IBPS/SBI)</strong> to specialized openings in the <strong>Airports Authority of India (AAI)</strong> and <strong>UPSC</strong>, we ensure you get the notification as soon as it's officially released.
+                  </p>
+              </div>
+              <div>
+                  <h3 class="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-2">Engineering & Apprentice Opportunities</h3>
+                  <p class="text-sm text-justify">
+                      For technical students, FromCampus is the go-to platform for <strong>Graduate, Diploma, and ITI Apprentice</strong> updates. We provide detailed guides on <strong>NATS and NAPS portal registration</strong>, helping you secure training opportunities in top PSUs and private organizations.
+                  </p>
+              </div>
+          </div>
+
+          <h3 class="text-xl font-semibold text-gray-800 dark:text-gray-200 mt-8 mb-2">Why Choose FromCampus.com?</h3>
+          <ul class="list-disc pl-6 space-y-2 text-sm">
+              <li><strong>Verified Information:</strong> Every job post is cross-checked with official gazettes and employment news.</li>
+              <li><strong>Daily Updates:</strong> Never miss a deadline with our real-time alerts on <strong>Admit Cards, Exam Results, and Answer Keys</strong>.</li>
+              <li><strong>User-Friendly Interface:</strong> Our mobile-optimized design allows you to browse <strong>Sarkari Naukri</strong> updates on the go.</li>
+              <li><strong>Comprehensive Guides:</strong> Beyond notifications, we offer step-by-step "How to Apply" instructions to make your application process error-free.</li>
+          </ul>
+
+          <p class="mt-6 text-sm italic border-l-4 border-indigo-500 px-2">
+              Whether you are a college student looking for your first <strong>campus placement</strong> or a job seeker aiming for a prestigious <strong>government job in India</strong>, FromCampus is committed to being your most reliable career partner. Explore our categories and take the next step toward your dream job today!
+          </p>
+      </div>
+    </section>
   </main>
 </div>
 </div>

@@ -1,9 +1,9 @@
 <?php 
-
-  $pageTitle = "Terms & Conditions | FromCampus - Job Notification Portal";
-  $pageDescription = "Read the official Terms and Conditions of FromCampus. Understand allowable use of job listings, content, and saved job features.";
-  $keywords = "Terms and Conditions, Website Rules, Usage Policy, Job Portal Rules, FromCampus Terms";
-  $author = "FromCampus";
+  // SEO Optimized Meta Tags
+  $pageTitle = "Terms and Conditions | FromCampus - Usage Policy & Disclaimer";
+  $pageDescription = "Read the Terms and Conditions of FromCampus.com. Learn about our content usage policy, job notification accuracy disclaimer, and user responsibilities.";
+  $keywords = "Terms and Conditions FromCampus, Job Portal Disclaimer, Website Usage Policy, FromCampus Rules, Career Portal Terms India";
+  $author = "FromCampus Team";
   $ogImage = "https://fromcampus.com/assets/logo/FromCampus_Color_text.png";
   $canonicalUrl = "https://fromcampus.com/terms";
 
@@ -12,8 +12,7 @@
       "@type" => "WebPage",
       "name" => "Terms & Conditions - FromCampus",
       "url" => "https://fromcampus.com/terms",
-      "description" => "Official Terms & Conditions of FromCampus including usage rules for job listings and saved job features.",
-      "keywords" => "Terms and Conditions, Usage Rules, Job Portal Terms, FromCampus Policies",
+      "description" => "Official Terms and Conditions and User Agreement for FromCampus.com visitors.",
       "publisher" => [
           "@type" => "Organization",
           "name" => "FromCampus",
@@ -28,56 +27,50 @@
   require_once('_header.php');
 ?>
 <main class="max-w-4xl mx-auto px-4 py-10">
-  <h1 class="text-3xl font-bold mb-6">Terms & Conditions</h1>
+  <h1 class="text-3xl font-bold mb-6 text-gray-900 dark:text-white border-b-2 border-indigo-500 inline-block">Terms & Conditions</h1>
 
-  <div class="space-y-4 text-gray-700 dark:text-gray-300 leading-relaxed">
+  <div class="space-y-6 text-gray-700 dark:text-gray-300 leading-relaxed text-base">
 
-    <p>Welcome to <strong>FromCampus.com</strong>. By accessing or using our website, you agree to comply with and be bound by the following Terms and Conditions. Please read them carefully. If you do not agree with any part of these terms, you must discontinue using the website.</p>
+    <p>Welcome to <strong>FromCampus.com</strong>. These Terms and Conditions outline the rules and regulations for the use of FromCampus's Website, located at <a href="https://fromcampus.com/" class="text-indigo-600 hover:underline">https://fromcampus.com/</a>.</p>
 
-    <h2 class="text-xl font-semibold mt-6">Use of Website</h2>
+    <p>By accessing this website, we assume you accept these terms and conditions. Do not continue to use FromCampus if you do not agree to take all of the terms and conditions stated on this page.</p>
+
+    <h2 class="text-2xl font-semibold mt-8 text-gray-900 dark:text-white">1. Intellectual Property Rights</h2>
+    <p>Unless otherwise stated, FromCampus and/or its licensors own the intellectual property rights for all material on FromCampus. All intellectual property rights are reserved. You may access this from FromCampus for your own personal use subjected to restrictions set in these terms and conditions.</p>
+    <p><strong>You must not:</strong></p>
     <ul class="list-disc pl-6 space-y-2">
-      <li>You agree to use this platform only for lawful and legitimate purposes.</li>
-      <li>You are prohibited from attempting to disrupt, manipulate, harm, or misuse any part of this website.</li>
-      <li>Copying, redistributing, or reproducing our content without permission is not allowed.</li>
+      <li>Republish material from FromCampus without proper credit.</li>
+      <li>Sell, rent, or sub-license material from FromCampus.</li>
+      <li>Reproduce, duplicate or copy material for commercial purposes.</li>
     </ul>
 
-    <h2 class="text-xl font-semibold mt-6">Information & Accuracy</h2>
-    <p>
-      FromCampus.com shares job notifications and career-related information collected from official sources and trusted platforms. 
-      Although we make every effort to ensure accuracy, we do not guarantee that the information is always complete, updated, or error-free.
-      Users are strongly advised to verify information from official websites before applying.
-    </p>
+    <h2 class="text-2xl font-semibold mt-8 text-gray-900 dark:text-white">2. Accuracy of Job Notifications (Disclaimer)</h2>
+    <p>The information provided on FromCampus.com is for general informational purposes only. While we strive to provide the most <strong>accurate and up-to-date job alerts</strong>, we collect data from official government gazettes, news portals, and department websites.</p>
+    <div class="bg-yellow-50 dark:bg-yellow-900/20 border-l-4 border-yellow-500 p-4 my-4">
+        <p class="text-yellow-800 dark:text-yellow-200 font-medium"><strong>Mandatory Notice:</strong> FromCampus is NOT a government entity. We are an independent news portal. Users are requested to verify all details from the <strong>Official Notification</strong> before paying any fees or submitting applications.</p>
+    </div>
 
-    <h2 class="text-xl font-semibold mt-6">Third-Party Links</h2>
-    <p>
-      Our website may include external links, advertisements, or affiliate content. 
-      We do not control or take responsibility for the content or policies of third-party websites.
-    </p>
+    <h2 class="text-2xl font-semibold mt-8 text-gray-900 dark:text-white">3. User Responsibilities</h2>
+    <ul class="list-disc pl-6 space-y-2">
+      <li>Users must provide accurate information when contacting us.</li>
+      <li>Misuse of the "Saved Jobs" feature or attempting to scrape data from our portal is strictly prohibited.</li>
+      <li>You agree not to use the website in any way that causes, or may cause, damage to the website or impairment of the availability or accessibility of FromCampus.</li>
+    </ul>
 
-    <h2 class="text-xl font-semibold mt-6">Use of Browser Storage</h2>
-    <p>
-      Our website may use browser-based features such as local storage to provide functionality like saving bookmarked job posts. 
-      We do not store or access this data on our servers; it remains on your device and can be cleared anytime from your browser settings.
-    </p>
+    <h2 class="text-2xl font-semibold mt-8 text-gray-900 dark:text-white">4. No Warranties</h2>
+    <p>This Website is provided "as is," with all faults, and FromCampus expresses no representations or warranties, of any kind related to this Website or the materials contained on this Website.</p>
 
-    <h2 class="text-xl font-semibold mt-6">Limitation of Liability</h2>
-    <p>
-      FromCampus.com shall not be held responsible for any loss, financial damage, missed opportunity, or misunderstanding resulting from information shared on this platform.
-    </p>
+    <h2 class="text-2xl font-semibold mt-8 text-gray-900 dark:text-white">5. Governing Law & Jurisdiction</h2>
+    <p>These Terms will be governed by and interpreted in accordance with the laws of <strong>India</strong>, and you submit to the non-exclusive jurisdiction of the state and federal courts located in <strong>West Bengal</strong> for the resolution of any disputes.</p>
 
-    <h2 class="text-xl font-semibold mt-6">Changes to Terms</h2>
-    <p>
-      We may update or modify these Terms & Conditions at any time. 
-      Continued use of our website indicates your acceptance of the latest version.
-    </p>
+    <div class="bg-gray-100 dark:bg-gray-800 p-6 rounded-lg mt-10 border-l-4 border-indigo-600">
+        <h2 class="text-xl font-bold mb-2 text-gray-900 dark:text-white">Contact Information</h2>
+        <p>If you have any questions about our Terms and Conditions, please reach out to us:</p>
+        <p class="mt-2 font-medium">📧 <strong>Email:</strong> teamfromcampus@gmail.com</p>
+        <p class="mt-1 font-medium">🌐 <strong>Website:</strong> <a href="/contact" class="text-indigo-600 hover:underline">Contact Form</a></p>
+    </div>
 
-    <h2 class="text-xl font-semibold mt-6">Contact Information</h2>
-    <p>If you have any questions regarding these Terms & Conditions, please contact us at:</p>
-    <p class="font-medium">📧 teamfromcampus@gmail.com</p>
-
-    <p class="mt-6 font-semibold">Last Updated: <?= date('F j, Y') ?></p>
-
+    <p class="mt-6 text-sm italic">Last Updated: <?php echo date('F j, Y'); ?></p>
   </div>
 </main>
-
 <?php require_once "_footer.php"; ?>
