@@ -1,6 +1,6 @@
 <?php
-$pageTitle = "FromCampus - JOB Notification Portal";
-$pageDescription = "FromCampus - JOB Notification Portal";
+$pageTitle = "Latest Govt Jobs 2026, Private Job Vacancy & Exam Updates - FromCampus";
+$pageDescription = "Find the latest recruitment notifications for Graduate, Diploma, ITI, and Engineering jobs in India. Get daily updates on AAI, SSC, Railway, and State Govt jobs at FromCampus.";
 $keywords = "Goverment JOBS, ITI JOBS, Railway Jobs, Engineer";
 $author = "FromCampus";
 $ogImage = "https://fromcampus.com/assets/logo/FromCampus_Color_text.png";
