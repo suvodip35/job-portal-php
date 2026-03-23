@@ -9,14 +9,14 @@ function ampSanitizeJobDescription($markdown) {
     $Parsedown = new Parsedown();
     $html = $Parsedown->text($markdown);
 
-    // Remove script, iframe
+    // Remove disallowed tags
     $html = preg_replace('/<script\b[^>]*>(.*?)<\/script>/is', '', $html);
     $html = preg_replace('/<iframe\b[^>]*>(.*?)<\/iframe>/is', '', $html);
 
-    // Remove disallowed attributes
+    // Remove invalid attributes
     $html = preg_replace('/\s(style|border|align|cellpadding|cellspacing|valign|onclick|onload|on\w+|target|rel)="[^"]*"/i', '', $html);
 
-    // Convert YouTube links to AMP
+    // YouTube → amp-youtube
     $html = preg_replace_callback(
         '#https?://(?:www\.)?youtu(?:be\.com/watch\?v=|\.be/)([a-zA-Z0-9_-]+)#',
         function($m) {
@@ -25,7 +25,7 @@ function ampSanitizeJobDescription($markdown) {
         $html
     );
 
-    // Convert img → amp-img
+    // img → amp-img
     $dom = new DOMDocument();
     libxml_use_internal_errors(true);
     $dom->loadHTML('<?xml encoding="utf-8" ?><div id="amp-wrapper">'.$html.'</div>', LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
@@ -37,7 +37,7 @@ function ampSanitizeJobDescription($markdown) {
 
         $ampImg = $dom->createElement('amp-img');
         $ampImg->setAttribute('src', $img->getAttribute('src'));
-        $ampImg->setAttribute('alt', $img->getAttribute('alt') ?: 'job image');
+        $ampImg->setAttribute('alt', $img->getAttribute('alt') ?: 'image');
         $ampImg->setAttribute('layout', 'responsive');
         $ampImg->setAttribute('width', '800');
         $ampImg->setAttribute('height', '450');
@@ -52,11 +52,9 @@ function ampSanitizeJobDescription($markdown) {
     return trim($finalHTML);
 }
 
-// -------- Job List Page --------
+// ---------------- JOB LIST ----------------
 if (!$slug) {
-    $stmt = $pdo->prepare("SELECT j.*, c.category_name FROM jobs j LEFT JOIN job_categories c ON j.category_slug = c.category_slug WHERE j.status='published' ORDER BY j.posted_date DESC");
-    $stmt->execute();
-    $jobs = $stmt->fetchAll();
+    $jobs = $pdo->query("SELECT * FROM jobs WHERE status='published' ORDER BY posted_date DESC")->fetchAll();
 
     $pageTitle = "FromCampus - JOB Notification Portal";
     $canonicalUrl = "https://fromcampus.com/job";
@@ -71,14 +69,26 @@ if (!$slug) {
 
 <script async src="https://cdn.ampproject.org/v0.js"></script>
 
+<!-- ✅ CORRECT AMP BOILERPLATE -->
 <style amp-boilerplate>
 body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;
 -moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;
 -ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;
 animation:-amp-start 8s steps(1,end) 0s 1 normal both}
+@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}
+@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}
+@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}
+@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}
 @keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}
 </style>
-<noscript><style amp-boilerplate>body{animation:none}</style></noscript>
+<noscript>
+<style amp-boilerplate>
+body{-webkit-animation:none;
+-moz-animation:none;
+-ms-animation:none;
+animation:none}
+</style>
+</noscript>
 
 <style amp-custom>
 body { font-family: Arial; background:#f8f9fa; margin:0 }
@@ -106,7 +116,7 @@ body { font-family: Arial; background:#f8f9fa; margin:0 }
 </html>
 <?php exit; }
 
-// -------- Single Job Page --------
+// ---------------- SINGLE JOB ----------------
 $stmt = $pdo->prepare("SELECT * FROM jobs WHERE job_title_slug=? AND status='published'");
 $stmt->execute([$slug]);
 $job = $stmt->fetch();
@@ -133,11 +143,26 @@ $jobDescriptionAMP = ampSanitizeJobDescription($job['description']);
 <script async custom-element="amp-youtube"
 src="https://cdn.ampproject.org/v0/amp-youtube-0.1.js"></script>
 
+<!-- ✅ CORRECT AMP BOILERPLATE -->
 <style amp-boilerplate>
-body{animation:-amp-start 8s steps(1,end) 0s 1 normal both}
+body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;
+-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;
+-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;
+animation:-amp-start 8s steps(1,end) 0s 1 normal both}
+@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}
+@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}
+@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}
+@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}
 @keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}
 </style>
-<noscript><style amp-boilerplate>body{animation:none}</style></noscript>
+<noscript>
+<style amp-boilerplate>
+body{-webkit-animation:none;
+-moz-animation:none;
+-ms-animation:none;
+animation:none}
+</style>
+</noscript>
 
 <style amp-custom>
 body { font-family: Arial; background:#f8f9fa; margin:0 }
@@ -153,6 +178,7 @@ table { display:block; overflow-x:auto }
 <div class="fc-container">
 
 <h1><?= htmlspecialchars($job['job_title']) ?></h1>
+
 <p class="fc-job-meta">
 🏢 <?= htmlspecialchars($job['company_name']) ?> |
 📍 <?= htmlspecialchars($job['location']) ?>
