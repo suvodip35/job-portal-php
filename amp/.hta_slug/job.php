@@ -8,13 +8,15 @@ $slug = $_GET['slug'] ?? '';
 // 1. AMP Sanitizer Function (Fixed logic for AMP tags)
 function ampSanitizeJobDescription($markdown) {
     $Parsedown = new Parsedown();
+    
+    // 1. Markdown → HTML convert
     $html = $Parsedown->text($markdown);
 
+    // 2. Iframe ebong Script purapuri remove kora
     $html = preg_replace('/<script\b[^>]*>(.*?)<\/script>/is', '', $html);
-    $html = preg_replace('/on\w+="[^"]*"/i', '', $html);
-    $html = preg_replace('/style="[^"]*"/i', '', $html);
+    $html = preg_replace('/<iframe\b[^>]*>(.*?)<\/iframe>/is', '', $html);
 
-    // Convert YouTube
+    // 3. YouTube link convert to <amp-youtube>
     $html = preg_replace_callback(
         '#https?://(?:www\.)?youtu(?:be\.com/watch\?v=|\.be/)([a-zA-Z0-9_-]+)#',
         function($m) {
@@ -23,26 +25,45 @@ function ampSanitizeJobDescription($markdown) {
         $html
     );
 
+    // 4. Banned Attributes (Disallowed attributes) remove kora
+    // style, border, align, width, height (except amp tags), cellpadding, cellspacing, onclick etc.
+    $html = preg_replace('/\s(style|border|align|cellpadding|cellspacing|valign|onclick|onload|on\w+)="[^"]*"/i', '', $html);
+
+    // 5. DOMDocument bebohar kore <img> tag-ke <amp-img> kora
     $dom = new DOMDocument();
     libxml_use_internal_errors(true);
-    $dom->loadHTML('<?xml encoding="utf-8" ?><div id="amp-wrapper">'.$html.'</div>');
+    // UTF-8 support nishchit korte prefix bebohar
+    $dom->loadHTML('<?xml encoding="utf-8" ?><div id="amp-wrapper">'.$html.'</div>', LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
     libxml_clear_errors();
 
-    foreach ($dom->getElementsByTagName('img') as $img) {
-        $amp = $dom->createElement('amp-img');
-        $amp->setAttribute('src', $img->getAttribute('src'));
-        $amp->setAttribute('alt', $img->getAttribute('alt') ?: '');
-        $amp->setAttribute('layout', 'responsive');
-        $amp->setAttribute('width', '800');
-        $amp->setAttribute('height', '450');
-        $amp->appendChild($dom->createElement('noscript')); 
-        $img->parentNode->replaceChild($amp, $img);
+    $images = $dom->getElementsByTagName('img');
+    for ($i = $images->length - 1; $i >= 0; $i--) {
+        $img = $images->item($i);
+        $ampImg = $dom->createElement('amp-img');
+        
+        $src = $img->getAttribute('src');
+        $alt = $img->getAttribute('alt') ?: 'job details image';
+        
+        $ampImg->setAttribute('src', $src);
+        $ampImg->setAttribute('alt', $alt);
+        $ampImg->setAttribute('layout', 'responsive');
+        $ampImg->setAttribute('width', '800');
+        $ampImg->setAttribute('height', '450');
+        
+        // No-script fallback
+        $noscript = $dom->createElement('noscript');
+        $fallbackImg = $dom->createElement('img');
+        $fallbackImg->setAttribute('src', $src);
+        $noscript->appendChild($fallbackImg);
+        $ampImg->appendChild($noscript);
+
+        $img->parentNode->replaceChild($ampImg, $img);
     }
 
-    $finalHTML = $dom->saveHTML();
-    $finalHTML = preg_replace('/<iframe\b[^>]*>(.*?)<\/iframe>/is', '', $finalHTML);
-    $finalHTML = preg_replace('/^.*<div id="amp-wrapper">/s', '', $finalHTML);
-    $finalHTML = preg_replace('/<\/div>.*$/s', '', $finalHTML);
+    // 6. Wrapper remove kore shudhu content return kora
+    $finalHTML = $dom->saveHTML($dom->getElementById('amp-wrapper'));
+    $finalHTML = preg_replace('/^<div id="amp-wrapper">/i', '', $finalHTML);
+    $finalHTML = preg_replace('/<\/div>$/i', '', $finalHTML);
 
     return trim($finalHTML);
 }
@@ -124,7 +145,7 @@ $jobDescriptionAMP = ampSanitizeJobDescription($job['description']);
     .fc-job-title { font-size:24px; color: #2c3e50; margin-bottom:10px; }
     .fc-job-meta { font-size:14px; color: #7f8c8d; background: #f8f9fa; padding: 10px; border-radius: 5px; }
     .fc-job-content { margin-top: 20px; color: #2c3e50; }
-    .fc-action-buttons { text-align: center; margin: 30px 0; padding-bottom: 50px; }
+    .fc-action-buttons { text-align: center; margin: 30px auto; padding-bottom: 50px; position: fixed; bottom: 0; left: 0; right: 0;}
     .fc-main-btn { display:inline-block; padding:12px 20px; background:#e67e22; color:#fff; border-radius:5px; text-decoration:none; font-weight:bold; }
     .fc-footer { text-align:center; padding:20px; font-size:12px; color:#7f8c8d; border-top: 1px solid #eee; }
   </style>
