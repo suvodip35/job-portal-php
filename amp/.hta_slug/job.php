@@ -170,7 +170,8 @@ body { font-family: Arial; background:#f8f9fa; margin:0 }
 .fc-job-title { font-size:24px }
 .fc-job-meta { font-size:14px; color:#777 }
 table { display:block; overflow-x:auto }
-.fc-main-btn { background:#e67e22; color:#fff; padding:12px 20px; display:inline-block; margin-top:20px; text-decoration:none }
+.fc-action-btn { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 1000; }
+.fc-main-btn { background:#e67e22; color:#fff; padding:12px 20px; display:inline-block; margin-top:20px; text-decoration:none; border-radius:4px; font-weight:600; font-size:14px; box-shadow:0 2px 4px rgba(0,0,0,.2) }
 </style>
 </head>
 
@@ -191,8 +192,9 @@ table { display:block; overflow-x:auto }
 <div>
 <?= $jobDescriptionAMP ?>
 </div>
-
-<a href="<?= $canonicalUrl ?>" class="fc-main-btn">View Main Page</a>
+<div class="fc-action-btn">
+    <a href="<?= $canonicalUrl ?>" class="fc-main-btn">📄 View Main Page for Full Details</a>
+</div>
 
 </div>
 </body>
