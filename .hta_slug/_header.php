@@ -153,7 +153,7 @@
       <div class="flex items-center">
         <!-- <a href="/" class="text-xl font-semibold">From Campus</a> -->
         <a href="/" class="text-xl font-semibold flex flex-col justify-center items-center" >
-          <img src="/assets/logo/fc_logo_crop.png" alt="FromCampus Logo" class="w-[40px] h-auto" />
+          <img src="/assets/logo/fc_logo_crop.png" alt="FromCampus Logo" class="w-[40px] h-auto" width="40" height="40" />
           <p class="text-xs"><?= e(APP_NAME) ?></p>
         </a>
         <form action="<?= BASE_URL ?>search" method="get" class="ml-6 hidden md:block">
