@@ -78,7 +78,7 @@
       <!-- Company Info -->
       <div>
         <a href="/" class="text-xl font-semibold flex flex-col justify-center items-center" >
-          <img src="/assets/logo/fc_logo_crop.png" alt="FromCampus Logo" class="w-[40px] h-auto" />
+          <img src="/assets/logo/fc_logo_crop.webp" alt="FromCampus Logo" class="w-[40px] h-auto" />
           <p class="text-lg">FromCampus</p>
         </a>
         <p class="text-gray-600 dark:text-gray-400">FromCampus is your trusted portal for latest job notifications, mock tests, and career updates.</p>
