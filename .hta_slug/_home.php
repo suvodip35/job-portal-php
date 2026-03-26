@@ -566,12 +566,11 @@ $currentUpdates = $updatesStmt->fetchAll();
           <?php if (!empty($job['thumbnail'])): ?>
           <div class="w-full aspect-[16/9] overflow-hidden rounded">
             <img 
-              src="<?= e($job['thumbnail_small']) ?>"
-              srcset="<?= e($job['thumbnail_small']) ?> 300w,
-                      <?= e($job['thumbnail_medium']) ?> 600w"
-              sizes="(max-width: 768px) 100vw, 300px"
+              src="<?= e($job['thumbnail']) ?>"
               loading="lazy"
               decoding="async"
+              width="300"
+              height="200"
               alt="<?= e($job['job_title']) ?>"
               class="w-full h-full object-cover"
             />
