@@ -314,16 +314,12 @@ $shareText = urlencode("Check out this job opportunity: " . $job['job_title'] . 
     <article class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
       <?php if ($job['thumbnail']): ?>
       <div class="w-full h-80 overflow-hidden">
-        <div class="w-full aspect-[16/9] relative overflow-hidden rounded">
-          <!-- blurred background from same image -->
-          <div class="absolute inset-0">
-            <img src="<?= e($job['thumbnail']) ?>" fetchpriority="high" alt="<?= e($job['job_title']) ?>" width="800" height="450" loading="eager" class="w-full h-full object-cover blur-lg scale-110" />
-          </div>
-
-          <!-- main image (object-contain) -->
-          <img src="<?= e($job['thumbnail']) ?>" fetchpriority="high" alt="<?= e($job['job_title']) ?>" class="relative w-full h-full object-contain" width="800" height="450" loading="eager" />
+        <div 
+          class="w-full aspect-[16/9] relative overflow-hidden rounded bg-cover bg-center blur-lg scale-110"
+          style="background-image: url('<?= e($job['thumbnail']) ?>');"
+        >
+          <img src="<?= e($job['thumbnail']) ?>"  alt="<?= e($job['job_title']) ?>"  width="800"  height="450"  loading="eager" fetchpriority="high" class="relative w-full h-full object-contain" />
         </div>
-
       </div>
       <?php endif; ?>
       
