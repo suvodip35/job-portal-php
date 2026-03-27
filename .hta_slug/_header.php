@@ -126,16 +126,6 @@
 
 <link rel="preload" href="/assets/css/tailwind.css?v=1.0.4" as="style">
 <link rel="stylesheet" href="/assets/css/tailwind.css?v=1.0.4">
-
-  <!-- Google tag (gtag.js) -->
-  <script src="https://www.googletagmanager.com/gtag/js?id=G-7JQW8FVNQ2" async></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-
-    gtag('config', 'G-7JQW8FVNQ2');
-  </script>
   
   <!-- Canonical URL -->
   <link rel="canonical" href="<?php echo htmlspecialchars($canonicalUrl); ?>">
@@ -144,8 +134,37 @@
   <meta name="robots" content="index, follow">
   <meta name="googlebot" content="index, follow">
 
+  <!-- Google tag (gtag.js) -->
+  <script>
+    window.addEventListener('load', function () {
+
+      // Delay analytics + ads by 2 sec
+      setTimeout(function () {
+
+        // ✅ Google Analytics
+        var gtagScript = document.createElement('script');
+        gtagScript.src = "https://www.googletagmanager.com/gtag/js?id=G-7JQW8FVNQ2";
+        gtagScript.async = true;
+        document.head.appendChild(gtagScript);
+
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-7JQW8FVNQ2');
+
+        // ✅ Google Ads
+        var adsScript = document.createElement('script');
+        adsScript.src = "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4941413774457326";
+        adsScript.async = true;
+        adsScript.crossOrigin = "anonymous";
+        document.head.appendChild(adsScript);
+
+      }, 2000); // delay 2 seconds
+
+    });
+  </script>
   <meta name="google-adsense-account" content="ca-pub-4941413774457326">
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4941413774457326" crossorigin="anonymous"></script>
+  <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4941413774457326" crossorigin="anonymous"></script> -->
   <meta property="fb:app_id" content="1469923257657008" />
 
 </head>
