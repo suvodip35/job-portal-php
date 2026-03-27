@@ -120,6 +120,8 @@
   <meta property="og:locale" content="bn_IN">
   <meta property="og:locale" content="hi_IN">
 
+  <link rel="preload" as="image" href="FIRST_IMAGE_URL">
+
   <!-- <link rel="stylesheet" href="/assets/css/tailwind.css?v=1.0.4" /> -->
 
 <link rel="preload" href="/assets/css/tailwind.css?v=1.0.4" as="style">
