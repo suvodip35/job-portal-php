@@ -561,28 +561,32 @@ $currentUpdates = $updatesStmt->fetchAll();
       <div class="mt-6 p-6 border rounded-xl bg-white dark:bg-gray-800">No jobs matched your filters.</div>
     <?php else: ?>
       <div class="mt-4 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        <?php foreach ($jobs as $job): ?>
-        <article aria-label="<?= e($job['job_title']) ?>" onclick="location.href='<?= BASE_URL ?>job?slug=<?= e($job['job_title_slug']) ?>'" class="group border cursor-pointer rounded-2xl bg-white dark:bg-gray-800 shadow hover:shadow-2xl transition overflow-hidden w-full">
-          <?php if (!empty($job['thumbnail'])): ?>
-            <div class="w-full aspect-[16/9] overflow-hidden rounded">
-              <img 
-                src="<?= e($job['thumbnail']) ?>"
-                
-                <?php if ($index < 2): ?>
-                  loading="eager"
-                  fetchpriority="high"
-                <?php else: ?>
-                  loading="lazy"
-                <?php endif; ?>
+        <?php foreach ($jobs as $index => $job): ?>
+          <article 
+            aria-label="<?= e($job['job_title']) ?>" 
+            onclick="location.href='<?= BASE_URL ?>job?slug=<?= e($job['job_title_slug']) ?>'" 
+            class="group border cursor-pointer rounded-2xl bg-white dark:bg-gray-800 shadow hover:shadow-2xl transition overflow-hidden w-full">
 
-                decoding="async"
-                width="300"
-                height="200"
-                alt="<?= e($job['job_title']) ?>"
-                class="w-full h-full object-cover"
-              />
-            </div>
-          <?php endif; ?>
+            <?php if (!empty($job['thumbnail'])): ?>
+              <div class="w-full aspect-[16/9] overflow-hidden rounded">
+                <img 
+                  src="<?= e($job['thumbnail']) ?>"
+                  
+                  <?php if ($index === 0): ?>
+                    loading="eager"
+                    fetchpriority="high"
+                  <?php else: ?>
+                    loading="lazy"
+                    decoding="async"
+                  <?php endif; ?>
+
+                  width="300"
+                  height="200"
+                  alt="<?= e($job['job_title']) ?>"
+                  class="w-full h-full object-cover"
+                />
+              </div>
+            <?php endif; ?>
           <div class="p-3">
             <div class="flex justify-between items-start gap-3">
               <div class="min-w-0">
