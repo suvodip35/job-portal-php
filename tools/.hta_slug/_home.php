@@ -29,7 +29,7 @@ $tools = [
         'description' => 'Compress images without losing quality. Supports JPG, JPEG, PNG & converts to lightweight JPG.',
         'image' => '/assets/tools-image/image-compressor.jpg',
         'url' => '/tools/image-compressor',
-        'button_color' => 'bg-pink-500 hover:bg-pink-600',
+        'button_color' => 'bg-blue-500 hover:bg-blue-600',
         'alt' => 'Image Compressor'
     ],
     [
@@ -53,7 +53,7 @@ $tools = [
         'description' => 'Generate QR codes for URLs, text, and more. Perfect for online forms, job applications, and more.',
         'image' => '/assets/tools-image/qr-code.jpg',
         'url' => '/tools/qr-code-generator',
-        'button_color' => 'bg-yellow-500 hover:bg-yellow-600',
+        'button_color' => 'bg-blue-500 hover:bg-blue-600',
         'alt' => 'QR Code Generator'
     ],
     [
@@ -61,7 +61,7 @@ $tools = [
         'description' => 'Convert text between uppercase, lowercase, sentence case, title case and more. Format text instantly.',
         'image' => '/assets/tools-image/letter-case-converter.jpg',
         'url' => '/tools/lettercase-converter',
-        'button_color' => 'bg-indigo-500 hover:bg-indigo-600',
+        'button_color' => 'bg-blue-500 hover:bg-blue-600',
         'alt' => 'Letter Case Converter'
     ],
     [
@@ -69,7 +69,7 @@ $tools = [
         'description' => 'Add, edit, complete, and manage tasks efficiently. Drag & drop, filtering, and auto-save included.',
         'image' => '/assets/tools-image/todo-list.jpg',
         'url' => '/tools/todo-list',
-        'button_color' => 'bg-green-500 hover:bg-green-600',
+        'button_color' => 'bg-blue-500 hover:bg-blue-600',
         'alt' => 'To-Do List'
     ],
     [
@@ -77,7 +77,7 @@ $tools = [
         'description' => 'Check your typing speed and accuracy in real-time. Improve typing skills efficiently.',
         'image' => '/assets/tools-image/typing-test.jpg',
         'url' => '/tools/typing-speed',
-        'button_color' => 'bg-purple-500 hover:bg-purple-600',
+        'button_color' => 'bg-blue-500 hover:bg-blue-600',
         'alt' => 'Typing Speed Test'
     ],
 ];
@@ -86,7 +86,7 @@ require_once __DIR__ . '/../../.hta_slug/_header.php';
 ?>
 
 <!-- Hero Section -->
-<div class="bg-gradient-to-r from-blue-500 to-teal-500 text-white py-8 px-6 text-center">
+<div class="bg-gradient-to-r from-blue-500 to-teal-500 py-8 px-6 text-center">
     <h1 class="text-4xl md:text-5xl font-bold mb-4">Explore Free Online Tools</h1>
     <p class="text-lg md:text-xl max-w-3xl mx-auto">
         FromCampus offers a collection of browser-based tools to boost productivity, organize tasks, 
@@ -108,7 +108,7 @@ require_once __DIR__ . '/../../.hta_slug/_header.php';
 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 max-w-6xl mx-auto mt-12 px-4">
     
     <?php foreach ($tools as $tool): ?>
-    <div class="border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden transform transition hover:scale-105 duration-300 tool-card">
+    <div class="border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden transform transition hover:scale-105 duration-300 tool-card">
         <div class="w-full h-40 bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-600 dark:to-gray-700 flex items-center justify-center relative">
             <img 
                 src="<?php echo htmlspecialchars($tool['image']); ?>" 
