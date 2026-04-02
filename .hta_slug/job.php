@@ -315,11 +315,12 @@ $shareText = urlencode("Check out this job opportunity: " . $job['job_title'] . 
       <?php if ($job['thumbnail']): ?>
       <div class="w-full h-80 overflow-hidden">
         <div class="w-full aspect-[16/9] relative overflow-hidden rounded">
-          <!-- blurred background -->
-          <div class="absolute inset-0 bg-cover bg-center blur-lg scale-110" style="background-image: url('<?= e($job['thumbnail']) ?>');" ></div>
-          <!-- main image (clear) -->
-          <img src="<?= e($job['thumbnail']) ?>"   alt="<?= e($job['job_title']) ?>"   width="800"   height="450"   loading="eager"  fetchpriority="high" class="relative w-full h-full object-contain" />
 
+          <!-- 🔥 Main image FIRST (LCP element) -->
+          <img src="<?= e($job['thumbnail']) ?>" alt="<?= e($job['job_title']) ?>" width="800" height="450" loading="eager" fetchpriority="high" class="relative z-10 w-full h-full object-cover"/>
+
+          <!-- 🎨 Blur background AFTER -->
+          <div class="absolute inset-0 bg-cover bg-center blur-lg scale-110 z-0 pointer-events-none" style="background-image: url('<?= e($job['thumbnail']) ?>');"></div>
         </div>
       </div>
       <?php endif; ?>
