@@ -313,16 +313,15 @@ $shareText = urlencode("Check out this job opportunity: " . $job['job_title'] . 
   <main class="lg:col-span-3">
     <article class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
       <?php if ($job['thumbnail']): ?>
-      <div class="w-full h-80 overflow-hidden">
-        <div class="w-full aspect-[16/9] relative overflow-hidden rounded">
+        <div class="w-full h-80 overflow-hidden">
+          <div class="w-full aspect-[16/9] relative overflow-hidden rounded">
+            <!-- blurred background -->
+            <div class="absolute inset-0 bg-cover bg-center blur-lg scale-110" style="background-image: url('<?= e($job['thumbnail']) ?>');" ></div>
+            <!-- main image (clear) -->
+            <img src="<?= e($job['thumbnail']) ?>" alt="<?= e($job['job_title']) ?>" width="800" height="450" loading="eager" fetchpriority="high" class="relative w-full h-full object-contain" />
 
-          <!-- 🔥 Main image FIRST (LCP element) -->
-          <img src="<?= e($job['thumbnail']) ?>" alt="<?= e($job['job_title']) ?>" width="800" height="450" loading="eager" fetchpriority="high" class="relative z-10 w-full h-full object-cover"/>
-
-          <!-- 🎨 Blur background AFTER -->
-          <div class="absolute inset-0 bg-cover bg-center blur-lg scale-110 z-0 pointer-events-none" style="background-image: url('<?= e($job['thumbnail']) ?>');"></div>
+          </div>
         </div>
-      </div>
       <?php endif; ?>
       
       <div class="p-6">
@@ -438,9 +437,15 @@ $shareText = urlencode("Check out this job opportunity: " . $job['job_title'] . 
             <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden border border-gray-200 dark:border-gray-700 hover:shadow-lg transition duration-300">
               <?php if ($book['book_image']): ?>
               <div class="h-48 overflow-hidden">
-                <img src="<?= $book['book_image'] ?>" 
-                     alt="<?= e($book['title']) ?>" 
-                     class="w-full h-full object-cover hover:scale-105 transition duration-300">
+                <img 
+                  src="<?= $book['book_image'] ?>" 
+                  alt="<?= e($book['title']) ?>"
+                  width="300"
+                  height="400"
+                  loading="lazy"
+                  decoding="async"
+                  class="w-full h-full object-cover hover:scale-105 transition duration-300"
+                />
               </div>
               <?php endif; ?>
               
