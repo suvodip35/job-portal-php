@@ -135,13 +135,13 @@
   <meta name="googlebot" content="index, follow">
 
   <!-- Google tag (gtag.js) -->
-  <script>
-    window.addEventListener('load', function () {
-
-      // Delay analytics + ads by 2 sec
+  <script id="opt1">
+    // run after DOM ready, not full load
+    document.addEventListener('DOMContentLoaded', function () {
+      
       setTimeout(function () {
 
-        // ✅ Google Analytics
+        // Google Analytics
         var gtagScript = document.createElement('script');
         gtagScript.src = "https://www.googletagmanager.com/gtag/js?id=G-7JQW8FVNQ2";
         gtagScript.async = true;
@@ -152,15 +152,14 @@
         gtag('js', new Date());
         gtag('config', 'G-7JQW8FVNQ2');
 
-        // ✅ Google Ads
+        // Google Ads
         var adsScript = document.createElement('script');
         adsScript.src = "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4941413774457326";
         adsScript.async = true;
         adsScript.crossOrigin = "anonymous";
         document.head.appendChild(adsScript);
 
-      }, 2000); // delay 2 seconds
-
+      }, 3000); // increase delay একটু
     });
   </script>
   <meta name="google-adsense-account" content="ca-pub-4941413774457326">
