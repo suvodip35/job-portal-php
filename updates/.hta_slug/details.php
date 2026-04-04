@@ -187,7 +187,7 @@ $ansKeyUpdates = $pdo->query("SELECT slug, title, created_at FROM updates WHERE 
         <!-- Share Buttons -->
 
         <!-- Title -->
-        <h1 class="text-2xl font-bold text-gray-900 dark:text-white mb-4"><?= e($update['title']) ?></h1>
+        <h1 class="text-xl md:text-2xl font-bold text-gray-900 dark:text-white mb-4"><?= e($update['title']) ?></h1>
         <?php if ($update['thumbnail']): ?>
           <div class="w-full h-80 overflow-hidden">
             <div class="w-full aspect-[16/9] relative overflow-hidden rounded">
@@ -211,7 +211,7 @@ $ansKeyUpdates = $pdo->query("SELECT slug, title, created_at FROM updates WHERE 
 
         <!-- Content -->
         <!-- <div class="prose dark:prose-invert max-w-none"><?= $Parsedown->text($update['description']) ?></div> -->
-        <div id="markdownContent" class="job-description mt-6 prose dark:prose-invert max-w-none text-justify leading-7"><?= $Parsedown->text($update['description']) ?></div>
+        <div id="markdownContent" class="job-description prose dark:prose-invert max-w-none text-justify leading-7"><?= $Parsedown->text($update['description']) ?></div>
         <!-- Apply Link -->
         
           <div class="mt-8">
