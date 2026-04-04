@@ -204,7 +204,7 @@ $ansKeyUpdates = $pdo->query("SELECT slug, title, created_at FROM updates WHERE 
         <?php endif; ?>
         <!-- Date -->
         <?php if ($update['created_at']): ?>
-          <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">
+          <p class="text-sm text-gray-500 dark:text-gray-400">
             Published on <?= date("F j, Y", strtotime($update['created_at'])) ?>
           </p>
         <?php endif; ?>
