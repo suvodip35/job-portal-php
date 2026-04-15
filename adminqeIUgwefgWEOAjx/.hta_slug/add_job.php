@@ -123,16 +123,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Get the newly inserted job ID
         $jobId = $pdo->lastInsertId();
         
-        // Send local notification for new job (only if status is published)
-        if ($status === 'published') {
-            try {
-                $success = 'Job posted successfully! It is now live on the website. Notification sent!';
-            } catch (Exception $e) {
-                $success = 'Job posted successfully! It is now live on the website.';
-            }
-        } else {
-            $success = 'Job posted successfully! It is now live on the website.';
-        }
+        // Simple success message - FCM notifications can be added later if needed
+        $success = 'Job posted successfully! It is now live on the website.';
     } else {
         $err = implode('<br>', $errors);
     }
@@ -654,7 +646,7 @@ function updateSelectedBooksPreview() {
     }
 </style>
 
-<?php if (isset($success) && strpos($success, 'Notification sent') !== false): ?>
+<?php if (isset($success) && strpos($success, 'Job posted successfully') !== false): ?>
 <script>
 // Show local notification after successful job posting
 if ('Notification' in window && Notification.permission === 'granted') {

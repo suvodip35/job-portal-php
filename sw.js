@@ -2,6 +2,23 @@
 const CACHE_NAME = 'fromcampus-job-portal-v1';
 const OFFLINE_URL = '/';
 
+// Import Firebase scripts for messaging
+importScripts('https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js');
+importScripts('https://www.gstatic.com/firebasejs/9.0.0/firebase-messaging-compat.js');
+
+// Initialize Firebase in service worker
+firebase.initializeApp({
+    apiKey: "AIzaSyBkwnyJ6ffLJh41h8-CBE8shejK7lpyxOk",
+    authDomain: "my-jnp-project.firebaseapp.com",
+    projectId: "my-jnp-project",
+    storageBucket: "my-jnp-project.firebasestorage.app",
+    messagingSenderId: "535417052099",
+    appId: "1:535417052099:web:512dfff48d21290b57bb76"
+});
+
+// Get Firebase Messaging instance
+const messaging = firebase.messaging();
+
 // Install event
 self.addEventListener('install', (event) => {
     console.log('Service Worker installing...');
@@ -210,6 +227,36 @@ async function getFailedNotifications() {
         };
     });
 }
+
+// Firebase Cloud Messaging background message handler
+messaging.onBackgroundMessage((payload) => {
+    console.log('[Firebase] Received background message: ', payload);
+    
+    // Customize notification here
+    const notificationTitle = payload.notification.title || 'New Job Notification';
+    const notificationOptions = {
+        body: payload.notification.body || 'Check out the latest job opportunities!',
+        icon: payload.notification.icon || '/assets/logo/fc_logo_crop.webp',
+        badge: '/favicon.ico',
+        tag: payload.data.tag || 'job-notification',
+        data: payload.data || {},
+        requireInteraction: false,
+        renotify: true,
+        actions: [
+            {
+                action: 'view',
+                title: 'View Job'
+            },
+            {
+                action: 'dismiss',
+                title: 'Dismiss'
+            }
+        ]
+    };
+
+    // Show the notification
+    self.registration.showNotification(notificationTitle, notificationOptions);
+});
 
 async function removeFailedNotification(id) {
     return new Promise((resolve, reject) => {
