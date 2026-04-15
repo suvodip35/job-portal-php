@@ -171,6 +171,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->execute([$id]);
             $job = $stmt->fetch();
             
+            // Send push notification for job update (only if status is published)
+            if ($status === 'published') {
+                try {
+                    require_once __DIR__ . '/../../lib/PushNotificationService.php';
+                    $pushService = new PushNotificationService($pdo);
+                    
+                    $jobData = [
+                        'job_id' => $id,
+                        'job_title' => $title,
+                        'job_title_slug' => $slug,
+                        'company_name' => $company,
+                        'location' => $location
+                    ];
+                    
+                    $notificationResult = $pushService->sendJobUpdateNotification($jobData);
+                    error_log("Push notification result for job update: " . json_encode($notificationResult));
+                    
+                    if ($notificationResult['success']) {
+                        $success .= ' Push notifications sent to ' . $notificationResult['sent_count'] . ' subscribers.';
+                    } else {
+                        $success .= ' (Push notifications had some issues)';
+                    }
+                } catch (Exception $e) {
+                    error_log("Error sending push notification for job update: " . $e->getMessage());
+                    $success .= ' (Push notifications failed)';
+                }
+            }
+            
             // refresh current recommended books
             $currentRecommendedBooks = [];
             if (!empty($job['suggested_books'])) {

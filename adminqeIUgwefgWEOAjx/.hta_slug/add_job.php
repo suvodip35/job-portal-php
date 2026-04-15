@@ -119,7 +119,39 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $stmt = $pdo->prepare("INSERT INTO jobs (category_slug, job_title, job_title_slug, meta_title, meta_description, company_name, location, description, requirements, job_type, apply_url, last_date, status, min_salary, max_salary, document_link, created_by, thumbnail, suggested_books) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
         $stmt->execute([$category_slug, $title, $slug, $meta_title, $meta_desc, $company, $location, $description, $requirements, $job_type, $apply_url, $last_date, $status, $min_salary, $max_salary, $document_link, $createdBy, $thumbnail, $suggested_books_json]);
-        $success = 'Job posted successfully! It is now live on the website.';
+        
+        // Get the newly inserted job ID
+        $jobId = $pdo->lastInsertId();
+        
+        // Send push notification for new job (only if status is published)
+        if ($status === 'published') {
+            try {
+                require_once __DIR__ . '/../../lib/PushNotificationService.php';
+                $pushService = new PushNotificationService($pdo);
+                
+                $jobData = [
+                    'job_id' => $jobId,
+                    'job_title' => $title,
+                    'job_title_slug' => $slug,
+                    'company_name' => $company,
+                    'location' => $location
+                ];
+                
+                $notificationResult = $pushService->sendNewJobNotification($jobData);
+                error_log("Push notification result for new job: " . json_encode($notificationResult));
+                
+                if ($notificationResult['success']) {
+                    $success = 'Job posted successfully! It is now live on the website. Push notifications sent to ' . $notificationResult['sent_count'] . ' subscribers.';
+                } else {
+                    $success = 'Job posted successfully! It is now live on the website. (Push notifications had some issues)';
+                }
+            } catch (Exception $e) {
+                error_log("Error sending push notification for new job: " . $e->getMessage());
+                $success = 'Job posted successfully! It is now live on the website. (Push notifications failed)';
+            }
+        } else {
+            $success = 'Job posted successfully! It is now live on the website.';
+        }
     } else {
         $err = implode('<br>', $errors);
     }
