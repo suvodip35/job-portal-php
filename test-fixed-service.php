@@ -9,7 +9,7 @@ try {
     require_once '.hta_config/config.php';
     
     // Test the fixed service
-    $pushService = new SimplePushNotificationService($pdo);
+    $pushService = new PushNotificationServiceWorking($pdo);
     
     echo "<h2>Testing Fixed Service</h2>";
     
