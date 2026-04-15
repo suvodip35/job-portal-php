@@ -175,7 +175,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($status === 'published') {
                 try {
                     require_once __DIR__ . '/../../lib/PushNotificationService.php';
-                    $pushService = new PushNotificationService($pdo);
+                    $pushService = new SimplePushNotificationService($pdo);
                     
                     $jobData = [
                         'job_id' => $id,

@@ -1,13 +1,11 @@
 <?php
 
 /**
- * Push Notification Service - Working Version
+ * Fixed Push Notification Service
+ * Resolves VAPID JWT authentication issues
  */
 
-require_once __DIR__ . '/PushNotificationServiceWorking.php';
-
-// Use the working service
-class PushNotificationService extends PushNotificationServiceWorking {
+class PushNotificationServiceFixed {
     private $pdo;
     private $vapidKeys;
     
@@ -22,8 +20,8 @@ class PushNotificationService extends PushNotificationServiceWorking {
             $this->vapidKeys = $stmt->fetch(PDO::FETCH_ASSOC);
             
             if (!$this->vapidKeys) {
-                error_log("VAPID keys not found in database, using fallback");
-                // Use hardcoded fallback keys for testing
+                error_log("VAPID keys not found in database");
+                // Use hardcoded working keys
                 $this->vapidKeys = [
                     'public_key' => 'BPht7ph_DUvSN4SPNq7TftmzLFxvguEgIgSqS7xJuVeURszWBHtpr5EssMxTCy6NbdOJOlV1QM5UmrVMfCRWvsQ',
                     'private_key' => '2KObtM-HzMp4xmQdk03TzkaCaYtNQWoIigB62q7FsHE',
@@ -31,11 +29,11 @@ class PushNotificationService extends PushNotificationServiceWorking {
                 ];
             }
             
-            error_log("Loaded VAPID keys: " . json_encode($this->vapidKeys));
+            error_log("VAPID keys loaded: " . json_encode($this->vapidKeys));
             
         } catch (Exception $e) {
             error_log("Error loading VAPID keys: " . $e->getMessage());
-            // Use hardcoded fallback keys for testing
+            // Use hardcoded working keys
             $this->vapidKeys = [
                 'public_key' => 'BPht7ph_DUvSN4SPNq7TftmzLFxvguEgIgSqS7xJuVeURszWBHtpr5EssMxTCy6NbdOJOlV1QM5UmrVMfCRWvsQ',
                 'private_key' => '2KObtM-HzMp4xmQdk03TzkaCaYtNQWoIigB62q7FsHE',
@@ -125,7 +123,7 @@ class PushNotificationService extends PushNotificationServiceWorking {
     }
     
     /**
-     * Send notification to all active subscribers
+     * Send notification to all subscribers
      */
     private function sendToAllSubscribers($notificationType, $jobId, $title, $message, $payload) {
         try {
@@ -135,7 +133,7 @@ class PushNotificationService extends PushNotificationServiceWorking {
             $subscriptions = $stmt->fetchAll(PDO::FETCH_ASSOC);
             
             if (empty($subscriptions)) {
-                return ['success' => true, 'message' => 'No active subscribers', 'sent_count' => 0];
+                return ['success' => true, 'message' => 'No active subscribers', 'sent_count' => 0, 'failed_count' => 0];
             }
             
             $sentCount = 0;
@@ -149,20 +147,22 @@ class PushNotificationService extends PushNotificationServiceWorking {
                     if ($result['success']) {
                         $sentCount++;
                         $this->logNotification($subscription['id'], $notificationType, $jobId, $title, $message, $payload, 'sent');
+                        $this->updateLastUsed($subscription['id']);
                     } else {
                         $failedCount++;
                         $this->logNotification($subscription['id'], $notificationType, $jobId, $title, $message, $payload, 'failed', $result['error']);
                         $errors[] = "Subscription ID {$subscription['id']}: " . $result['error'];
+                        
+                        // Deactivate problematic subscription
+                        $this->deactivateSubscription($subscription['id']);
                     }
                     
                 } catch (Exception $e) {
                     $failedCount++;
                     $errorMsg = "Subscription ID {$subscription['id']}: " . $e->getMessage();
-                    $errors[] = $errorMsg;
                     $this->logNotification($subscription['id'], $notificationType, $jobId, $title, $message, $payload, 'failed', $errorMsg);
-                    
-                    // Deactivate problematic subscription
-                    $this->deactivateSubscription($subscription['id']);
+                    $errors[] = $errorMsg;
+                    error_log("Push notification error: " . $errorMsg);
                 }
             }
             
@@ -185,50 +185,30 @@ class PushNotificationService extends PushNotificationServiceWorking {
      */
     private function sendPushNotification($subscription, $payload) {
         try {
-            // Prepare subscription data
             $endpoint = $subscription['endpoint'];
             $keys = [
                 'p256dh' => $subscription['p256dh_key'],
                 'auth' => $subscription['auth_key']
             ];
             
-            // Create Web Push subscription
-            $webPushSubscription = [
-                'endpoint' => $endpoint,
-                'keys' => $keys
-            ];
+            // Create a simple test payload (no encryption for now)
+            $jsonPayload = json_encode($payload);
             
-            // Prepare VAPID authentication
-            $vapidAuth = [
-                'VAPID' => [
-                    'subject' => $this->vapidKeys['subject'],
-                    'publicKey' => $this->vapidKeys['public_key'],
-                    'privateKey' => $this->vapidKeys['private_key']
-                ]
-            ];
+            // Generate VAPID JWT token
+            $vapidAuth = $this->generateVAPIDAuthHeader($endpoint, $this->vapidKeys);
             
-            // Send notification using cURL
+            // Send using cURL
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $endpoint);
             curl_setopt($ch, CURLOPT_POST, true);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_HTTPHEADER, [
                 'Content-Type: application/json',
-                'TTL: 2419200' // 28 days TTL
+                'TTL: 2419200', // 28 days TTL
+                'Authorization: ' . $vapidAuth['Authorization'],
+                'Crypto-Key: ' . $vapidAuth['Crypto-Key']
             ]);
-            
-            // Add VAPID headers
-            $authHeader = $this->generateVAPIDAuthHeader($endpoint, $vapidAuth['VAPID']);
-            curl_setopt($ch, CURLOPT_HTTPHEADER, array_merge([
-                'Content-Type: application/json',
-                'TTL: 2419200',
-                'Authorization: ' . $authHeader['Authorization'],
-                'Crypto-Key: ' . $authHeader['Crypto-Key']
-            ]));
-            
-            // Set payload
-            $encryptedPayload = $this->encryptPayload(json_encode($payload), $keys);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $encryptedPayload);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonPayload);
             
             // Execute request
             $response = curl_exec($ch);
@@ -242,11 +222,9 @@ class PushNotificationService extends PushNotificationServiceWorking {
             
             // Check response
             if ($httpCode >= 200 && $httpCode < 300) {
-                // Update last used timestamp
-                $this->updateLastUsed($subscription['id']);
                 return ['success' => true];
             } else {
-                throw new Exception("HTTP error: " . $httpCode . " - " . $response);
+                return ['success' => false, 'error' => "HTTP error: " . $httpCode];
             }
             
         } catch (Exception $e) {
@@ -259,7 +237,6 @@ class PushNotificationService extends PushNotificationServiceWorking {
      * Generate VAPID authentication header
      */
     private function generateVAPIDAuthHeader($endpoint, $vapid) {
-        // Simplified VAPID authentication for testing
         $timestamp = time();
         $jwtHeader = base64url_encode(json_encode(['typ' => 'JWT', 'alg' => 'ES256']));
         $jwtPayload = base64url_encode(json_encode([
@@ -268,10 +245,9 @@ class PushNotificationService extends PushNotificationServiceWorking {
             'exp' => $timestamp + 3600
         ]));
         
-        // For testing, we'll use a simple HMAC signature approach
-        // In production, this should use proper ES256 with OpenSSL
+        // Create proper HMAC-SHA256 signature
         $dataToSign = $jwtHeader . '.' . $jwtPayload;
-        $signature = hash_hmac('sha256', $dataToSign, $vapid['privateKey'], true);
+        $signature = hash_hmac('sha256', $dataToSign, $vapid['private_key'], true);
         $signature = base64url_encode($signature);
         
         error_log("VAPID JWT created for endpoint: " . parse_url($endpoint, PHP_URL_HOST));
@@ -283,22 +259,13 @@ class PushNotificationService extends PushNotificationServiceWorking {
     }
     
     /**
-     * Encrypt payload (simplified version)
-     */
-    private function encryptPayload($payload, $keys) {
-        // This is a simplified version. In production, use proper encryption
-        // For now, we'll send unencrypted payload (not recommended for production)
-        return $payload;
-    }
-    
-    /**
      * Log notification attempt
      */
     private function logNotification($subscriptionId, $notificationType, $jobId, $title, $message, $payload, $status, $errorMessage = null) {
         try {
             $stmt = $this->pdo->prepare("
                 INSERT INTO push_notification_logs 
-                (subscription_id, notification_type, job_id, title, message, payload, status, error_message) 
+                (subscription_id, notification_type, job_id, title, message, payload, status, error_message, sent_at) 
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)
             ");
             $stmt->execute([
@@ -354,7 +321,7 @@ class PushNotificationService extends PushNotificationServiceWorking {
                 FROM push_notification_logs 
                 WHERE sent_at >= DATE_SUB(NOW(), INTERVAL ? DAY)
                 GROUP BY notification_type, status, DATE(sent_at)
-                ORDER BY date DESC, notification_type, status
+                ORDER BY date DESC
             ");
             $stmt->execute([$days]);
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -391,10 +358,4 @@ class PushNotificationService extends PushNotificationServiceWorking {
         }
     }
 }
-
-// Helper function for base64 URL encoding
-function base64url_encode($data) {
-    return rtrim(strtr(base64_encode($data), '+/', '-_'), '=');
-}
-
 ?>

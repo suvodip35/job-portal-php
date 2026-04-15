@@ -68,8 +68,8 @@ try {
 echo "<h2>5. Send Test Notification</h2>";
 if (isset($_POST['send_test'])) {
     try {
-        require_once 'lib/PushNotificationService.php';
-        $pushService = new PushNotificationService($pdo);
+        require_once 'lib/SimplePushNotificationService.php';
+        $pushService = new SimplePushNotificationService($pdo);
         
         $result = $pushService->sendCustomNotification(
             'Test Notification',
