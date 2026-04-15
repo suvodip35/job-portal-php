@@ -37,7 +37,7 @@ $pageDescription = mb_substr(strip_tags($update['meta_description'] ?? $update['
 $metaTitle       = $update['meta_title'] ?? $update['title'];
 $keywords        = "Exam Updates, Admit Card, Result, Govt Notice, " . $metaTitle;
 $ogImage         = $ogImageURIPrefix ."/thumbnails/". $update['thumbnail'] ? $update['thumbnail'] : "assets/logo/FromCampus_Color_text.png";;
-$canonicalUrl    = "https://fromcampus.com/updates/details?slug=" . $slug;
+$canonicalUrl    = "https://fromcampus.com/updates/" . $slug;
 $schema = [ 
   "@context" => "https://schema.org",
   "@type" => "NewsArticle",
@@ -290,7 +290,7 @@ $ansKeyUpdates = $pdo->query("SELECT slug, title, created_at FROM updates WHERE 
                 </div>
             <?php else: ?>
                 <?php foreach ($latestJobs as $job): ?>
-                <a href="/job?slug=<?= e($job['job_title_slug']) ?>" class="block p-4 border rounded-lg hover:shadow-md transition-all duration-200 dark:border-gray-700 dark:hover:bg-gray-700/50 group">
+                <a href="/job/<?= e($job['job_title_slug']) ?>" class="block p-4 border rounded-lg hover:shadow-md transition-all duration-200 dark:border-gray-700 dark:hover:bg-gray-700/50 group">
                     <div class="flex justify-between items-start mb-2">
                         <h3 class="font-semibold text-sm dark:text-white line-clamp-2 flex-1 group-hover:text-blue-600 dark:group-hover:text-blue-400">
                             <?= e($job['job_title']) ?>
@@ -364,7 +364,7 @@ $ansKeyUpdates = $pdo->query("SELECT slug, title, created_at FROM updates WHERE 
             </div>
           <?php else: ?>
             <?php foreach ($latestJobs as $job): ?>
-              <a href="/job?slug=<?= e($job['job_title_slug']) ?>" class="block p-3 border rounded hover:shadow-sm transition dark:border-gray-700 dark:hover:bg-gray-700 group">
+              <a href="/job/<?= e($job['job_title_slug']) ?>" class="block p-3 border rounded hover:shadow-sm transition dark:border-gray-700 dark:hover:bg-gray-700 group">
                 <div class="flex justify-between items-start mb-1">
                   <h3 class="font-medium text-sm dark:text-white line-clamp-2 flex-1 group-hover:text-blue-600 dark:group-hover:text-blue-400">
                     <?= e($job['job_title']) ?>
@@ -422,7 +422,7 @@ $ansKeyUpdates = $pdo->query("SELECT slug, title, created_at FROM updates WHERE 
       </h2>
       <div class="space-y-3">
         <?php foreach ($examUpdates as $exam): ?>
-        <a href="details?slug=<?= e($exam['slug']) ?>" class="block p-3 border rounded hover:shadow-sm transition dark:border-gray-700 dark:hover:bg-gray-700">
+        <a href="<?= e($exam['slug']) ?>" class="block p-3 border rounded hover:shadow-sm transition dark:border-gray-700 dark:hover:bg-gray-700">
           <h3 class="font-medium text-sm dark:text-white line-clamp-2"><?= e($exam['title']) ?></h3>
           <p class="text-xs text-gray-500 dark:text-gray-500 mt-1"><?= date('M d, Y', strtotime($exam['created_at'])) ?></p>
         </a>
@@ -443,7 +443,7 @@ $ansKeyUpdates = $pdo->query("SELECT slug, title, created_at FROM updates WHERE 
       </h2>
       <div class="space-y-3">
         <?php foreach ($resultUpdates as $result): ?>
-        <a href="details?slug=<?= e($result['slug']) ?>" class="block p-3 border rounded hover:shadow-sm transition dark:border-gray-700 dark:hover:bg-gray-700">
+        <a href="<?= e($result['slug']) ?>" class="block p-3 border rounded hover:shadow-sm transition dark:border-gray-700 dark:hover:bg-gray-700">
           <h3 class="font-medium text-sm dark:text-white line-clamp-2"><?= e($result['title']) ?></h3>
           <p class="text-xs text-gray-500 dark:text-gray-500 mt-1"><?= date('M d, Y', strtotime($result['created_at'])) ?></p>
         </a>
@@ -464,7 +464,7 @@ $ansKeyUpdates = $pdo->query("SELECT slug, title, created_at FROM updates WHERE 
       </h2>
       <div class="space-y-3">
         <?php foreach ($syllabusUpdates as $syllabus): ?>
-        <a href="details?slug=<?= e($syllabus['slug']) ?>" class="block p-3 border rounded hover:shadow-sm transition dark:border-gray-700 dark:hover:bg-gray-700">
+        <a href="<?= e($syllabus['slug']) ?>" class="block p-3 border rounded hover:shadow-sm transition dark:border-gray-700 dark:hover:bg-gray-700">
           <h3 class="font-medium text-sm dark:text-white line-clamp-2"><?= e($syllabus['title']) ?></h3>
           <p class="text-xs text-gray-500 dark:text-gray-500 mt-1"><?= date('M d, Y', strtotime($syllabus['created_at'])) ?></p>
         </a>
@@ -485,7 +485,7 @@ $ansKeyUpdates = $pdo->query("SELECT slug, title, created_at FROM updates WHERE 
       </h2>
       <div class="space-y-3">
         <?php foreach ($ansKeyUpdates as $ansKey): ?>
-        <a href="details?slug=<?= e($ansKey['slug']) ?>" class="block p-3 border rounded hover:shadow-sm transition dark:border-gray-700 dark:hover:bg-gray-700">
+        <a href="<?= e($ansKey['slug']) ?>" class="block p-3 border rounded hover:shadow-sm transition dark:border-gray-700 dark:hover:bg-gray-700">
           <h3 class="font-medium text-sm dark:text-white line-clamp-2"><?= e($ansKey['title']) ?></h3>
           <p class="text-xs text-gray-500 dark:text-gray-500 mt-1"><?= date('M d, Y', strtotime($ansKey['created_at'])) ?></p>
         </a>

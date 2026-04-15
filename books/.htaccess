@@ -1,16 +1,26 @@
 RewriteEngine On
 
 # =========================
-# ✅ Force HTTPS
+# ✅ Force HTTPS (production only)
 # =========================
 RewriteCond %{HTTPS} !=on
+RewriteCond %{HTTP_HOST} !^localhost [NC]
+RewriteCond %{HTTP_HOST} !^127\.0\.0\.1 [NC]
 RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
 # =========================
-# ✅ Remove www
+# Remove www and force HTTPS (production only)
 # =========================
 RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+RewriteCond %{HTTP_HOST} !^localhost [NC]
+RewriteCond %{HTTP_HOST} !^127\.0\.0\.1 [NC]
 RewriteRule ^ https://%1%{REQUEST_URI} [R=301,L]
+
+# =========================
+# Redirect old book URLs to new clean URLs
+# =========================
+RewriteCond %{THE_REQUEST} \s/books/book-details\?slug=([^\s&]+) [NC]
+RewriteRule ^ /books/%1? [R=301,L]
 
 # =========================
 # ✅ Skip static files

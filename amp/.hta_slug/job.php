@@ -57,7 +57,17 @@ if (!$slug) {
     $jobs = $pdo->query("SELECT * FROM jobs WHERE status='published' ORDER BY posted_date DESC")->fetchAll();
 
     $pageTitle = "FromCampus - JOB Notification Portal";
-    $canonicalUrl = "https://fromcampus.com/job";
+    // Debug: Check if BASE_URL is defined
+if (!defined('BASE_URL')) {
+    // Fallback if BASE_URL is not defined
+    $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
+    $host = $_SERVER['HTTP_HOST'];
+    $baseUrl = $protocol . '://' . $host . '/';
+} else {
+    $baseUrl = BASE_URL;
+}
+
+$canonicalUrl = rtrim($baseUrl, '/') . "/job";
 ?>
 <!doctype html>
 <html amp lang="en">
@@ -107,7 +117,7 @@ body { font-family: Arial; background:#f8f9fa; margin:0 }
 <article class="fc-job-card">
 <h2><?= htmlspecialchars($job['job_title']) ?></h2>
 <p><?= htmlspecialchars($job['company_name']) ?></p>
-<a href="/amp/job?slug=<?= urlencode($job['job_title_slug']) ?>" class="fc-job-link">View</a>
+<a href="/amp/job/<?= urlencode($job['job_title_slug']) ?>" class="fc-job-link">View</a>
 </article>
 <?php endforeach; ?>
 
@@ -124,7 +134,17 @@ $job = $stmt->fetch();
 if (!$job) { echo "Not found"; exit; }
 
 $pageTitle = $job['meta_title'] ?: $job['job_title'];
-$canonicalUrl = "https://fromcampus.com/job?slug=".$job['job_title_slug'];
+// Debug: Check if BASE_URL is defined
+if (!defined('BASE_URL')) {
+    // Fallback if BASE_URL is not defined
+    $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
+    $host = $_SERVER['HTTP_HOST'];
+    $baseUrl = $protocol . '://' . $host . '/';
+} else {
+    $baseUrl = BASE_URL;
+}
+
+$canonicalUrl = rtrim($baseUrl, '/') . "/job/" . $job['job_title_slug'];
 $thumbnailUrl = "https://fromcampus.com".$job['thumbnail'];
 $jobDescriptionAMP = ampSanitizeJobDescription($job['description']);
 ?>
@@ -193,7 +213,8 @@ table { display:block; overflow-x:auto }
 <?= $jobDescriptionAMP ?>
 </div>
 <div class="fc-action-btn">
-    <a href="<?= $canonicalUrl ?>" class="fc-main-btn">📄 View Main Page for Full Details</a>
+    <!-- Debug: canonicalUrl = <?= htmlspecialchars($canonicalUrl) ?> -->
+    <a href="/job/<?= $job['job_title_slug'] ?>" class="fc-main-btn" target="_blank">View Main Page for Full Details</a>
 </div>
 
 </div>

@@ -40,7 +40,7 @@ $pageDescription = mb_substr(strip_tags($book['meta_description'] ?? $book['desc
 $metaTitle       = $book['meta_title'] ?? $book['title'];
 $keywords        = "Book Review, Competitive Exam Books, Study Materials, " . $book['author'] . ", " . $metaTitle;
 $ogImage         = $book_image_url;
-$canonicalUrl    = "https://fromcampus.com/books/book-details?slug=" . $slug;
+$canonicalUrl    = "https://fromcampus.com/books/" . $slug;
 
 $schema = [
   "@context" => "https://schema.org",
@@ -325,7 +325,7 @@ $railwayBooks = $pdo->query("SELECT slug, title, author, created_at FROM books W
       
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         <?php foreach ($relatedBooks as $relatedBook): ?>
-        <a href="book-details?slug=<?= e($relatedBook['slug']) ?>" class="block p-4 border rounded-lg hover:shadow-md transition-all duration-200 dark:border-gray-700 dark:hover:bg-gray-700/50 group">
+        <a href="<?= e($relatedBook['slug']) ?>" class="block p-4 border rounded-lg hover:shadow-md transition-all duration-200 dark:border-gray-700 dark:hover:bg-gray-700/50 group">
           <div class="flex items-start gap-3">
             <img src="<?= $book_image_url ?>" 
                  alt="<?= e($relatedBook['title']) ?>" 
@@ -363,7 +363,7 @@ $railwayBooks = $pdo->query("SELECT slug, title, author, created_at FROM books W
                 </div>
             <?php else: ?>
                 <?php foreach ($latestBooks as $latestBook): ?>
-                <a href="book-details?slug=<?= e($latestBook['slug']) ?>" class="block p-4 border rounded-lg hover:shadow-md transition-all duration-200 dark:border-gray-700 dark:hover:bg-gray-700/50 group">
+                <a href="<?= e($latestBook['slug']) ?>" class="block p-4 border rounded-lg hover:shadow-md transition-all duration-200 dark:border-gray-700 dark:hover:bg-gray-700/50 group">
                     <div class="flex items-start gap-3">
                         <img src="<?=$book_image_url?>" 
                              alt="<?= e($latestBook['title']) ?>" 
@@ -419,7 +419,7 @@ $railwayBooks = $pdo->query("SELECT slug, title, author, created_at FROM books W
             </div>
           <?php else: ?>
             <?php foreach ($latestBooks as $latestBook): ?>
-              <a href="book-details?slug=<?= e($latestBook['slug']) ?>" class="block p-3 border rounded hover:shadow-sm transition dark:border-gray-700 dark:hover:bg-gray-700 group">
+              <a href="<?= e($latestBook['slug']) ?>" class="block p-3 border rounded hover:shadow-sm transition dark:border-gray-700 dark:hover:bg-gray-700 group">
                 <div class="flex items-start gap-2">
                   <img src="<?= $book_image_url ?>" 
                        alt="<?= e($latestBook['title']) ?>" 
@@ -471,7 +471,7 @@ $railwayBooks = $pdo->query("SELECT slug, title, author, created_at FROM books W
       </h2>
       <div class="space-y-3">
         <?php foreach ($upscBooks as $upscBook): ?>
-        <a href="book-details?slug=<?= e($upscBook['slug']) ?>" class="block p-3 border rounded hover:shadow-sm transition dark:border-gray-700 dark:hover:bg-gray-700">
+        <a href="<?= e($upscBook['slug']) ?>" class="block p-3 border rounded hover:shadow-sm transition dark:border-gray-700 dark:hover:bg-gray-700">
           <h3 class="font-medium text-sm dark:text-white line-clamp-2"><?= e($upscBook['title']) ?></h3>
           <p class="text-xs text-gray-500 dark:text-gray-500 mt-1">By <?= e($upscBook['author']) ?></p>
         </a>
@@ -492,7 +492,7 @@ $railwayBooks = $pdo->query("SELECT slug, title, author, created_at FROM books W
       </h2>
       <div class="space-y-3">
         <?php foreach ($sscBooks as $sscBook): ?>
-        <a href="book-details?slug=<?= e($sscBook['slug']) ?>" class="block p-3 border rounded hover:shadow-sm transition dark:border-gray-700 dark:hover:bg-gray-700">
+        <a href="<?= e($sscBook['slug']) ?>" class="block p-3 border rounded hover:shadow-sm transition dark:border-gray-700 dark:hover:bg-gray-700">
           <h3 class="font-medium text-sm dark:text-white line-clamp-2"><?= e($sscBook['title']) ?></h3>
           <p class="text-xs text-gray-500 dark:text-gray-500 mt-1">By <?= e($sscBook['author']) ?></p>
         </a>
@@ -513,7 +513,7 @@ $railwayBooks = $pdo->query("SELECT slug, title, author, created_at FROM books W
       </h2>
       <div class="space-y-3">
         <?php foreach ($bankingBooks as $bankingBook): ?>
-        <a href="book-details?slug=<?= e($bankingBook['slug']) ?>" class="block p-3 border rounded hover:shadow-sm transition dark:border-gray-700 dark:hover:bg-gray-700">
+        <a href="<?= e($bankingBook['slug']) ?>" class="block p-3 border rounded hover:shadow-sm transition dark:border-gray-700 dark:hover:bg-gray-700">
           <h3 class="font-medium text-sm dark:text-white line-clamp-2"><?= e($bankingBook['title']) ?></h3>
           <p class="text-xs text-gray-500 dark:text-gray-500 mt-1">By <?= e($bankingBook['author']) ?></p>
         </a>
@@ -534,7 +534,7 @@ $railwayBooks = $pdo->query("SELECT slug, title, author, created_at FROM books W
       </h2>
       <div class="space-y-3">
         <?php foreach ($railwayBooks as $railwayBook): ?>
-        <a href="book-details?slug=<?= e($railwayBook['slug']) ?>" class="block p-3 border rounded hover:shadow-sm transition dark:border-gray-700 dark:hover:bg-gray-700">
+        <a href="<?= e($railwayBook['slug']) ?>" class="block p-3 border rounded hover:shadow-sm transition dark:border-gray-700 dark:hover:bg-gray-700">
           <h3 class="font-medium text-sm dark:text-white line-clamp-2"><?= e($railwayBook['title']) ?></h3>
           <p class="text-xs text-gray-500 dark:text-gray-500 mt-1">By <?= e($railwayBook['author']) ?></p>
         </a>

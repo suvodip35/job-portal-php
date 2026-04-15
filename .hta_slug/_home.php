@@ -372,13 +372,13 @@ $currentUpdates = $updatesStmt->fetchAll();
     <div class="marquee-wrap">
       <div class="marquee-content">
         <?php foreach ($marqueeJobs as $i=>$mj): ?>
-          <a class="marquee-link" href="<?= BASE_URL ?>job?slug=<?= e($mj['job_title_slug']) ?>" aria-label="<?= e($mj['job_title']) ?>" title="<?= e($mj['job_title']) ?>">
+          <a class="marquee-link" href="<?= BASE_URL ?>job/<?= e($mj['job_title_slug']) ?>" aria-label="<?= e($mj['job_title']) ?>" title="<?= e($mj['job_title']) ?>">
             <?= e($mj['job_title']) ?>
           </a><?= $i<count($marqueeJobs)-1 ? ' • ' : '' ?>
         <?php endforeach; ?>
         <!-- Duplicate for seamless loop -->
         <?php foreach ($marqueeJobs as $i=>$mj): ?>
-          <a class="marquee-link" href="<?= BASE_URL ?>job?slug=<?= e($mj['job_title_slug']) ?>" aria-label="<?= e($mj['job_title']) ?>" title="<?= e($mj['job_title']) ?>">
+          <a class="marquee-link" href="<?= BASE_URL ?>job/<?= e($mj['job_title_slug']) ?>" aria-label="<?= e($mj['job_title']) ?>" title="<?= e($mj['job_title']) ?>">
             <?= e($mj['job_title']) ?>
           </a><?= $i<count($marqueeJobs)-1 ? ' • ' : '' ?>
         <?php endforeach; ?>
@@ -402,7 +402,7 @@ $currentUpdates = $updatesStmt->fetchAll();
           <?php foreach ($latestUpdates as $lu): ?>
           <li class="flex items-start gap-2">
             <span class="inline-block mt-0.5 w-1.5 h-1.5 rounded-full bg-blue-600"></span>
-            <a href="<?= BASE_URL ?>job?slug=<?= e($lu['job_title_slug']) ?>" title="<?= e($lu['job_title']) ?>" aria-label="<?= e($lu['job_title']) ?>" class="text-sm hover:underline line-clamp-2">
+            <a href="<?= BASE_URL ?>job/<?= e($lu['job_title_slug']) ?>" title="<?= e($lu['job_title']) ?>" aria-label="<?= e($lu['job_title']) ?>" class="text-sm hover:underline line-clamp-2">
               <?= e($lu['job_title']) ?>
               <span class="block text-xs text-gray-500 mt-0.5"><?= date('M d', strtotime($lu['posted_date'])) ?></span>
             </a>
@@ -564,7 +564,7 @@ $currentUpdates = $updatesStmt->fetchAll();
         <?php foreach ($jobs as $index => $job): ?>
           <article 
             aria-label="<?= e($job['job_title']) ?>" 
-            onclick="location.href='<?= BASE_URL ?>job?slug=<?= e($job['job_title_slug']) ?>'" 
+            onclick="location.href='<?= BASE_URL ?>job/<?= e($job['job_title_slug']) ?>'" 
             class="group border cursor-pointer rounded-2xl bg-white dark:bg-gray-800 shadow hover:shadow-2xl transition overflow-hidden w-full">
 
             <?php if (!empty($job['thumbnail'])): ?>
@@ -590,7 +590,7 @@ $currentUpdates = $updatesStmt->fetchAll();
           <div class="p-3">
             <div class="flex justify-between items-start gap-3">
               <div class="min-w-0">
-                <a href="<?= BASE_URL ?>job?slug=<?= e($job['job_title_slug']) ?>" title="<?= e($job['job_title']) ?>" aria-label="<?= e($job['job_title']) ?>">
+                <a href="<?= BASE_URL ?>job/<?= e($job['job_title_slug']) ?>" title="<?= e($job['job_title']) ?>" aria-label="<?= e($job['job_title']) ?>">
                   <h1 class="text-lg font-semibold text-blue-600 group-hover:underline truncate"><?= e($job['job_title']) ?></h1>
                 </a>
                 <p class="text-sm text-gray-600 dark:text-gray-300 mt-0.5 truncate">🏢 <?= e($job['company_name']) ?> • 📍 <?= e($job['location']) ?></p>
@@ -614,7 +614,7 @@ $currentUpdates = $updatesStmt->fetchAll();
               </div>
 
             <div class="mt-4 flex justify-between items-center">
-              <a class="px-3 py-1.5 bg-blue-600 text-white rounded hover:bg-blue-700" href="<?= BASE_URL ?>job?slug=<?= e($job['job_title_slug']) ?>" title="Details for <?= e($job['job_title']) ?>" aria-label="Details for <?= e($job['job_title']) ?>">Details</a>
+              <a class="px-3 py-1.5 bg-blue-600 text-white rounded hover:bg-blue-700" href="<?= BASE_URL ?>job/<?= e($job['job_title_slug']) ?>">Details</a>
               <div class="flex items-center gap-3">
                 <button class="save-btn text-sm px-2 py-1 border rounded hover:bg-gray-100 dark:hover:bg-gray-700" data-slug="<?= e($job['job_title_slug']) ?>">★ Save</button>
                 <span class="text-xs text-gray-500"><?= date('M d, Y', strtotime($job['posted_date'])) ?></span>
@@ -684,7 +684,7 @@ $currentUpdates = $updatesStmt->fetchAll();
                   <div class="p-3 space-y-3 max-h-80 overflow-y-auto scroll-container">
                       <div class="scroll-inner">
                           <?php foreach ($filteredUpdates as $update): ?>
-                          <a href="<?= BASE_URL ?>updates/details?slug=<?= e($update['slug']) ?>" target="_blank" title="<?= e($update['title']) ?>" aria-label="<?= e($update['title']) ?>" class="block p-2 border rounded hover:shadow-md transition dark:border-gray-700 dark:hover:bg-gray-700">
+                          <a href="<?= BASE_URL ?>updates/<?= e($update['slug']) ?>" target="_blank" title="<?= e($update['title']) ?>" aria-label="<?= e($update['title']) ?>" class="block p-2 border rounded hover:shadow-md transition dark:border-gray-700 dark:hover:bg-gray-700">
                               <div class="flex justify-between items-start">
                                   <h4 class="text-sm font-medium dark:text-white line-clamp-2 flex-1"><?= e($update['title']) ?></h4>
                                   <?php if (strtotime($update['created_at']) > strtotime('-2 days')): ?>

@@ -1,15 +1,35 @@
 RewriteEngine On
 
 # =========================
-# ✅ Remove www
+# Remove www and force HTTPS (production only)
 # =========================
 RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+RewriteCond %{HTTP_HOST} !^localhost [NC]
+RewriteCond %{HTTP_HOST} !^127\.0\.0\.1 [NC]
 RewriteRule ^(.*)$ https://%1/$1 [R=301,L]
 
 # =========================
-# ✅ Redirect sitemap
+# Redirect sitemap
 # =========================
 RewriteRule ^sitemap\.xml$ sitemap.php [L]
+
+# =========================
+# Redirect old job URLs to new clean URLs
+# =========================
+RewriteCond %{THE_REQUEST} \s/job\?slug=([^\s&]+) [NC]
+RewriteRule ^ /job/%1? [R=301,L]
+
+# =========================
+# Redirect old AMP job URLs to new clean URLs
+# =========================
+RewriteCond %{THE_REQUEST} \s/amp/job\?slug=([^\s&]+) [NC]
+RewriteRule ^ /amp/job/%1? [R=301,L]
+
+# =========================
+# Redirect old update URLs to new clean URLs
+# =========================
+RewriteCond %{THE_REQUEST} \s/updates/details\?slug=([^\s&]+) [NC]
+RewriteRule ^ /updates/%1? [R=301,L]
 
 # =========================
 # ✅ Don't rewrite static assets

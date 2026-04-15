@@ -26,33 +26,55 @@
 
     // echo "Total Views: " . $count;
   // error handler function
-  function setupErrorLogger($logFile = __DIR__ . '/error_files.txt') {
+  function setupErrorLogger($logFile = null) {
       // Set timezone for accurate timestamps
       date_default_timezone_set('Asia/Kolkata');
+      
+      // Use system temp directory if no file specified or if permissions issue
+      if ($logFile === null) {
+          $logFile = sys_get_temp_dir() . '/error_files.txt';
+      }
+      
+      // Create directory if it doesn't exist
+      $logDir = dirname($logFile);
+      if (!is_dir($logDir)) {
+          @mkdir($logDir, 0755, true);
+      }
+      
+      // Check if we can write to the log file
+      if (!is_writable($logDir) || (file_exists($logFile) && !is_writable($logFile))) {
+          // Fallback to system temp directory
+          $logFile = sys_get_temp_dir() . '/error_files.txt';
+      }
+
+      // Safe write function
+      $safeWrite = function($message) use ($logFile) {
+          @file_put_contents($logFile, $message, FILE_APPEND | LOCK_EX);
+      };
 
       // Custom error handler
-      set_error_handler(function ($errno, $errstr, $errfile, $errline) use ($logFile) {
+      set_error_handler(function ($errno, $errstr, $errfile, $errline) use ($safeWrite) {
           $date = date('Y-m-d H:i:s');
           $message = "[$date] ERROR: [$errno] $errstr in $errfile on line $errline" . PHP_EOL;
-          file_put_contents($logFile, $message, FILE_APPEND);
+          $safeWrite($message);
           return true; // prevent default PHP error handler
       });
 
       // Fatal error handler
-      register_shutdown_function(function () use ($logFile) {
+      register_shutdown_function(function () use ($safeWrite) {
           $error = error_get_last();
-          if ($error !== null) {
+          if ($error !== null && in_array($error['type'], [E_ERROR, E_CORE_ERROR, E_COMPILE_ERROR, E_USER_ERROR])) {
               $date = date('Y-m-d H:i:s');
               $message = "[$date] FATAL: {$error['message']} in {$error['file']} on line {$error['line']}" . PHP_EOL;
-              file_put_contents($logFile, $message, FILE_APPEND);
+              $safeWrite($message);
           }
       });
 
       // Exception handler
-      set_exception_handler(function ($exception) use ($logFile) {
+      set_exception_handler(function ($exception) use ($safeWrite) {
           $date = date('Y-m-d H:i:s');
           $message = "[$date] EXCEPTION: {$exception->getMessage()} in {$exception->getFile()} on line {$exception->getLine()}" . PHP_EOL;
-          file_put_contents($logFile, $message, FILE_APPEND);
+          $safeWrite($message);
       });
   }
 

@@ -24,8 +24,8 @@ $pageTitle = $job['meta_title'] ?: $job['job_title'] . ' - ' . APP_NAME;
 $pageDescription = $job['meta_description'] ?: mb_substr(strip_tags($job['description']), 0, 160);
 $keywords = "Government JOBS, ITI JOBS, Railway Jobs, Engineer, " . $job['job_title'];
 $ogImage = BASE_URL . $job['thumbnail'] ? $job['thumbnail'] : "assets/logo/FromCampus_Color_text.png";
-$canonicalUrl = "https://fromcampus.com/job?slug=" . $slug;
-$ampHtmlCanonical = "https://fromcampus.com/amp/job?slug=".$slug;
+$canonicalUrl = "https://fromcampus.com/job/" . $slug;
+$ampHtmlCanonical = "https://fromcampus.com/amp/job/".$slug;
 
 // Get related jobs (same category, excluding current job)
 $relatedJobs = [];
@@ -473,7 +473,7 @@ $shareText = urlencode("Check out this job opportunity: " . $job['job_title'] . 
                   <a href="<?= e($book['flipkart_link']) ?>" target="_blank" rel="noopener" class="flex-1 bg-[#fb641b] hover:bg-orange-600 text-white text-center py-2 px-2 rounded text-sm font-medium transition"> Buy on Flipkart</a>
                   <?php endif; ?>
                 </div>
-                <a href="/books/book-details?slug=<?= e($book['slug']) ?>" title="Book Details for <?= e($book['title']) ?>" class="mt-2 flex bg-blue-600 hover:bg-blue-700 text-white justify-center text-center py-2 px-3 rounded text-sm font-medium transition" >Book Details</a>
+                <a href="/books/<?= e($book['slug']) ?>" title="Book Details for <?= e($book['title']) ?>" class="mt-2 flex bg-blue-600 hover:bg-blue-700 text-white justify-center text-center py-2 px-3 rounded text-sm font-medium transition" >Book Details</a>
               </div>
             </div>
             <?php endforeach; ?>
@@ -509,7 +509,7 @@ $shareText = urlencode("Check out this job opportunity: " . $job['job_title'] . 
       <h2 class="text-2xl font-bold dark:text-white mb-4">Related Jobs</h2>
       <div class="space-y-4">
         <?php foreach ($relatedJobs as $rJob): ?>
-        <a href="job?slug=<?= e($rJob['job_title_slug']) ?>" class="block p-4 border rounded-lg hover:shadow-md transition dark:border-gray-700 dark:hover:bg-gray-800">
+        <a href="job/<?= e($rJob['job_title_slug']) ?>" class="block p-4 border rounded-lg hover:shadow-md transition dark:border-gray-700 dark:hover:bg-gray-800">
           <h1 class="font-semibold dark:text-white"><?= e($rJob['job_title']) ?></h1>
           <p class="text-sm text-gray-600 dark:text-gray-400 mt-1"><?= e($rJob['company_name']) ?></p>
           <p class="text-xs text-gray-500 dark:text-gray-500 mt-2">Posted <?= date('M d, Y', strtotime($rJob['posted_date'])) ?></p>
@@ -525,7 +525,7 @@ $shareText = urlencode("Check out this job opportunity: " . $job['job_title'] . 
       <h2 class="text-2xl font-bold dark:text-white mb-4">Latest Jobs</h2>
       <div class="space-y-4">
         <?php foreach ($latestJobs as $lJob): ?>
-        <a href="job?slug=<?= e($lJob['job_title_slug']) ?>" class="block p-4 border rounded-lg hover:shadow-md transition dark:border-gray-700 dark:hover:bg-gray-800">
+        <a href="job/<?= e($lJob['job_title_slug']) ?>" class="block p-4 border rounded-lg hover:shadow-md transition dark:border-gray-700 dark:hover:bg-gray-800">
           <h1 class="font-semibold dark:text-white"><?= e($lJob['job_title']) ?></h1>
           <p class="text-sm text-gray-600 dark:text-gray-400 mt-1"><?= e($lJob['company_name']) ?></p>
           <p class="text-xs text-gray-500 dark:text-gray-500 mt-2">Posted <?= date('M d, Y', strtotime($lJob['posted_date'])) ?></p>
@@ -544,7 +544,7 @@ $shareText = urlencode("Check out this job opportunity: " . $job['job_title'] . 
       <h2 class="text-xl font-bold dark:text-white mb-4">Related Jobs</h2>
       <div class="space-y-3">
         <?php foreach ($relatedJobs as $rJob): ?>
-        <a href="job?slug=<?= e($rJob['job_title_slug']) ?>" class="block p-3 border rounded hover:shadow-sm transition dark:border-gray-700 dark:hover:bg-gray-700">
+        <a href="job/<?= e($rJob['job_title_slug']) ?>" class="block p-3 border rounded hover:shadow-sm transition dark:border-gray-700 dark:hover:bg-gray-700">
           <h1 class="font-medium dark:text-white line-clamp-1"><?= e($rJob['job_title']) ?></h1>
           <p class="text-sm text-gray-600 dark:text-gray-400 mt-1"><?= e($rJob['company_name']) ?></p>
           <p class="text-xs text-gray-500 dark:text-gray-500 mt-1">Posted <?= date('M d, Y', strtotime($rJob['posted_date'])) ?></p>
@@ -560,7 +560,7 @@ $shareText = urlencode("Check out this job opportunity: " . $job['job_title'] . 
       <h2 class="text-xl font-bold dark:text-white mb-4">Latest Jobs</h2>
       <div class="space-y-3">
         <?php foreach ($latestJobs as $lJob): ?>
-        <a href="job?slug=<?= e($lJob['job_title_slug']) ?>" class="block p-3 border rounded hover:shadow-sm transition dark:border-gray-700 dark:hover:bg-gray-700">
+        <a href="job/<?= e($lJob['job_title_slug']) ?>" class="block p-3 border rounded hover:shadow-sm transition dark:border-gray-700 dark:hover:bg-gray-700">
           <h1 class="font-medium dark:text-white line-clamp-1"><?= e($lJob['job_title']) ?></h1>
           <p class="text-sm text-gray-600 dark:text-gray-400 mt-1"><?= e($lJob['company_name']) ?></p>
           <p class="text-xs text-gray-500 dark:text-gray-500 mt-1">Posted <?= date('M d, Y', strtotime($lJob['posted_date'])) ?></p>

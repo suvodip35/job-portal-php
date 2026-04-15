@@ -44,7 +44,7 @@ while ($r = $stmt->fetch()) {
     $lastmod = date('Y-m-d', strtotime($r['posted_date']));
 
     // Normal job page
-    $loc = $base . '/job?slug=' . $slug;
+    $loc = $base . '/job/' . $slug;
     echo "<url>\n";
     echo "  <loc>" . e($loc) . "</loc>\n";
     echo "  <lastmod>$lastmod</lastmod>\n";
@@ -53,7 +53,7 @@ while ($r = $stmt->fetch()) {
     echo "</url>\n";
 
     // AMP job page
-    $amp = $base . '/amp/job?slug=' . $slug;
+    $amp = $base . '/amp/job/' . $slug;
     echo "<url>\n";
     echo "  <loc>" . e($amp) . "</loc>\n";
     echo "  <lastmod>$lastmod</lastmod>\n";
@@ -69,7 +69,7 @@ $stmt = $pdo->query("SELECT slug, update_type, created_at FROM updates ORDER BY 
 while ($r = $stmt->fetch()) {
     $slug = urlencode($r['slug']);
     $lastmod = date('Y-m-d', strtotime($r['created_at']));
-    $loc = $base . '/updates/details?slug=' . $slug;
+    $loc = $base . '/updates/' . $slug;
 
     switch ($r['update_type']) {
         case 'exam': $priority='0.9'; $freq='daily'; break;
@@ -86,15 +86,15 @@ while ($r = $stmt->fetch()) {
     echo "</url>\n";
 
     // OPTIONAL: Updates AMP page (only if you have AMP version)
-    /*
-    $amp = $base . '/amp/updates/details?slug=' . $slug;
+/*
+    $amp = $base . '/amp/updates/' . $slug;
     echo "<url>\n";
     echo "  <loc>" . e($amp) . "</loc>\n";
     echo "  <lastmod>$lastmod</lastmod>\n";
     echo "  <changefreq>$freq</changefreq>\n";
-    echo "  <priority>0.6</priority>\n";
+    echo "  <priority>" . ($priority * 0.8) . "</priority>\n";
     echo "</url>\n";
-    */
+*/
 }
 
 // ============================
@@ -104,7 +104,7 @@ $stmt = $pdo->query("SELECT slug, created_at FROM books WHERE status='active' OR
 while ($r = $stmt->fetch()) {
     $slug = urlencode($r['slug']);
     $lastmod = date('Y-m-d', strtotime($r['created_at']));
-    $loc = $base . '/books/book-details?slug=' . $slug;
+    $loc = $base . '/books/' . $slug;
 
     echo "<url>\n";
     echo "  <loc>" . e($loc) . "</loc>\n";

@@ -42,7 +42,7 @@ $latestUpdates = $latestStmt->fetchAll();
                         <?php foreach ($latestUpdates as $lu): ?>
                         <li class="flex items-start gap-2">
                             <span class="inline-block mt-0.5 w-1.5 h-1.5 rounded-full bg-blue-600"></span>
-                            <a href="<?= BASE_URL ?>job?slug=<?= e($lu['job_title_slug']) ?>" class="text-sm hover:underline dark:text-gray-300">
+                            <a href="<?= BASE_URL ?>job/<?= e($lu['job_title_slug']) ?>" class="text-sm hover:underline dark:text-gray-300">
                                 <?= e($lu['job_title']) ?>
                                 <span class="block text-xs text-gray-500 mt-0.5"><?= date('M d', strtotime($lu['posted_date'])) ?></span>
                             </a>
@@ -177,7 +177,7 @@ $latestUpdates = $latestStmt->fetchAll();
                             <span class="text-xs text-gray-500 dark:text-gray-400">
                                 ${new Date(job.posted_date).toLocaleDateString()}
                             </span>
-                            <a href="<?= BASE_URL ?>job?slug=${job.job_title_slug}" 
+                            <a href="<?= BASE_URL ?>job/${job.job_title_slug}" 
                               class="px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white 
                                       rounded-lg hover:from-blue-700 hover:to-indigo-700 
                                       transition text-sm shadow-md whitespace-nowrap">

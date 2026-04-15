@@ -113,7 +113,7 @@ function markdownExcerpt($markdown, $Parsedown, $length = 80) {
             <div class="overflow-hidden whitespace-nowrap flex-1">
                 <div class="inline-block whitespace-nowrap animate-marquee">
                     <?php foreach ($marqueeUpdates as $i=>$update): ?>
-                        <a class="inline-block mx-4 transition-all duration-300 ease-in-out hover:text-blue-600 dark:hover:text-blue-400 text-gray-700 dark:text-gray-300 font-medium text-sm" href="<?= BASE_URL ?>/details?slug=<?= e($update['slug']) ?>">
+                        <a class="inline-block mx-4 transition-all duration-300 ease-in-out hover:text-blue-600 dark:hover:text-blue-400 text-gray-700 dark:text-gray-300 font-medium text-sm" href="<?= BASE_URL ?><?= e($update['slug']) ?>">
                             <?= e($update['title']) ?>
                             <?php if (isNewUpdate($update['created_at'])) echo blinkTag("NEW", "#ef4444"); ?>
                         </a>
@@ -179,7 +179,7 @@ function markdownExcerpt($markdown, $Parsedown, $length = 80) {
                             <?php foreach ($examUpdates as $exam): 
                                 $shortDescription = markdownExcerpt($exam['description'], $Parsedown, 80);
                             ?>
-                            <a href="details?slug=<?= e($exam['slug']) ?>" class="block p-4 border rounded-lg hover:shadow-md transition-all duration-200 dark:border-gray-700 dark:hover:bg-gray-700/50 bg-white dark:bg-gray-800 group">
+                            <a href="<?= e($exam['slug']) ?>" class="block p-4 border rounded-lg hover:shadow-md transition-all duration-200 dark:border-gray-700 dark:hover:bg-gray-700/50 bg-white dark:bg-gray-800 group">
                                 <div class="flex justify-between items-start mb-2">
                                     <h3 class="font-semibold text-sm dark:text-white line-clamp-2 flex-1 group-hover:text-blue-600 dark:group-hover:text-blue-400"><?= e($exam['title']) ?></h3>
                                     <?php if (isNewUpdate($exam['created_at'])) echo blinkTag("NEW", "#3b82f6"); ?>
@@ -224,7 +224,7 @@ function markdownExcerpt($markdown, $Parsedown, $length = 80) {
                             <?php foreach ($resultUpdates as $result): 
                                 $shortDescription = markdownExcerpt($result['description'], $Parsedown, 80);
                             ?>
-                            <a href="details?slug=<?= e($result['slug']) ?>" class="block p-4 border rounded-lg hover:shadow-md transition-all duration-200 dark:border-gray-700 dark:hover:bg-gray-700/50 bg-white dark:bg-gray-800 group">
+                            <a href="<?= e($result['slug']) ?>" class="block p-4 border rounded-lg hover:shadow-md transition-all duration-200 dark:border-gray-700 dark:hover:bg-gray-700/50 bg-white dark:bg-gray-800 group">
                                 <div class="flex justify-between items-start mb-2">
                                     <h3 class="font-semibold text-sm dark:text-white line-clamp-2 flex-1 group-hover:text-green-600 dark:group-hover:text-green-400"><?= e($result['title']) ?></h3>
                                     <?php if (isNewUpdate($result['created_at'])) echo blinkTag("NEW", "#10b981"); ?>
@@ -269,7 +269,7 @@ function markdownExcerpt($markdown, $Parsedown, $length = 80) {
                             <?php foreach ($syllabusUpdates as $syllabus): 
                                 $shortDescription = markdownExcerpt($syllabus['description'], $Parsedown, 80);
                             ?>
-                            <a href="details?slug=<?= e($syllabus['slug']) ?>" class="block p-4 border rounded-lg hover:shadow-md transition-all duration-200 dark:border-gray-700 dark:hover:bg-gray-700/50 bg-white dark:bg-gray-800 group">
+                            <a href="<?= e($syllabus['slug']) ?>" class="block p-4 border rounded-lg hover:shadow-md transition-all duration-200 dark:border-gray-700 dark:hover:bg-gray-700/50 bg-white dark:bg-gray-800 group">
                                 <div class="flex justify-between items-start mb-2">
                                     <h3 class="font-semibold text-sm dark:text-white line-clamp-2 flex-1 group-hover:text-yellow-600 dark:group-hover:text-yellow-400"><?= e($syllabus['title']) ?></h3>
                                     <?php if (isNewUpdate($syllabus['created_at'])) echo blinkTag("NEW", "#f59e0b"); ?>
@@ -314,7 +314,7 @@ function markdownExcerpt($markdown, $Parsedown, $length = 80) {
                             <?php foreach ($ansKeyUpdates as $ansKey): 
                                 $shortDescription = markdownExcerpt($ansKey['description'], $Parsedown, 80);
                             ?>
-                            <a href="details?slug=<?= e($ansKey['slug']) ?>" class="block p-4 border rounded-lg hover:shadow-md transition-all duration-200 dark:border-gray-700 dark:hover:bg-gray-700/50 bg-white dark:bg-gray-800 group">
+                            <a href="<?= e($ansKey['slug']) ?>" class="block p-4 border rounded-lg hover:shadow-md transition-all duration-200 dark:border-gray-700 dark:hover:bg-gray-700/50 bg-white dark:bg-gray-800 group">
                                 <div class="flex justify-between items-start mb-2">
                                     <h3 class="font-semibold text-sm dark:text-white clamp-1 flex-1 group-hover:text-red-600 dark:group-hover:text-red-400"><?= e($ansKey['title']) ?></h3>
                                     <?php if (isNewUpdate($ansKey['created_at'])) echo blinkTag("NEW", "#ef4444"); ?>
