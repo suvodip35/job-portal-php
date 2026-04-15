@@ -125,7 +125,7 @@
       </div>
       <div>
         <h2 class="">Total Visits:</h2>
-        <div class="text-white fw-normal roller-counter" data-count="<?php echo $count; ?>">
+        <div class="text-white fw-normal roller-counter" data-count="<?php echo $count ?? 0; ?>">
                 <span id="rollerCounter"></span>
             </div>
       </div>
