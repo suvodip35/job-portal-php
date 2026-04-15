@@ -337,7 +337,7 @@ function renderBooksTable() {
             <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors cursor-pointer" onclick="window.location.href='${book.slug}'">
                 <td class="px-6 py-4">
                     <div class="flex items-center">
-                        <img src="${getBookImage(book.book_image, book.title)}" alt="${book.title}" 
+                        <img src="${book.book_image}" alt="${book.title}" 
                              class="w-12 h-16 object-cover rounded border dark:border-gray-600 mr-4">
                         <div>
                             <div class="text-sm font-medium text-gray-900 dark:text-white">
