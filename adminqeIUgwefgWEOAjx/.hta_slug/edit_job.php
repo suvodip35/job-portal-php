@@ -185,7 +185,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         'location' => $location
                     ];
                     
-                    $notificationResult = $pushService->sendJobUpdateNotification($jobData);
+                    $notificationResult = $pushService->sendCustomNotification(
+                    'Job Updated: ' . $jobData['job_title'],
+                    'Company: ' . $jobData['company_name'] . ' | Important updates available',
+                    '/job/' . $jobData['job_title_slug'],
+                    ['job_id' => $jobData['job_id'], 'notification_type' => 'job_update']
+                );
                     error_log("Push notification result for job update: " . json_encode($notificationResult));
                     
                     if ($notificationResult['success']) {

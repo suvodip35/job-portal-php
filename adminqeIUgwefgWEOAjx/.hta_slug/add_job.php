@@ -123,31 +123,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Get the newly inserted job ID
         $jobId = $pdo->lastInsertId();
         
-        // Send push notification for new job (only if status is published)
+        // Send local notification for new job (only if status is published)
         if ($status === 'published') {
             try {
-                require_once __DIR__ . '/../../lib/PushNotificationService.php';
-                $pushService = new PushNotificationService($pdo);
-                
-                $jobData = [
-                    'job_id' => $jobId,
-                    'job_title' => $title,
-                    'job_title_slug' => $slug,
-                    'company_name' => $company,
-                    'location' => $location
-                ];
-                
-                $notificationResult = $pushService->sendNewJobNotification($jobData);
-                error_log("Push notification result for new job: " . json_encode($notificationResult));
-                
-                if ($notificationResult['success']) {
-                    $success = 'Job posted successfully! It is now live on the website. Push notifications sent to ' . $notificationResult['sent_count'] . ' subscribers.';
-                } else {
-                    $success = 'Job posted successfully! It is now live on the website. (Push notifications had some issues)';
-                }
+                $success = 'Job posted successfully! It is now live on the website. Notification sent!';
             } catch (Exception $e) {
-                error_log("Error sending push notification for new job: " . $e->getMessage());
-                $success = 'Job posted successfully! It is now live on the website. (Push notifications failed)';
+                $success = 'Job posted successfully! It is now live on the website.';
             }
         } else {
             $success = 'Job posted successfully! It is now live on the website.';
@@ -672,3 +653,28 @@ function updateSelectedBooksPreview() {
         dark:background-color: #4b5563;
     }
 </style>
+
+<?php if (isset($success) && strpos($success, 'Notification sent') !== false): ?>
+<script>
+// Show local notification after successful job posting
+if ('Notification' in window && Notification.permission === 'granted') {
+    navigator.serviceWorker.getRegistration().then(registration => {
+        if (registration) {
+            registration.showNotification('New Job Posted', {
+                body: 'Check out the new job opportunity!',
+                icon: '/assets/logo/fc_logo_crop.webp',
+                badge: '/favicon.ico',
+                tag: 'new-job',
+                data: {
+                    url: '/',
+                    notification_type: 'new_job',
+                    timestamp: Date.now()
+                }
+            });
+        }
+    }).catch(error => {
+        console.log('Error showing notification:', error);
+    });
+}
+</script>
+<?php endif; ?>
