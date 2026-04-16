@@ -72,24 +72,29 @@ function showInstallBanner() {
         </div>
     `;
     
-    // Add animation
+    // Add animations
     const style = document.createElement('style');
     style.textContent = `
         @keyframes slideUp {
             from { transform: translateY(100%); }
             to { transform: translateY(0); }
         }
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 1; }
+            100% { transform: scale(1); opacity: 1; }
+        }
     `;
     document.head.appendChild(style);
     
     document.body.appendChild(banner);
     
-    // Auto-hide after 10 seconds
-    setTimeout(() => {
-        if (document.getElementById('pwa-install-banner')) {
-            banner.style.opacity = '0.8';
-        }
-    }, 10000);
+    // Don't auto-hide banner - let user decide
+    // setTimeout(() => {
+    //     if (document.getElementById('pwa-install-banner')) {
+    //         banner.style.opacity = '0.8';
+    //     }
+    // }, 10000);
 }
 
 function dismissBanner() {
@@ -124,16 +129,74 @@ function showInstallButton() {
         existingBtn.remove();
     }
     
-    // Create install button
+    // Create install button (desktop fallback)
     installButton = document.createElement('button');
     installButton.id = 'pwa-install-btn';
-    installButton.className = 'fixed bottom-4 right-4 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg shadow-lg transition-all duration-300 z-50 flex items-center gap-2';
-    installButton.innerHTML = `
-        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd"></path>
-        </svg>
-        Install App
+    installButton.className = 'install-btn';
+    installButton.textContent = '📱 Install FromCampus App';
+    installButton.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: #008dff;
+        color: white;
+        border: none;
+        padding: 12px 20px;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        z-index: 9998;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        transition: all 0.3s ease;
     `;
+    
+    document.body.appendChild(installButton);
+    
+    // Also show desktop install icon in address bar area
+    setTimeout(() => {
+        if (!document.getElementById('desktop-install-icon')) {
+            const desktopIcon = document.createElement('div');
+            desktopIcon.id = 'desktop-install-icon';
+            desktopIcon.innerHTML = '📱';
+            desktopIcon.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 180px;
+                background: #008dff;
+                color: white;
+                width: 30px;
+                height: 30px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 16px;
+                z-index: 9997;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+                animation: pulse 2s infinite;
+                cursor: pointer;
+            `;
+            desktopIcon.onclick = () => {
+                if (deferredPrompt) {
+                    deferredPrompt.prompt();
+                    deferredPrompt.userChoice.then((choiceResult) => {
+                        if (choiceResult.outcome === 'accepted') {
+                            desktopIcon.style.background = '#4caf50';
+                            desktopIcon.innerHTML = '✓';
+                            setTimeout(() => desktopIcon.remove(), 2000);
+                        } else {
+                            desktopIcon.style.background = '#f44336';
+                            setTimeout(() => desktopIcon.remove(), 2000);
+                        }
+                        deferredPrompt = null;
+                    });
+                }
+            };
+            
+            document.body.appendChild(desktopIcon);
+        }
+    }, 2000);
     
     installButton.addEventListener('click', async () => {
         if (deferredPrompt) {
