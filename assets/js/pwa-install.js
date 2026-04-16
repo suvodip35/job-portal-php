@@ -28,43 +28,45 @@ function showInstallBanner() {
         right: 0;
         background: linear-gradient(135deg, #008dff 0%, #0066cc 100%);
         color: white;
-        padding: 15px 20px;
+        padding: 10px 15px;
         text-align: center;
         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-        font-size: 14px;
+        font-size: 13px;
         font-weight: 600;
         z-index: 9999;
-        box-shadow: 0 -2px 10px rgba(0,0,0,0.3);
+        box-shadow: 0 -2px 8px rgba(0,0,0,0.3);
         animation: slideUp 0.3s ease-out;
     `;
     
     banner.innerHTML = `
-        <div style="display: flex; align-items: center; justify-content: center; gap: 15px;">
-            <span>📱 Install FromCampus App for faster access to jobs</span>
-            <button onclick="installPWA()" style="
-                background: white; 
-                color: #008dff; 
-                border: none; 
-                padding: 8px 16px; 
-                border-radius: 20px; 
-                font-size: 14px; 
-                font-weight: 600; 
-                cursor: pointer; 
-                transition: all 0.2s ease;
-            " onmouseover="this.style.transform='scale(1.05)'" 
-               onmouseout="this.style.transform='scale(1)'">
-                Install
-            </button>
-            <button onclick="dismissBanner()" style="
-                background: transparent; 
-                color: white; 
-                border: 1px solid white; 
-                padding: 4px 8px; 
-                border-radius: 50%; 
-                cursor: pointer;
-                font-size: 16px;
-                line-height: 1;
-            ">×</button>
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 8px;">
+            <span style="font-size: 12px; font-weight: 600;">📱 Install FromCampus</span>
+            <div style="display: flex; gap: 8px;">
+                <button onclick="installPWA()" style="
+                    background: white; 
+                    color: #008dff; 
+                    border: none; 
+                    padding: 6px 12px; 
+                    border-radius: 15px; 
+                    font-size: 12px; 
+                    font-weight: 600; 
+                    cursor: pointer; 
+                    transition: all 0.2s ease;
+                " onmouseover="this.style.transform='scale(1.05)'" 
+                   onmouseout="this.style.transform='scale(1)'">
+                    Install
+                </button>
+                <button onclick="dismissBanner()" style="
+                    background: transparent; 
+                    color: white; 
+                    border: 1px solid white; 
+                    padding: 2px 6px; 
+                    border-radius: 50%; 
+                    cursor: pointer;
+                    font-size: 14px;
+                    line-height: 1;
+                ">×</button>
+            </div>
         </div>
     `;
     
