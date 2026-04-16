@@ -522,4 +522,18 @@
 </style>
 
 <!-- Push Notification Script -->
-<script src="/assets/js/push-notifications.js"></script>
+<script>
+// Load push notification script with delay for mobile compatibility
+setTimeout(() => {
+  console.log('HEADER: Loading push notification script...');
+  const script = document.createElement('script');
+  script.src = '/assets/js/push-notifications.js';
+  script.onload = () => {
+    console.log('HEADER: Push notification script loaded successfully');
+  };
+  script.onerror = () => {
+    console.error('HEADER: Failed to load push notification script');
+  };
+  document.head.appendChild(script);
+}, 1000); // 1 second delay
+</script>
