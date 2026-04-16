@@ -32,12 +32,12 @@ RewriteCond %{THE_REQUEST} \s/updates/details\?slug=([^\s&]+) [NC]
 RewriteRule ^ /updates/%1? [R=301,L]
 
 # =========================
-# ✅ Don't rewrite static assets
+# Don't rewrite static assets and API
 # =========================
-RewriteRule ^(assets|thumbnails|book-image|s-assets|logo|tools-image)/ - [L]
+RewriteRule ^(assets|thumbnails|book-image|s-assets|logo|tools-image|api)/ - [L]
 
 # =========================
-# ✅ Routing
+# Routing
 # =========================
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
