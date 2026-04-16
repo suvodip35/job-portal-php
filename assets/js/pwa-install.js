@@ -12,67 +12,29 @@ window.addEventListener('beforeinstallprompt', (e) => {
     
     // Only show banner on mobile devices
     if (window.innerWidth <= 768) {
-        // Check if user dismissed within last week
-        const dismissedUntil = localStorage.getItem('pwa-banner-dismissed-until');
-        const now = new Date();
-        const isDismissed = dismissedUntil && new Date(dismissedUntil) > now;
-        
-        // Check if banner was shown this session
-        if (!sessionStorage.getItem('pwa-banner-shown-session') && !isDismissed) {
+        // Simple check - only hide if explicitly dismissed this session
+        if (!sessionStorage.getItem('pwa-banner-dismissed-session')) {
             console.log('🚀 Showing install banner...');
             showInstallBanner();
             sessionStorage.setItem('pwa-banner-shown-session', 'true');
         } else {
-            console.log('⏸️ Banner already shown this session or dismissed within last week');
+            console.log('⏸️ Banner already dismissed this session');
         }
     } else {
         console.log('💻 Desktop device - no banner');
     }
 });
 
-// Also add manual trigger for testing
+// Simple fallback - show banner after 5 seconds if no event
 setTimeout(() => {
-    console.log('🔍 Manual check - Mobile:', window.innerWidth <= 768);
+    console.log('🔍 Fallback check - Mobile:', window.innerWidth <= 768);
     console.log('🔍 Has deferred prompt:', !!deferredPrompt);
-    if (window.innerWidth <= 768 && !deferredPrompt) {
-        console.log('⚠️ No install prompt yet - trying to show anyway...');
-        showInstallBanner();
-    }
-    
-    // Add manual trigger button for testing
-    if (window.innerWidth <= 768) {
-        const manualBtn = document.createElement('button');
-        manualBtn.textContent = '🎯 Show Banner';
-        manualBtn.style.cssText = `
-            position: fixed;
-            top: 110px;
-            right: 10px;
-            background: #ff6b6b;
-            color: white;
-            border: none;
-            padding: 8px 12px;
-            border-radius: 6px;
-            font-size: 12px;
-            z-index: 10002;
-            cursor: pointer;
-        `;
-        manualBtn.onclick = () => {
-            console.log('🎯 Manual banner trigger clicked');
-            showInstallBanner();
-            manualBtn.remove();
-        };
-        document.body.appendChild(manualBtn);
-    }
-}, 5000);
-
-// Fallback: Show banner after 10 seconds even if beforeinstallprompt doesn't fire
-setTimeout(() => {
-    if (window.innerWidth <= 768 && !sessionStorage.getItem('pwa-banner-shown-session')) {
-        console.log('🔄 Fallback: Showing banner after delay...');
+    if (window.innerWidth <= 768 && !sessionStorage.getItem('pwa-banner-shown')) {
+        console.log('🔄 Fallback: Showing banner anyway...');
         showInstallBanner();
         sessionStorage.setItem('pwa-banner-shown-session', 'true');
     }
-}, 10000);
+}, 5000);
 
 // Immediate manual trigger for testing
 if (window.innerWidth <= 768) {
@@ -219,9 +181,8 @@ function dismissBanner() {
         banner.style.animation = 'slideOutRight 0.3s ease-out';
         setTimeout(() => banner.remove(), 300);
     }
-    // Remember dismissal for 1 week
-    const oneWeekFromNow = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
-    localStorage.setItem('pwa-banner-dismissed-until', oneWeekFromNow.toISOString());
+    // Remember dismissal for this session
+    sessionStorage.setItem('pwa-banner-dismissed-session', 'true');
 }
 
 function installPWA() {
