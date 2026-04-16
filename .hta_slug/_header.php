@@ -239,7 +239,7 @@
       <!-- Mobile Menu Button -->
       <div class="md:hidden flex items-center gap-2">
         <!-- Mobile Push Notification Button -->
-        <button id="mobilePushNotificationBtn" class="px-3 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition shadow-lg">
+        <button id="mobilePushNotificationBtn" onclick="handleMobileAlertClick()" class="px-3 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition shadow-lg">
           <svg class="w-4 h-4 inline mr-2" fill="currentColor" viewBox="0 0 20 20">
             <path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z"></path>
           </svg>
@@ -287,6 +287,56 @@
     mobileMenu.classList.toggle('hidden');
   });
   
+  // Backup function for mobile button click
+  window.handleMobileAlertClick = async function() {
+    console.log('Mobile button clicked via inline handler');
+    alert('Mobile button clicked! Requesting permission...');
+    
+    try {
+      const permission = await Notification.requestPermission();
+      alert('Permission: ' + permission);
+      
+      if (permission === 'granted') {
+        // Try to get FCM token
+        if (typeof firebase !== 'undefined' && firebase.messaging) {
+          const messaging = firebase.messaging();
+          const token = await messaging.getToken({
+            vapidKey: 'BOt9XnxPzEX2b8pn0-kGRNqpS1rfby1CEbV-Dc_G87H9Wp5qnd6E_nyDBTHiD_NLoXGyx4Y0RhwbxTNSI9O9dtA'
+          });
+          alert('Token: ' + token.substring(0, 30) + '...');
+          
+          // Send to server
+          const response = await fetch('/api/save-fcm-token.php', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+              token: token,
+              user_agent: navigator.userAgent,
+              timestamp: Date.now()
+            })
+          });
+          
+          if (response.ok) {
+            alert('Token saved successfully!');
+            // Update button
+            const btn = document.getElementById('mobilePushNotificationBtn');
+            if (btn) {
+              btn.innerHTML = '<svg class="w-4 h-4 inline mr-2" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Subscribed';
+              btn.classList.remove('bg-blue-600');
+              btn.classList.add('bg-green-600');
+            }
+          } else {
+            alert('Failed to save token');
+          }
+        } else {
+          alert('Firebase not loaded');
+        }
+      }
+    } catch (error) {
+      alert('Error: ' + error.message);
+    }
+  };
+
 
 
 </script>

@@ -34,6 +34,18 @@ class PushNotificationManager {
     }
 
     setupEventListeners() {
+        this.setupButtonListeners();
+        
+        // Retry if buttons not found (might be loaded later)
+        if (!document.getElementById('subscribePushBtn') || !document.getElementById('mobilePushNotificationBtn')) {
+            setTimeout(() => {
+                this.showDebug('Retrying button setup...');
+                this.setupButtonListeners();
+            }, 1000);
+        }
+    }
+    
+    setupButtonListeners() {
         const desktopBtn = document.getElementById('subscribePushBtn');
         const mobileBtn = document.getElementById('mobilePushNotificationBtn');
 
@@ -259,11 +271,10 @@ class PushNotificationManager {
     }
 }
 
-// Test if JavaScript loads
-alert('JavaScript is loading!');
-
 // Initialize when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
-    alert('DOM loaded, initializing PushNotificationManager...');
-    new PushNotificationManager();
+    // Small delay to ensure all elements are rendered
+    setTimeout(() => {
+        new PushNotificationManager();
+    }, 100);
 });
