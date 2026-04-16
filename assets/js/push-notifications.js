@@ -49,6 +49,8 @@ class PushNotificationManager {
     }
 
     async handleSubscribeClick() {
+        console.log('PushNotificationManager: Subscribe clicked');
+        
         if (this.isSubscribed) {
             // Already subscribed, show message
             this.showMessage('You are already subscribed to job alerts!');
@@ -56,7 +58,9 @@ class PushNotificationManager {
         }
 
         // Request permission
+        console.log('PushNotificationManager: Requesting notification permission...');
         const permission = await Notification.requestPermission();
+        console.log('PushNotificationManager: Permission result:', permission);
 
         if (permission === 'granted') {
             this.isSubscribed = true;
@@ -87,6 +91,7 @@ class PushNotificationManager {
     }
 
     async initializeFirebase() {
+        console.log('PushNotificationManager: Initializing Firebase...');
         try {
             // Check if Firebase is already loaded
             if (typeof firebase === 'undefined') {
@@ -94,8 +99,10 @@ class PushNotificationManager {
                 setTimeout(() => this.initializeFirebase(), 1000);
                 return;
             }
-
+            console.log('PushNotificationManager: Firebase loaded, getting messaging instance...');
+            
             const messaging = firebase.messaging();
+            console.log('PushNotificationManager: Got messaging instance, requesting token...');
 
             // Get FCM token
             // VAPID Key: Copy from Firebase Console > Project Settings > Cloud Messaging > Web Push certificates > Key pair
@@ -104,10 +111,11 @@ class PushNotificationManager {
             });
 
             if (token) {
-                console.log('FCM Token obtained:', token);
+                console.log('PushNotificationManager: FCM Token obtained:', token.substring(0, 20) + '...');
                 await this.sendTokenToServer(token);
             } else {
-                console.log('No FCM token available');
+                console.log('PushNotificationManager: No FCM token available');
+                this.showMessage('Failed to get notification token. Please try again.', 'error');
             }
 
             // Handle token refresh
@@ -125,6 +133,7 @@ class PushNotificationManager {
     }
 
     async sendTokenToServer(token) {
+        console.log('PushNotificationManager: Sending token to server...');
         try {
             const response = await fetch('/api/save-fcm-token.php', {
                 method: 'POST',
@@ -139,12 +148,14 @@ class PushNotificationManager {
             });
 
             if (response.ok) {
-                console.log('FCM token saved successfully');
+                const data = await response.json();
+                console.log('PushNotificationManager: Token saved successfully:', data);
             } else {
-                console.error('Failed to save FCM token');
+                const errorText = await response.text();
+                console.error('PushNotificationManager: Failed to save FCM token, status:', response.status, errorText);
             }
         } catch (error) {
-            console.error('Error sending token to server:', error);
+            console.error('PushNotificationManager: Error sending token to server:', error);
         }
     }
 
