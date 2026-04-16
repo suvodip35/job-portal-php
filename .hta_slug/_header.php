@@ -303,32 +303,66 @@
         console.log('HEADER SCRIPT: Permission result:', permission);
         
         if (permission === 'granted') {
-          // Ultra-simple service worker registration for mobile
-          console.log('HEADER SCRIPT: Setting up service worker...');
+          // Debug environment and try direct approach
+          console.log('HEADER SCRIPT: Permission granted, debugging environment...');
+          console.log('HEADER SCRIPT: HTTPS:', location.protocol === 'https:');
+          console.log('HEADER SCRIPT: ServiceWorker supported:', 'serviceWorker' in navigator);
+          console.log('HEADER SCRIPT: PushManager supported:', 'PushManager' in window);
+          console.log('HEADER SCRIPT: User Agent:', navigator.userAgent);
           
+          // Try direct service worker registration
           try {
-            // Most basic registration possible
-            console.log('HEADER SCRIPT: Basic service worker registration...');
-            await navigator.serviceWorker.register('/sw.js');
-            console.log('HEADER SCRIPT: Service worker registered');
+            console.log('HEADER SCRIPT: Attempting service worker registration...');
+            const registration = await navigator.serviceWorker.register('/sw.js');
+            console.log('HEADER SCRIPT: Registration successful:', registration.scope);
             
-            // Just wait for ready - no complex activation logic
-            console.log('HEADER SCRIPT: Waiting for service worker ready...');
-            await navigator.serviceWorker.ready;
-            console.log('HEADER SCRIPT: Service worker ready');
+            // Force immediate activation
+            if (registration.installing) {
+              console.log('HEADER SCRIPT: Service worker installing...');
+              await new Promise(resolve => {
+                registration.installing.addEventListener('statechange', () => {
+                  console.log('HEADER SCRIPT: SW state:', registration.installing.state);
+                  if (registration.installing.state === 'activated') {
+                    resolve();
+                  }
+                });
+              });
+            }
             
-            // Small delay
-            await new Promise(resolve => setTimeout(resolve, 500));
+            // Get ready registration
+            const readyReg = await navigator.serviceWorker.ready;
+            console.log('HEADER SCRIPT: Ready registration:', readyReg);
+            console.log('HEADER SCRIPT: Has pushManager:', !!readyReg.pushManager);
+            
+            // Try direct push subscription first
+            if (readyReg.pushManager) {
+              console.log('HEADER SCRIPT: Testing direct push subscription...');
+              try {
+                const subscription = await readyReg.pushManager.subscribe({
+                  userVisibleOnly: true,
+                  applicationServerKey: new Uint8Array([
+                    4, 211, 31, 197, 211, 84, 219, 204, 169, 71, 182, 176, 54, 203, 225, 254,
+                    78, 24, 216, 135, 62, 13, 118, 18, 203, 162, 86, 174, 43, 209, 175, 123,
+                    23, 18, 145, 44, 196, 174, 250, 122, 129, 197, 205, 75, 191, 89, 68, 252,
+                    28, 198, 228, 228, 149, 50, 45, 153, 108, 225, 127, 212, 129, 193, 21, 105,
+                    207, 13, 34, 145, 216, 191, 166, 35, 61, 197, 241, 236, 250, 191, 120, 225,
+                    249, 75, 138, 144, 69, 205, 188, 154, 38, 74, 249, 212, 232, 207, 161, 125,
+                    13, 90, 148, 232, 248, 168, 149, 167, 216, 225, 217, 121, 226, 254, 249, 41
+                  ])
+                });
+                console.log('HEADER SCRIPT: Direct subscription successful:', subscription);
+              } catch (subError) {
+                console.log('HEADER SCRIPT: Direct subscription failed:', subError.message);
+              }
+            }
             
           } catch (error) {
-            console.error('HEADER SCRIPT: Service worker failed:', error);
-            // Don't return - try to continue anyway
-            console.log('HEADER SCRIPT: Continuing despite service worker error...');
+            console.error('HEADER SCRIPT: Service worker error:', error);
           }
           
-          // Get FCM token
+          // Try Firebase anyway
           if (typeof firebase !== 'undefined' && firebase.messaging) {
-            console.log('HEADER SCRIPT: Getting FCM token...');
+            console.log('HEADER SCRIPT: Trying Firebase...');
             const messaging = firebase.messaging();
             const token = await messaging.getToken({
               vapidKey: 'BOt9XnxPzEX2b8pn0-kGRNqpS1rfby1CEbV-Dc_G87H9Wp5qnd6E_nyDBTHiD_NLoXGyx4Y0RhwbxTNSI9O9dtA'
