@@ -320,9 +320,25 @@
         }
         alert('Step 7: Firebase messaging available');
         
+        // Register service worker first
+        alert('Step 8: Registering service worker...');
+        let registration;
+        try {
+          registration = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
+          alert('Step 8a: Service Worker registered: ' + registration.scope);
+        } catch (error) {
+          alert('Step 8a ERROR: Service Worker registration failed: ' + error.message);
+          return;
+        }
+        
+        // Wait for service worker to be ready
+        alert('Step 8b: Waiting for service worker to be ready...');
+        await navigator.serviceWorker.ready;
+        alert('Step 8c: Service Worker is ready');
+        
         // Try to get FCM token
         const messaging = firebase.messaging();
-        alert('Step 8: Getting FCM token...');
+        alert('Step 9: Getting FCM token...');
         
         const token = await messaging.getToken({
           vapidKey: 'BOt9XnxPzEX2b8pn0-kGRNqpS1rfby1CEbV-Dc_G87H9Wp5qnd6E_nyDBTHiD_NLoXGyx4Y0RhwbxTNSI9O9dtA'
