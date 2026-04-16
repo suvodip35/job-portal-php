@@ -605,15 +605,13 @@ if ('serviceWorker' in navigator) {
           registration.active.postMessage({ type: 'CLAIM_CLIENTS' });
         }
         
-        // Check for updates
+        // Check for updates - auto-update without confirmation
         registration.addEventListener('updatefound', () => {
           const newWorker = registration.installing;
           newWorker.addEventListener('statechange', () => {
             if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-              // New version available
-              if (confirm('A new version of the app is available. Would you like to update?')) {
-                newWorker.postMessage({ type: 'SKIP_WAITING' });
-              }
+              // New version available - auto-update
+              newWorker.postMessage({ type: 'SKIP_WAITING' });
             }
           });
         });
