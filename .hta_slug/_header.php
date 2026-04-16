@@ -316,23 +316,14 @@
             const registration = await navigator.serviceWorker.register('/sw.js');
             console.log('HEADER SCRIPT: Registration successful:', registration.scope);
             
-            // Force immediate activation
-            if (registration.installing) {
-              console.log('HEADER SCRIPT: Service worker installing...');
-              await new Promise(resolve => {
-                registration.installing.addEventListener('statechange', () => {
-                  console.log('HEADER SCRIPT: SW state:', registration.installing.state);
-                  if (registration.installing.state === 'activated') {
-                    resolve();
-                  }
-                });
-              });
-            }
-            
-            // Get ready registration
+            // Wait for service worker to be ready properly
+            console.log('HEADER SCRIPT: Waiting for service worker ready...');
             const readyReg = await navigator.serviceWorker.ready;
             console.log('HEADER SCRIPT: Ready registration:', readyReg);
             console.log('HEADER SCRIPT: Has pushManager:', !!readyReg.pushManager);
+            
+            // Additional delay to ensure PushManager is available
+            await new Promise(resolve => setTimeout(resolve, 2000));
             
             // Try direct push subscription first
             if (readyReg.pushManager) {
