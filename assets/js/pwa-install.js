@@ -28,6 +28,7 @@ window.addEventListener('beforeinstallprompt', (e) => {
 // Force show banner for debugging (remove this in production)
 document.addEventListener('DOMContentLoaded', () => {
     console.log('DOM loaded - checking mobile...');
+    alert('PWA Script Loaded - Mobile: ' + (window.innerWidth <= 768));
     if (window.innerWidth <= 768) {
         console.log('Mobile detected - forcing banner for debugging...');
         setTimeout(() => {
@@ -158,6 +159,24 @@ function showInstallBanner() {
     const addedBanner = document.getElementById('pwa-install-banner');
     console.log('Banner in DOM:', !!addedBanner);
     console.log('Banner styles:', addedBanner ? addedBanner.style.cssText.substring(0, 100) : 'Not found');
+    
+    // Add a simple test element to verify visibility
+    const testDiv = document.createElement('div');
+    testDiv.style.cssText = `
+        position: fixed !important;
+        top: 50px !important;
+        left: 10px !important;
+        background: yellow !important;
+        color: black !important;
+        padding: 10px !important;
+        z-index: 999999 !important;
+        font-size: 16px !important;
+        border: 2px solid black !important;
+    `;
+    testDiv.textContent = 'TEST BANNER VISIBLE';
+    document.body.appendChild(testDiv);
+    
+    console.log('Test div added - if you see this, DOM manipulation works');
     
     // Auto-hide after 30 seconds
     setTimeout(() => {
