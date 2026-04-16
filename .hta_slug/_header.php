@@ -289,6 +289,7 @@
   
   // Backup function for mobile button click
   window.handleMobileAlertClick = async function() {
+    alert('TEST: Function called!');
     console.log('Mobile button clicked via inline handler');
     alert('Step 1: Button clicked!');
     
