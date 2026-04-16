@@ -1,4 +1,5 @@
 // PWA Install Prompt Functionality
+console.log('PWA INSTALL SCRIPT LOADED - Version 1.0');
 let deferredPrompt;
 
 // Listen for beforeinstallprompt event
@@ -29,6 +30,24 @@ window.addEventListener('beforeinstallprompt', (e) => {
 document.addEventListener('DOMContentLoaded', () => {
     console.log('DOM loaded - checking mobile...');
     alert('PWA Script Loaded - Mobile: ' + (window.innerWidth <= 768));
+    
+    // Create a simple test banner immediately
+    const simpleBanner = document.createElement('div');
+    simpleBanner.style.cssText = `
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        background: red !important;
+        color: white !important;
+        padding: 20px !important;
+        text-align: center !important;
+        z-index: 999999 !important;
+        font-size: 20px !important;
+    `;
+    simpleBanner.textContent = 'SIMPLE TEST BANNER - If you see this, JavaScript works!';
+    document.body.appendChild(simpleBanner);
+    
     if (window.innerWidth <= 768) {
         console.log('Mobile detected - forcing banner for debugging...');
         setTimeout(() => {
