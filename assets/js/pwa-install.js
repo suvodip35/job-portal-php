@@ -44,6 +44,31 @@ setTimeout(() => {
     }
 }, 10000);
 
+// Immediate manual trigger for testing
+if (window.innerWidth <= 768) {
+    const manualBtn = document.createElement('button');
+    manualBtn.textContent = '🎯 Show Banner';
+    manualBtn.style.cssText = `
+        position: fixed;
+        top: 60px;
+        right: 10px;
+        background: #ff6b6b;
+        color: white;
+        border: none;
+        padding: 8px 12px;
+        border-radius: 6px;
+        font-size: 12px;
+        z-index: 10001;
+        cursor: pointer;
+    `;
+    manualBtn.onclick = () => {
+        console.log('🎯 Manual banner trigger clicked');
+        showInstallBanner();
+        manualBtn.remove();
+    };
+    document.body.appendChild(manualBtn);
+}
+
 // Create install banner for mobile
 function showInstallBanner() {
     // Remove existing banner
@@ -150,12 +175,7 @@ function showInstallBanner() {
     
     document.body.appendChild(banner);
     
-    // Auto-hide after 30 seconds (more time to see)
-    setTimeout(() => {
-        if (document.getElementById('pwa-install-banner')) {
-            banner.style.opacity = '0.7';
-        }
-    }, 30000);
+    // No auto-hide - banner stays visible until user action
 }
 
 function dismissBanner() {
@@ -164,7 +184,6 @@ function dismissBanner() {
         banner.style.animation = 'slideOutRight 0.3s ease-out';
         setTimeout(() => banner.remove(), 300);
     }
-    localStorage.setItem('pwa-banner-dismissed', 'true');
 }
 
 function installPWA() {
