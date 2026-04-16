@@ -290,55 +290,87 @@
   // Backup function for mobile button click
   window.handleMobileAlertClick = async function() {
     console.log('Mobile button clicked via inline handler');
-    alert('Mobile button clicked! Requesting permission...');
+    alert('Step 1: Button clicked!');
+    
+    // Check if Notification API is available
+    if (!('Notification' in window)) {
+      alert('ERROR: Notification API not supported');
+      return;
+    }
+    alert('Step 2: Notification API supported');
     
     try {
+      alert('Step 3: Requesting permission...');
       const permission = await Notification.requestPermission();
-      alert('Permission: ' + permission);
+      alert('Step 4: Permission result: ' + permission);
       
       if (permission === 'granted') {
+        alert('Step 5: Permission granted, checking Firebase...');
+        
+        // Check if Firebase is loaded
+        if (typeof firebase === 'undefined') {
+          alert('ERROR: Firebase not loaded');
+          return;
+        }
+        alert('Step 6: Firebase loaded');
+        
+        if (!firebase.messaging) {
+          alert('ERROR: Firebase messaging not available');
+          return;
+        }
+        alert('Step 7: Firebase messaging available');
+        
         // Try to get FCM token
-        if (typeof firebase !== 'undefined' && firebase.messaging) {
-          const messaging = firebase.messaging();
-          const token = await messaging.getToken({
-            vapidKey: 'BOt9XnxPzEX2b8pn0-kGRNqpS1rfby1CEbV-Dc_G87H9Wp5qnd6E_nyDBTHiD_NLoXGyx4Y0RhwbxTNSI9O9dtA'
-          });
-          alert('Token: ' + token.substring(0, 30) + '...');
+        const messaging = firebase.messaging();
+        alert('Step 8: Getting FCM token...');
+        
+        const token = await messaging.getToken({
+          vapidKey: 'BOt9XnxPzEX2b8pn0-kGRNqpS1rfby1CEbV-Dc_G87H9Wp5qnd6E_nyDBTHiD_NLoXGyx4Y0RhwbxTNSI9O9dtA'
+        });
+        
+        if (!token) {
+          alert('ERROR: No token received from Firebase');
+          return;
+        }
+        alert('Step 9: Token received: ' + token.substring(0, 30) + '...');
+        
+        // Send to server
+        alert('Step 10: Sending token to server...');
+        const response = await fetch('/api/save-fcm-token.php', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({
+            token: token,
+            user_agent: navigator.userAgent,
+            timestamp: Date.now()
+          })
+        });
+        
+        alert('Step 11: Server response status: ' + response.status);
+        
+        if (response.ok) {
+          const data = await response.json();
+          alert('Step 12: Token saved! Server: ' + JSON.stringify(data));
           
-          // Send to server
-          const response = await fetch('/api/save-fcm-token.php', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({
-              token: token,
-              user_agent: navigator.userAgent,
-              timestamp: Date.now()
-            })
-          });
-          
-          if (response.ok) {
-            alert('Token saved successfully!');
-            // Update button
-            const btn = document.getElementById('mobilePushNotificationBtn');
-            if (btn) {
-              btn.innerHTML = '<svg class="w-4 h-4 inline mr-2" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Subscribed';
-              btn.classList.remove('bg-blue-600');
-              btn.classList.add('bg-green-600');
-            }
-          } else {
-            alert('Failed to save token');
+          // Update button
+          const btn = document.getElementById('mobilePushNotificationBtn');
+          if (btn) {
+            btn.innerHTML = '<svg class="w-4 h-4 inline mr-2" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Subscribed';
+            btn.classList.remove('bg-blue-600');
+            btn.classList.add('bg-green-600');
+            alert('Step 13: SUCCESS! Button updated to Subscribed');
           }
         } else {
-          alert('Firebase not loaded');
+          const errorText = await response.text();
+          alert('ERROR: Failed to save token. Status: ' + response.status + ' - ' + errorText);
         }
+      } else {
+        alert('INFO: Permission not granted: ' + permission);
       }
     } catch (error) {
-      alert('Error: ' + error.message);
+      alert('CATCH ERROR: ' + error.message + '\n\nStack: ' + error.stack);
     }
   };
-
-
-
 </script>
 <style>
 
