@@ -287,6 +287,21 @@
     mobileMenu.classList.toggle('hidden');
   });
   
+  // Test if JavaScript is working on mobile
+  console.log('HEADER SCRIPT: Loaded on ' + (window.innerWidth <= 768 ? 'MOBILE' : 'DESKTOP'));
+  
+  // Simple mobile button test
+  const mobileBtn = document.getElementById('mobilePushNotificationBtn');
+  if (mobileBtn) {
+    console.log('HEADER SCRIPT: Mobile button found, adding test click');
+    mobileBtn.addEventListener('click', () => {
+      console.log('HEADER SCRIPT: Mobile button clicked!');
+      alert('Mobile button clicked! Test successful.');
+    });
+  } else {
+    console.log('HEADER SCRIPT: Mobile button NOT found');
+  }
+  
 </script>
 <style>
 
