@@ -9,7 +9,11 @@ window.addEventListener('beforeinstallprompt', (e) => {
     
     // Only show banner on mobile devices
     if (window.innerWidth <= 768) {
-        showInstallBanner();
+        // Check if banner was shown this session
+        if (!sessionStorage.getItem('pwa-banner-shown-session')) {
+            showInstallBanner();
+            sessionStorage.setItem('pwa-banner-shown-session', 'true');
+        }
     }
 });
 
@@ -175,11 +179,6 @@ window.addEventListener('appinstalled', () => {
 document.addEventListener('DOMContentLoaded', () => {
     // Don't show if already installed
     if (localStorage.getItem('pwa-installed') === 'true') {
-        return;
-    }
-    
-    // Don't show if banner was dismissed
-    if (localStorage.getItem('pwa-banner-dismissed') === 'true') {
         return;
     }
     
