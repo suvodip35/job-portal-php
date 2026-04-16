@@ -290,13 +290,69 @@
   // Test if JavaScript is working on mobile
   console.log('HEADER SCRIPT: Loaded on ' + (window.innerWidth <= 768 ? 'MOBILE' : 'DESKTOP'));
   
-  // Simple mobile button test
+  // Mobile push notification functionality
   const mobileBtn = document.getElementById('mobilePushNotificationBtn');
   if (mobileBtn) {
-    console.log('HEADER SCRIPT: Mobile button found, adding test click');
-    mobileBtn.addEventListener('click', () => {
-      console.log('HEADER SCRIPT: Mobile button clicked!');
-      alert('Mobile button clicked! Test successful.');
+    console.log('HEADER SCRIPT: Mobile button found, adding push notification click');
+    mobileBtn.addEventListener('click', async () => {
+      console.log('HEADER SCRIPT: Mobile button clicked - starting push notification flow');
+      
+      try {
+        // Request notification permission
+        const permission = await Notification.requestPermission();
+        console.log('HEADER SCRIPT: Permission result:', permission);
+        
+        if (permission === 'granted') {
+          // Register service worker
+          console.log('HEADER SCRIPT: Registering service worker...');
+          const registration = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
+          await navigator.serviceWorker.ready;
+          console.log('HEADER SCRIPT: Service worker registered and ready');
+          
+          // Get FCM token
+          if (typeof firebase !== 'undefined' && firebase.messaging) {
+            console.log('HEADER SCRIPT: Getting FCM token...');
+            const messaging = firebase.messaging();
+            const token = await messaging.getToken({
+              vapidKey: 'BOt9XnxPzEX2b8pn0-kGRNqpS1rfby1CEbV-Dc_G87H9Wp5qnd6E_nyDBTHiD_NLoXGyx4Y0RhwbxTNSI9O9dtA'
+            });
+            
+            if (token) {
+              console.log('HEADER SCRIPT: Got token, sending to server...');
+              // Send to server
+              const response = await fetch('/api/save-fcm-token.php', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({token, user_agent: navigator.userAgent, timestamp: Date.now()})
+              });
+              
+              if (response.ok) {
+                console.log('HEADER SCRIPT: Token saved successfully!');
+                alert('SUCCESS: Subscribed to job alerts!');
+                // Update button
+                mobileBtn.innerHTML = '<svg class="w-4 h-4 inline mr-2" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Subscribed';
+                mobileBtn.classList.remove('bg-blue-600');
+                mobileBtn.classList.add('bg-green-600');
+              } else {
+                console.error('HEADER SCRIPT: Failed to save token');
+                alert('ERROR: Failed to save token');
+              }
+            } else {
+              console.error('HEADER SCRIPT: No token received');
+              alert('ERROR: No token received');
+            }
+          } else {
+            console.error('HEADER SCRIPT: Firebase not available');
+            alert('ERROR: Firebase not available');
+          }
+        } else {
+          console.log('HEADER SCRIPT: Permission denied:', permission);
+          alert('Permission denied for notifications');
+        }
+      } catch (error) {
+        console.error('HEADER SCRIPT: Error:', error);
+        alert('ERROR: ' + error.message);
+      }
     });
   } else {
     console.log('HEADER SCRIPT: Mobile button NOT found');
