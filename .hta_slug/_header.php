@@ -303,41 +303,67 @@
         console.log('HEADER SCRIPT: Permission result:', permission);
         
         if (permission === 'granted') {
-          // Register and activate service worker
+          // Register and activate service worker with retry logic
           console.log('HEADER SCRIPT: Registering service worker...');
-          const registration = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
-          console.log('HEADER SCRIPT: Service worker registered, waiting for activation...');
+          let registration;
           
-          // Wait for service worker to be fully active
-          if (registration.installing) {
-            console.log('HEADER SCRIPT: Service worker is installing...');
-            await new Promise(resolve => {
-              registration.installing.addEventListener('statechange', () => {
-                if (registration.installing.state === 'activated') {
-                  console.log('HEADER SCRIPT: Service worker activated');
-                  resolve();
-                }
-              });
-            });
-          } else if (registration.active) {
-            console.log('HEADER SCRIPT: Service worker already active');
-          } else {
-            console.log('HEADER SCRIPT: Waiting for service worker to become active...');
-            await new Promise(resolve => {
-              const checkActive = () => {
-                if (registration.active) {
-                  console.log('HEADER SCRIPT: Service worker is now active');
-                  resolve();
-                } else {
-                  setTimeout(checkActive, 100);
-                }
-              };
-              checkActive();
-            });
+          try {
+            registration = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
+            console.log('HEADER SCRIPT: Service worker registered successfully');
+          } catch (error) {
+            console.error('HEADER SCRIPT: Service worker registration failed:', error);
+            alert('ERROR: Service worker registration failed: ' + error.message);
+            return;
           }
           
-          // Additional delay to ensure service worker is fully ready
-          await new Promise(resolve => setTimeout(resolve, 500));
+          // Wait for service worker to be fully active with timeout
+          console.log('HEADER SCRIPT: Waiting for service worker activation...');
+          try {
+            const timeoutPromise = new Promise((_, reject) => 
+              setTimeout(() => reject(new Error('Service worker activation timeout')), 10000)
+            );
+            
+            const activationPromise = new Promise(resolve => {
+              if (registration.active) {
+                console.log('HEADER SCRIPT: Service worker already active');
+                resolve(registration.active);
+              } else if (registration.installing) {
+                console.log('HEADER SCRIPT: Service worker is installing...');
+                registration.installing.addEventListener('statechange', () => {
+                  if (registration.installing.state === 'activated') {
+                    console.log('HEADER SCRIPT: Service worker activated');
+                    resolve(registration.installing);
+                  }
+                });
+              } else {
+                const checkActive = () => {
+                  if (registration.active) {
+                    console.log('HEADER SCRIPT: Service worker is now active');
+                    resolve(registration.active);
+                  } else {
+                    setTimeout(checkActive, 100);
+                  }
+                };
+                checkActive();
+              }
+            });
+            
+            await Promise.race([activationPromise, timeoutPromise]);
+            console.log('HEADER SCRIPT: Service worker is ready');
+            
+            // Verify service worker has pushManager
+            if (!registration.pushManager) {
+              throw new Error('Service worker does not have pushManager');
+            }
+            
+          } catch (error) {
+            console.error('HEADER SCRIPT: Service worker activation failed:', error);
+            alert('ERROR: Service worker activation failed: ' + error.message);
+            return;
+          }
+          
+          // Additional delay to ensure everything is ready
+          await new Promise(resolve => setTimeout(resolve, 1000));
           
           // Get FCM token
           if (typeof firebase !== 'undefined' && firebase.messaging) {
