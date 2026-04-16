@@ -21,3 +21,4 @@ s-assets/
 node_modules/
 package-lock.json
 tailwind.config.jsservice-account.json
+service-account.json
