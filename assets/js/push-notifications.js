@@ -9,6 +9,9 @@ class PushNotificationManager {
     }
 
     async init() {
+        console.log('PushNotificationManager: Initializing...');
+        // Show immediate debug to confirm script loaded
+        this.showDebug('PushNotificationManager: Script loaded');
         // Check if notifications are supported
         if (!('Notification' in window) || !('serviceWorker' in navigator)) {
             console.log('Push notifications not supported');
@@ -35,16 +38,24 @@ class PushNotificationManager {
         const mobileBtn = document.getElementById('mobileSubscribePushBtn');
         const mobileMenuBtn = document.getElementById('mobileMenuSubscribePushBtn');
 
+        // Debug: Show which buttons were found
+        this.showDebug('Desktop button found: ' + (desktopBtn ? 'YES' : 'NO'));
+        this.showDebug('Mobile button found: ' + (mobileBtn ? 'YES' : 'NO'));
+        this.showDebug('Mobile menu button found: ' + (mobileMenuBtn ? 'YES' : 'NO'));
+
         if (desktopBtn) {
             desktopBtn.addEventListener('click', () => this.handleSubscribeClick());
+            this.showDebug('Desktop button event attached');
         }
 
         if (mobileBtn) {
             mobileBtn.addEventListener('click', () => this.handleSubscribeClick());
+            this.showDebug('Mobile button event attached');
         }
 
         if (mobileMenuBtn) {
             mobileMenuBtn.addEventListener('click', () => this.handleSubscribeClick());
+            this.showDebug('Mobile menu button event attached');
         }
     }
 
