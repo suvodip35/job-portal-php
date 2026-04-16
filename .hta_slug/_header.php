@@ -303,7 +303,7 @@
         console.log('HEADER SCRIPT: Permission result:', permission);
         
         if (permission === 'granted') {
-          // Debug environment and try direct approach
+          alert('Permission granted! Setting up notifications...');
           console.log('HEADER SCRIPT: Permission granted, debugging environment...');
           console.log('HEADER SCRIPT: HTTPS:', location.protocol === 'https:');
           console.log('HEADER SCRIPT: ServiceWorker supported:', 'serviceWorker' in navigator);
@@ -312,7 +312,8 @@
           
           // Use the proper approach - wait for service worker ready first
           try {
-            console.log('HEADER SCRIPT: Waiting for service worker ready (proper approach)...');
+            console.log('HEADER SCRIPT: Step 1 - Waiting for service worker ready...');
+            alert('Step 1: Waiting for service worker...');
             
             // This is the key - wait for an active service worker
             const registration = await navigator.serviceWorker.ready;
