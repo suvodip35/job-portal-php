@@ -315,11 +315,43 @@
             console.log('HEADER SCRIPT: Step 1 - Waiting for service worker ready...');
             alert('Step 1: Waiting for service worker...');
             
-            // This is the key - wait for an active service worker
-            const registration = await navigator.serviceWorker.ready;
-            console.log('HEADER SCRIPT: Service worker is ready and active');
-            console.log('HEADER SCRIPT: Active worker:', registration.active);
-            console.log('HEADER SCRIPT: Has pushManager:', !!registration.pushManager);
+            // This is the key - wait for an active service worker with timeout
+            console.log('HEADER SCRIPT: Starting service worker ready with timeout...');
+            let registration;
+            try {
+              // Add timeout to prevent hanging
+              const timeoutPromise = new Promise((_, reject) => {
+                setTimeout(() => reject(new Error('Service worker ready timeout after 10 seconds')), 10000);
+              });
+              
+              registration = await Promise.race([
+                navigator.serviceWorker.ready,
+                timeoutPromise
+              ]);
+              
+              console.log('HEADER SCRIPT: Service worker is ready and active');
+              console.log('HEADER SCRIPT: Active worker:', registration.active);
+              console.log('HEADER SCRIPT: Has pushManager:', !!registration.pushManager);
+            } catch (readyError) {
+              console.error('HEADER SCRIPT: Service worker ready failed:', readyError.message);
+              alert('Service worker setup failed: ' + readyError.message);
+              
+              // Try manual registration as fallback
+              console.log('HEADER SCRIPT: Trying manual registration as fallback...');
+              try {
+                registration = await navigator.serviceWorker.register('/sw.js', { scope: '/' });
+                console.log('HEADER SCRIPT: Manual registration successful');
+                
+                // Wait a bit and check if it becomes active
+                await new Promise(resolve => setTimeout(resolve, 2000));
+                const readyReg = await navigator.serviceWorker.ready;
+                console.log('HEADER SCRIPT: Fallback ready successful:', readyReg.active);
+              } catch (fallbackError) {
+                console.error('HEADER SCRIPT: Fallback also failed:', fallbackError);
+                alert('Fallback registration failed: ' + fallbackError.message);
+                return; // Exit early
+              }
+            }
             
             // Only proceed if we have an active worker with pushManager
             if (registration.active && registration.pushManager) {
