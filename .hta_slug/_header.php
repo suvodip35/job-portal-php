@@ -303,11 +303,41 @@
         console.log('HEADER SCRIPT: Permission result:', permission);
         
         if (permission === 'granted') {
-          // Register service worker
+          // Register and activate service worker
           console.log('HEADER SCRIPT: Registering service worker...');
           const registration = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
-          await navigator.serviceWorker.ready;
-          console.log('HEADER SCRIPT: Service worker registered and ready');
+          console.log('HEADER SCRIPT: Service worker registered, waiting for activation...');
+          
+          // Wait for service worker to be fully active
+          if (registration.installing) {
+            console.log('HEADER SCRIPT: Service worker is installing...');
+            await new Promise(resolve => {
+              registration.installing.addEventListener('statechange', () => {
+                if (registration.installing.state === 'activated') {
+                  console.log('HEADER SCRIPT: Service worker activated');
+                  resolve();
+                }
+              });
+            });
+          } else if (registration.active) {
+            console.log('HEADER SCRIPT: Service worker already active');
+          } else {
+            console.log('HEADER SCRIPT: Waiting for service worker to become active...');
+            await new Promise(resolve => {
+              const checkActive = () => {
+                if (registration.active) {
+                  console.log('HEADER SCRIPT: Service worker is now active');
+                  resolve();
+                } else {
+                  setTimeout(checkActive, 100);
+                }
+              };
+              checkActive();
+            });
+          }
+          
+          // Additional delay to ensure service worker is fully ready
+          await new Promise(resolve => setTimeout(resolve, 500));
           
           // Get FCM token
           if (typeof firebase !== 'undefined' && firebase.messaging) {
