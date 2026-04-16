@@ -310,86 +310,27 @@
           console.log('HEADER SCRIPT: PushManager supported:', 'PushManager' in window);
           console.log('HEADER SCRIPT: User Agent:', navigator.userAgent);
           
-          // Use the proper approach - wait for service worker ready first
+          // Simplified approach - use only firebase-messaging-sw.js
           try {
-            console.log('HEADER SCRIPT: Step 1 - Waiting for service worker ready...');
-            alert('Step 1: Waiting for service worker...');
+            console.log('HEADER SCRIPT: Setting up Firebase service worker...');
+            alert('Setting up notifications...');
             
-            // This is the key - wait for an active service worker with timeout
-            console.log('HEADER SCRIPT: Starting service worker ready with timeout...');
-            let registration;
-            try {
-              // Add timeout to prevent hanging
-              const timeoutPromise = new Promise((_, reject) => {
-                setTimeout(() => reject(new Error('Service worker ready timeout after 10 seconds')), 10000);
-              });
-              
-              registration = await Promise.race([
-                navigator.serviceWorker.ready,
-                timeoutPromise
-              ]);
-              
-              console.log('HEADER SCRIPT: Service worker is ready and active');
-              console.log('HEADER SCRIPT: Active worker:', registration.active);
-              console.log('HEADER SCRIPT: Has pushManager:', !!registration.pushManager);
-            } catch (readyError) {
-              console.error('HEADER SCRIPT: Service worker ready failed:', readyError.message);
-              alert('Service worker setup failed: ' + readyError.message);
-              
-              // Try manual registration as fallback
-              console.log('HEADER SCRIPT: Trying manual registration as fallback...');
-              try {
-                registration = await navigator.serviceWorker.register('/sw.js', { scope: '/' });
-                console.log('HEADER SCRIPT: Manual registration successful');
-                
-                // Wait a bit and check if it becomes active
-                await new Promise(resolve => setTimeout(resolve, 2000));
-                const readyReg = await navigator.serviceWorker.ready;
-                console.log('HEADER SCRIPT: Fallback ready successful:', readyReg.active);
-              } catch (fallbackError) {
-                console.error('HEADER SCRIPT: Fallback also failed:', fallbackError);
-                alert('Fallback registration failed: ' + fallbackError.message);
-                return; // Exit early
-              }
-            }
+            // Register only the Firebase service worker
+            const registration = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
+            console.log('HEADER SCRIPT: Firebase service worker registered');
             
-            // Only proceed if we have an active worker with pushManager
-            if (registration.active && registration.pushManager) {
-              console.log('HEADER SCRIPT: Active worker and pushManager available, proceeding...');
-              
-              // Try direct push subscription test
-              console.log('HEADER SCRIPT: Testing direct push subscription...');
-              try {
-                const subscription = await registration.pushManager.subscribe({
-                  userVisibleOnly: true,
-                  applicationServerKey: new Uint8Array([
-                    4, 211, 31, 197, 211, 84, 219, 204, 169, 71, 182, 176, 54, 203, 225, 254,
-                    78, 24, 216, 135, 62, 13, 118, 18, 203, 162, 86, 174, 43, 209, 175, 123,
-                    23, 18, 145, 44, 196, 174, 250, 122, 129, 197, 205, 75, 191, 89, 68, 252,
-                    28, 198, 228, 228, 149, 50, 45, 153, 108, 225, 127, 212, 129, 193, 21, 105,
-                    207, 13, 34, 145, 216, 191, 166, 35, 61, 197, 241, 236, 250, 191, 120, 225,
-                    249, 75, 138, 144, 69, 205, 188, 154, 38, 74, 249, 212, 232, 207, 161, 125,
-                    13, 90, 148, 232, 248, 168, 149, 167, 216, 225, 217, 121, 226, 254, 249, 41
-                  ])
-                });
-                console.log('HEADER SCRIPT: Direct subscription successful:', subscription);
-              } catch (subError) {
-                console.log('HEADER SCRIPT: Direct subscription failed:', subError.message);
-              }
-            } else {
-              console.log('HEADER SCRIPT: No active worker or pushManager available');
-              // Try to register a new service worker
-              console.log('HEADER SCRIPT: Attempting to register new service worker...');
-              await navigator.serviceWorker.register('/sw.js', { scope: '/' });
-              console.log('HEADER SCRIPT: Service worker registered, waiting again...');
-              
-              // Wait again for the new registration to become active
-              const newRegistration = await navigator.serviceWorker.ready;
-              console.log('HEADER SCRIPT: New service worker is ready:', newRegistration.active);
-            }
+            // Wait for it to become active (no timeout - let it complete naturally)
+            await navigator.serviceWorker.ready;
+            console.log('HEADER SCRIPT: Service worker is ready and active');
+            console.log('HEADER SCRIPT: Active worker:', registration.active);
+            console.log('HEADER SCRIPT: Has pushManager:', !!registration.pushManager);
+            
+            alert('Service worker ready! Getting token...');
             
           } catch (error) {
-            console.error('HEADER SCRIPT: Service worker error:', error);
+            console.error('HEADER SCRIPT: Service worker setup failed:', error);
+            alert('Service worker setup failed: ' + error.message);
+            return; // Exit early if service worker fails
           }
           
           // Try Firebase anyway
