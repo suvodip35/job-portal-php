@@ -287,71 +287,42 @@
     mobileMenu.classList.toggle('hidden');
   });
   
-  // Test if JavaScript is working on mobile
-  console.log('HEADER SCRIPT: Loaded on ' + (window.innerWidth <= 768 ? 'MOBILE' : 'DESKTOP'));
-  
   // Mobile push notification functionality
   const mobileBtn = document.getElementById('mobilePushNotificationBtn');
   if (mobileBtn) {
-    console.log('HEADER SCRIPT: Mobile button found, adding push notification click');
     mobileBtn.addEventListener('click', async () => {
-      console.log('HEADER SCRIPT: Mobile button clicked - starting push notification flow');
-      
       try {
         // Request notification permission
         const permission = await Notification.requestPermission();
-        console.log('HEADER SCRIPT: Permission result:', permission);
         
         if (permission === 'granted') {
-          alert('Permission granted! Setting up notifications...');
-          console.log('HEADER SCRIPT: Permission granted, debugging environment...');
-          console.log('HEADER SCRIPT: HTTPS:', location.protocol === 'https:');
-          console.log('HEADER SCRIPT: ServiceWorker supported:', 'serviceWorker' in navigator);
-          console.log('HEADER SCRIPT: PushManager supported:', 'PushManager' in window);
-          console.log('HEADER SCRIPT: User Agent:', navigator.userAgent);
-          
           // Simplified approach - use only firebase-messaging-sw.js
           try {
-            console.log('HEADER SCRIPT: Setting up Firebase service worker...');
-            alert('Setting up notifications...');
-            
             // Register only the Firebase service worker
-            const registration = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
-            console.log('HEADER SCRIPT: Firebase service worker registered');
+            await navigator.serviceWorker.register('/firebase-messaging-sw.js');
             
-            // Wait for it to become active (no timeout - let it complete naturally)
+            // Wait for it to become active
             await navigator.serviceWorker.ready;
-            console.log('HEADER SCRIPT: Service worker is ready and active');
-            console.log('HEADER SCRIPT: Active worker:', registration.active);
-            console.log('HEADER SCRIPT: Has pushManager:', !!registration.pushManager);
-            
-            alert('Service worker ready! Getting token...');
             
           } catch (error) {
-            console.error('HEADER SCRIPT: Service worker setup failed:', error);
-            alert('Service worker setup failed: ' + error.message);
+            alert('Failed to set up notifications. Please try again.');
             return; // Exit early if service worker fails
           }
           
-          // Try Firebase anyway
+          // Get Firebase token
           if (typeof firebase !== 'undefined' && firebase.messaging) {
-            console.log('HEADER SCRIPT: Trying Firebase...');
             const messaging = firebase.messaging();
             const token = await messaging.getToken({
               vapidKey: 'BOt9XnxPzEX2b8pn0-kGRNqpS1rfby1CEbV-Dc_G87H9Wp5qnd6E_nyDBTHiD_NLoXGyx4Y0RhwbxTNSI9O9dtA'
             });
             
             if (token) {
-              console.log('HEADER SCRIPT: Got token, sending to server...');
-              console.log('HEADER SCRIPT: Token:', token.substring(0, 20) + '...');
-              
               // Prepare data
               const data = {
                 token: token,
                 user_agent: navigator.userAgent,
                 timestamp: Date.now()
               };
-              console.log('HEADER SCRIPT: Sending data:', JSON.stringify(data, null, 2));
               
               // Send to server
               const response = await fetch('/api/save-fcm-token.php', {
@@ -360,43 +331,28 @@
                 body: JSON.stringify(data)
               });
               
-              console.log('HEADER SCRIPT: Response status:', response.status);
-              console.log('HEADER SCRIPT: Response ok:', response.ok);
-              
-              // Get response text for debugging
-              const responseText = await response.text();
-              console.log('HEADER SCRIPT: Response body:', responseText);
-              
               if (response.ok) {
-                console.log('HEADER SCRIPT: Token saved successfully!');
-                alert('SUCCESS: Subscribed to job alerts!');
+                alert('Successfully subscribed to job alerts!');
                 // Update button
                 mobileBtn.innerHTML = '<svg class="w-4 h-4 inline mr-2" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Subscribed';
                 mobileBtn.classList.remove('bg-blue-600');
                 mobileBtn.classList.add('bg-green-600');
               } else {
-                console.error('HEADER SCRIPT: Failed to save token. Status:', response.status, 'Response:', responseText);
-                alert('ERROR: Failed to save token. Status: ' + response.status);
+                alert('Failed to save subscription. Please try again.');
               }
             } else {
-              console.error('HEADER SCRIPT: No token received');
-              alert('ERROR: No token received');
+              alert('Failed to get notification token. Please try again.');
             }
           } else {
-            console.error('HEADER SCRIPT: Firebase not available');
-            alert('ERROR: Firebase not available');
+            alert('Notification system not available. Please refresh and try again.');
           }
         } else {
-          console.log('HEADER SCRIPT: Permission denied:', permission);
           alert('Permission denied for notifications');
         }
       } catch (error) {
-        console.error('HEADER SCRIPT: Error:', error);
-        alert('ERROR: ' + error.message);
+        alert('An error occurred. Please try again.');
       }
     });
-  } else {
-    console.log('HEADER SCRIPT: Mobile button NOT found');
   }
   
 </script>
