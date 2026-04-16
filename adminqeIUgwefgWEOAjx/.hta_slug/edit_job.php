@@ -175,6 +175,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($status === 'published') {
                 try {
                     require_once __DIR__ . '/../../lib/FCMNotificationService.php';
+                    
+                    // Debug: Check if service account file is readable
+                    $saPath = __DIR__ . '/../../service-account.json';
+                    $debugMsg = "Service account file exists: " . (file_exists($saPath) ? 'YES' : 'NO');
+                    if (file_exists($saPath)) {
+                        $saContent = file_get_contents($saPath);
+                        $saData = json_decode($saContent, true);
+                        $debugMsg .= ", client_email: " . ($saData['client_email'] ?? 'NOT FOUND');
+                    }
+                    error_log("FCM DEBUG: " . $debugMsg);
+                    $debugOutput = $debugMsg; // Save for display
+                    
                     $fcmService = new FCMNotificationService($pdo);
 
                     $notificationResult = $fcmService->sendToAll(
@@ -195,11 +207,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     if ($notificationResult['success']) {
                         $success .= ' Push notifications sent to ' . $notificationResult['sent_count'] . ' subscribers.';
                     } else {
-                        $success .= ' (Push notifications: ' . ($notificationResult['message'] ?? 'no active subscribers') . ')';
+                        $success .= ' (Push notifications: ' . ($notificationResult['message'] ?? 'no active subscribers') . ')<br><small>[' . htmlspecialchars($debugOutput) . ']</small>';
                     }
                 } catch (Exception $e) {
                     error_log("Error sending FCM notification for job update: " . $e->getMessage());
                     $success .= ' (Push notification failed: ' . $e->getMessage() . ')';
+                }
+            } else {
+                // Debug: Log to a visible place
+                $logFile = sys_get_temp_dir() . '/fcm_debug.log';
+                $debugInfo = @file_get_contents($logFile);
+                if ($debugInfo && strpos($debugInfo, 'FCM OAuth2') !== false) {
+                    $lines = explode("\n", $debugInfo);
+                    $recentErrors = array_slice(array_filter($lines, function($l) { return strpos($l, 'FCM OAuth2') !== false; }), -5);
+                    if (!empty($recentErrors)) {
+                        $success .= '<br><small class="text-red-500">Debug: ' . htmlspecialchars(implode('; ', $recentErrors)) . '</small>';
+                    }
                 }
             }
             

@@ -93,8 +93,9 @@ class PushNotificationManager {
             const messaging = firebase.messaging();
 
             // Get FCM token
+            // VAPID Key: Copy from Firebase Console > Project Settings > Cloud Messaging > Web Push certificates > Key pair
             const token = await messaging.getToken({
-                vapidKey: 'YOUR_VAPID_KEY_HERE' // Replace with your actual VAPID key
+                vapidKey: 'BOt9XnxPzEX2b8pn0-kGRNqpS1rfby1CEbV-Dc_G87H9Wp5qnd6E_nyDBTHiD_NLoXGyx4Y0RhwbxTNSI9O9dtA'
             });
 
             if (token) {
@@ -107,7 +108,7 @@ class PushNotificationManager {
             // Handle token refresh
             messaging.onTokenRefresh(async () => {
                 const refreshedToken = await messaging.getToken({
-                    vapidKey: 'YOUR_VAPID_KEY_HERE'
+                    vapidKey: 'BOt9XnxPzEX2b8pn0-kGRNqpS1rfby1CEbV-Dc_G87H9Wp5qnd6E_nyDBTHiD_NLoXGyx4Y0RhwbxTNSI9O9dtA'
                 });
                 console.log('Token refreshed:', refreshedToken);
                 await this.sendTokenToServer(refreshedToken);

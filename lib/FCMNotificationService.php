@@ -15,32 +15,50 @@ class FCMNotificationService {
     
     public function __construct($pdo) {
         $this->pdo = $pdo;
-        $this->projectId = FIREBASE_PROJECT_ID;
-        $this->clientEmail = FIREBASE_CLIENT_EMAIL;
-        $this->privateKey = FIREBASE_PRIVATE_KEY;
+        
+        // Load service account from JSON file for proper key formatting
+        $serviceAccountPath = __DIR__ . '/../service-account.json';
+        if (file_exists($serviceAccountPath)) {
+            $serviceAccount = json_decode(file_get_contents($serviceAccountPath), true);
+            $this->projectId = $serviceAccount['project_id'] ?? FIREBASE_PROJECT_ID;
+            $this->clientEmail = $serviceAccount['client_email'] ?? FIREBASE_CLIENT_EMAIL;
+            // The JSON file has the key in proper format with \n characters
+            $this->privateKey = $serviceAccount['private_key'] ?? FIREBASE_PRIVATE_KEY;
+        } else {
+            $this->projectId = FIREBASE_PROJECT_ID;
+            $this->clientEmail = FIREBASE_CLIENT_EMAIL;
+            $this->privateKey = FIREBASE_PRIVATE_KEY;
+        }
     }
     
     /**
      * Format private key for OpenSSL
      */
     private function formatPrivateKey($key) {
-        // If already has headers, return as-is
-        if (strpos($key, '-----BEGIN PRIVATE KEY-----') !== false) {
+        // If already has headers with newlines (proper PEM format), return as-is
+        if (strpos($key, "-----BEGIN PRIVATE KEY-----\n") !== false) {
             return $key;
         }
         
-        // Clean up the key - remove all whitespace and newlines
+        // If has headers but no newlines (from config.php define), reformat
+        if (strpos($key, '-----BEGIN PRIVATE KEY-----') !== false) {
+            // Extract just the base64 content
+            $key = preg_replace('/-----BEGIN PRIVATE KEY-----/', '', $key);
+            $key = preg_replace('/-----END PRIVATE KEY-----/', '', $key);
+            $key = preg_replace('/\s+/', '', $key);
+            
+            // Format with proper line breaks (64 chars per line as per PEM spec)
+            $formatted = "-----BEGIN PRIVATE KEY-----\n";
+            $formatted .= chunk_split($key, 64, "\n");
+            $formatted .= "-----END PRIVATE KEY-----\n";
+            return $formatted;
+        }
+        
+        // Raw key without headers - add them
         $key = preg_replace('/\s+/', '', $key);
-        
-        // Remove any existing headers/footers if present in the middle
-        $key = str_replace('-----BEGINPRIVATEKEY-----', '', $key);
-        $key = str_replace('-----ENDPRIVATEKEY-----', '', $key);
-        
-        // Format with proper line breaks (64 chars per line as per PEM spec)
         $formatted = "-----BEGIN PRIVATE KEY-----\n";
         $formatted .= chunk_split($key, 64, "\n");
         $formatted .= "-----END PRIVATE KEY-----\n";
-        
         return $formatted;
     }
     
@@ -81,8 +99,8 @@ class FCMNotificationService {
             // Create signature input
             $signatureInput = $headerEncoded . '.' . $claimSetEncoded;
             
-            // Format and load private key
-            $privateKey = $this->formatPrivateKey(FIREBASE_PRIVATE_KEY);
+            // Format and load private key (from service account file)
+            $privateKey = $this->formatPrivateKey($this->privateKey);
             
             // Sign the JWT
             $signature = '';
@@ -138,9 +156,10 @@ class FCMNotificationService {
                 if (isset($data['access_token'])) {
                     $this->accessToken = $data['access_token'];
                     $this->tokenExpiry = time() + ($data['expires_in'] ?? 3600) - 60;
+                    error_log("FCM OAuth2: Successfully obtained access token");
                     return $this->accessToken;
                 }
-                error_log("FCM OAuth2: No access_token in response");
+                error_log("FCM OAuth2: No access_token in response: " . $response);
                 return null;
             } else {
                 $errorData = json_decode($response, true);
@@ -221,10 +240,10 @@ class FCMNotificationService {
                         'title' => $title,
                         'body' => $body
                     ],
-                    'data' => array_merge($data, [
+                    'data' => array_map('strval', array_merge($data, [
                         'click_action' => $data['url'] ?? '/',
                         'notification_type' => $data['notification_type'] ?? 'general'
-                    ]),
+                    ])),
                     'webpush' => [
                         'headers' => [
                             'Urgency' => 'high'
@@ -265,8 +284,12 @@ class FCMNotificationService {
                 $errors[] = "Token $tokenId: " . $result['error'];
                 $this->logResult($tokenId, $title, $body, $data, 'failed', $result['error']);
                 
-                // Deactivate invalid tokens
-                if (in_array($result['error_code'], ['UNREGISTERED', 'INVALID_ARGUMENT', 'NOT_FOUND'])) {
+                // Deactivate invalid tokens (404 or UNREGISTERED means token is no longer valid)
+                $errorCode = $result['error_code'] ?? '';
+                $errorMsg = strtolower($result['error'] ?? '');
+                if ($errorCode === 404 || $errorCode === 'NOT_FOUND' || $errorCode === 'UNREGISTERED' || 
+                    strpos($errorMsg, 'not found') !== false || strpos($errorMsg, 'unregistered') !== false) {
+                    error_log("FCM: Deactivating invalid token $tokenId due to error: " . $result['error']);
                     $this->deactivateToken($token);
                 }
             }
