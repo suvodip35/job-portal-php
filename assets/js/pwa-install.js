@@ -1,6 +1,65 @@
 // PWA Install Functionality
 let deferredPrompt;
 
+// Show install button if prompt is available
+function showInstallButton() {
+    // Remove existing button if any
+    const existingBtn = document.getElementById('pwa-install-btn');
+    if (existingBtn) {
+        existingBtn.remove();
+    }
+    
+    // Create install button (desktop fallback)
+    installButton = document.createElement('button');
+    installButton.id = 'pwa-install-btn';
+    installButton.className = 'install-btn';
+    installButton.textContent = '📱 Install FromCampus App';
+    installButton.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: #008dff;
+        color: white;
+        border: none;
+        padding: 12px 20px;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        z-index: 9998;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        transition: all 0.3s ease;
+    `;
+    
+    document.body.appendChild(installButton);
+    
+    // Add manual trigger button for testing
+    setTimeout(() => {
+        const triggerBtn = document.createElement('button');
+        triggerBtn.id = 'manual-trigger-btn';
+        triggerBtn.textContent = '🎯 Show Install Banner';
+        triggerBtn.style.cssText = `
+            position: fixed;
+            top: 70px;
+            right: 20px;
+            background: #ff6b35;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            font-size: 12px;
+            cursor: pointer;
+            z-index: 9997;
+            box-shadow: 0 2px 8px rgba(255,107,0,0.3);
+        `;
+        triggerBtn.onclick = () => {
+            console.log('Manual trigger: Showing install banner');
+            showInstallBanner();
+        };
+        document.body.appendChild(triggerBtn);
+    }, 3000);
+}
+
 // Listen for beforeinstallprompt event
 window.addEventListener('beforeinstallprompt', (e) => {
     console.log('PWA install prompt available');
