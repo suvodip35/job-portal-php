@@ -50,6 +50,7 @@ class PushNotificationManager {
 
     async handleSubscribeClick() {
         console.log('PushNotificationManager: Subscribe clicked');
+        this.showDebug('Step 1: Subscribe clicked');
         
         if (this.isSubscribed) {
             // Already subscribed, show message
@@ -58,9 +59,9 @@ class PushNotificationManager {
         }
 
         // Request permission
-        console.log('PushNotificationManager: Requesting notification permission...');
+        this.showDebug('Step 2: Requesting permission...');
         const permission = await Notification.requestPermission();
-        console.log('PushNotificationManager: Permission result:', permission);
+        this.showDebug('Step 3: Permission=' + permission);
 
         if (permission === 'granted') {
             this.isSubscribed = true;
@@ -92,17 +93,21 @@ class PushNotificationManager {
 
     async initializeFirebase() {
         console.log('PushNotificationManager: Initializing Firebase...');
+        this.showDebug('Step 4: Initializing Firebase...');
         try {
             // Check if Firebase is already loaded
             if (typeof firebase === 'undefined') {
                 console.log('Firebase not loaded yet, will retry...');
+                this.showDebug('Step 4a: Firebase not loaded, retrying...');
                 setTimeout(() => this.initializeFirebase(), 1000);
                 return;
             }
-            console.log('PushNotificationManager: Firebase loaded, getting messaging instance...');
+            console.log('PushNotificationManager: Firebase loaded');
+            this.showDebug('Step 4b: Firebase loaded');
             
             const messaging = firebase.messaging();
-            console.log('PushNotificationManager: Got messaging instance, requesting token...');
+            console.log('PushNotificationManager: Got messaging instance');
+            this.showDebug('Step 4c: Got messaging, requesting token...');
 
             // Get FCM token
             // VAPID Key: Copy from Firebase Console > Project Settings > Cloud Messaging > Web Push certificates > Key pair
@@ -111,11 +116,13 @@ class PushNotificationManager {
             });
 
             if (token) {
-                console.log('PushNotificationManager: FCM Token obtained:', token.substring(0, 20) + '...');
+                console.log('PushNotificationManager: FCM Token obtained');
+                this.showDebug('Step 5: Got token, sending to server...');
                 await this.sendTokenToServer(token);
             } else {
-                console.log('PushNotificationManager: No FCM token available');
-                this.showMessage('Failed to get notification token. Please try again.', 'error');
+                console.log('PushNotificationManager: No FCM token');
+                this.showDebug('Step 5 ERROR: No token received');
+                this.showMessage('Failed to get token. Please try again.', 'error');
             }
 
             // Handle token refresh
@@ -134,6 +141,7 @@ class PushNotificationManager {
 
     async sendTokenToServer(token) {
         console.log('PushNotificationManager: Sending token to server...');
+        this.showDebug('Step 6: Sending token to server...');
         try {
             const response = await fetch('/api/save-fcm-token.php', {
                 method: 'POST',
@@ -149,10 +157,12 @@ class PushNotificationManager {
 
             if (response.ok) {
                 const data = await response.json();
-                console.log('PushNotificationManager: Token saved successfully:', data);
+                console.log('PushNotificationManager: Token saved');
+                this.showDebug('Step 7: Token saved to server!');
             } else {
                 const errorText = await response.text();
-                console.error('PushNotificationManager: Failed to save FCM token, status:', response.status, errorText);
+                console.error('PushNotificationManager: Failed, status:', response.status);
+                this.showDebug('Step 7 ERROR: Failed to save, status=' + response.status);
             }
         } catch (error) {
             console.error('PushNotificationManager: Error sending token to server:', error);
@@ -225,6 +235,20 @@ class PushNotificationManager {
             toast.style.transform = 'translateY(150%)';
             setTimeout(() => toast.remove(), 300);
         }, 3000);
+    }
+
+    showDebug(message) {
+        // Create visible debug panel for mobile testing
+        let debugPanel = document.getElementById('pushDebugPanel');
+        if (!debugPanel) {
+            debugPanel = document.createElement('div');
+            debugPanel.id = 'pushDebugPanel';
+            debugPanel.className = 'fixed top-0 left-0 right-0 bg-black text-white text-xs p-2 z-[9999] max-h-40 overflow-y-auto';
+            document.body.appendChild(debugPanel);
+        }
+        const entry = document.createElement('div');
+        entry.textContent = new Date().toLocaleTimeString() + ': ' + message;
+        debugPanel.appendChild(entry);
     }
 
     showUnsupportedMessage() {
