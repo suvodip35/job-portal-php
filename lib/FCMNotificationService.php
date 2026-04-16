@@ -25,9 +25,11 @@ class FCMNotificationService {
             // The JSON file has the key in proper format with \n characters
             $this->privateKey = $serviceAccount['private_key'] ?? FIREBASE_PRIVATE_KEY;
         } else {
+            // Fallback to config constants
             $this->projectId = FIREBASE_PROJECT_ID;
             $this->clientEmail = FIREBASE_CLIENT_EMAIL;
             $this->privateKey = FIREBASE_PRIVATE_KEY;
+            error_log("FCM: service-account.json not found, using config.php constants");
         }
     }
     
