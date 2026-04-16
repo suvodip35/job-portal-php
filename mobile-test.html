@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Mobile PWA Test - FromCampus</title>
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#008dff">
+    <style>
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+            padding: 10px; 
+            margin: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+        }
+        .card {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 10px 0;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+        .status { 
+            padding: 15px; 
+            margin: 10px 0; 
+            border-radius: 8px; 
+            font-size: 14px;
+        }
+        .success { background: #e8f5e8; color: #2e7d32; border-left: 4px solid #4caf50; }
+        .error { background: #ffebee; color: #c62828; border-left: 4px solid #f44336; }
+        .info { background: #e3f2fd; color: #1565c0; border-left: 4px solid #2196f3; }
+        .warning { background: #fff3e0; color: #f57c00; border-left: 4px solid #ff9800; }
+        .install-btn { 
+            background: #008dff; 
+            color: white; 
+            border: none; 
+            padding: 15px 25px; 
+            border-radius: 25px; 
+            font-size: 16px; 
+            cursor: pointer; 
+            margin: 15px 0;
+            display: block;
+            width: 100%;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(0,141,255,0.3);
+        }
+        .install-btn:hover { 
+            background: #0066cc; 
+            transform: translateY(-2px);
+        }
+        .install-btn:disabled { 
+            background: #666; 
+            cursor: not-allowed; 
+            transform: none;
+        }
+        h1 { text-align: center; margin: 10px 0; font-size: 24px; }
+        .mobile-tips {
+            background: #fff3e0;
+            color: #f57c00;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border-left: 4px solid #ff9800;
+        }
+        .engagement-bar {
+            background: rgba(255,255,255,0.2);
+            border-radius: 10px;
+            padding: 10px;
+            margin: 10px 0;
+        }
+        .progress {
+            background: #4caf50;
+            height: 8px;
+            border-radius: 4px;
+            width: 0%;
+            transition: width 1s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📱 Mobile PWA Test</h1>
+        
+        <div class="card">
+            <div class="status info">
+                <strong>🔍 Mobile PWA Status:</strong><br>
+                • Browser: <span id="browser">Checking...</span><br>
+                • Platform: <span id="platform">Checking...</span><br>
+                • Service Worker: <span id="sw-status">Checking...</span><br>
+                • Manifest: <span id="manifest-status">Checking...</span><br>
+                • Install Prompt: <span id="install-status">Waiting...</span>
+            </div>
+            
+            <div class="engagement-bar">
+                <strong>⏱️ User Engagement (Required for Install):</strong><br>
+                <div style="background: rgba(255,255,255,0.3); border-radius: 5px; margin: 5px 0;">
+                    <div class="progress" id="progress"></div>
+                </div>
+                <small id="engagement-text">0/30 seconds</small>
+            </div>
+            
+            <button id="installBtn" class="install-btn" style="display: none;">
+                📱 Install FromCampus App
+            </button>
+            
+            <div class="mobile-tips">
+                <strong>📋 Mobile Install Instructions:</strong><br>
+                1. <strong>Engage with the site</strong> for 30+ seconds (scroll, click links)<br>
+                2. <strong>Look for install banner</strong> at the bottom of screen<br>
+                3. <strong>Tap "Install"</strong> when it appears<br>
+                4. <strong>Alternative:</strong> Chrome menu (⋮) → "Add to Home Screen"<br>
+                5. <strong>iOS:</strong> Share button → "Add to Home Screen"
+            </div>
+            
+            <div class="status warning">
+                <strong>⚠️ If No Install Prompt:</strong><br>
+                • Try clearing browser cache and reopening<br>
+                • Try different browser (Chrome, Samsung Internet)<br>
+                • Check if site is added to home screen already<br>
+                • Some Android versions need manual install
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let deferredPrompt;
+        const installBtn = document.getElementById('installBtn');
+        let engagementTime = 0;
+        let engagementInterval;
+
+        // Detect browser and platform
+        document.getElementById('browser').innerHTML = navigator.userAgent.includes('Chrome') ? 'Chrome' : 
+                                                   navigator.userAgent.includes('Samsung') ? 'Samsung Internet' :
+                                                   navigator.userAgent.includes('Firefox') ? 'Firefox' : 'Unknown';
+        
+        document.getElementById('platform').innerHTML = /Android/.test(navigator.userAgent) ? 'Android' :
+                                                    /iPhone|iPad|iPod/.test(navigator.userAgent) ? 'iOS' : 'Unknown';
+
+        // Check manifest
+        fetch('/manifest.json')
+            .then(response => {
+                if (response.ok) {
+                    document.getElementById('manifest-status').innerHTML = '✅ Loaded';
+                    return response.json();
+                } else {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+            })
+            .then(manifest => {
+                console.log('Manifest loaded:', manifest);
+            })
+            .catch(error => {
+                document.getElementById('manifest-status').innerHTML = `❌ Error: ${error.message}`;
+            });
+
+        // Register service worker
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js')
+                .then(registration => {
+                    console.log('Service Worker registered:', registration);
+                    document.getElementById('sw-status').innerHTML = '✅ Registered & Active';
+                })
+                .catch(error => {
+                    console.error('SW registration failed:', error);
+                    document.getElementById('sw-status').innerHTML = `❌ Failed: ${error.message}`;
+                });
+        } else {
+            document.getElementById('sw-status').innerHTML = '❌ Not Supported';
+        }
+
+        // Engagement timer
+        engagementInterval = setInterval(() => {
+            engagementTime++;
+            const progress = Math.min((engagementTime / 30) * 100, 100);
+            document.getElementById('progress').style.width = progress + '%';
+            document.getElementById('engagement-text').textContent = `${engagementTime}/30 seconds`;
+            
+            if (engagementTime === 30) {
+                clearInterval(engagementInterval);
+                document.getElementById('engagement-text').innerHTML = '✅ Install criteria met!';
+                document.querySelector('.engagement-bar').style.background = 'rgba(76,175,80,0.2)';
+            }
+        }, 1000);
+
+        // Listen for install prompt
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            
+            installBtn.style.display = 'block';
+            document.getElementById('install-status').innerHTML = '✅ Install Prompt Available!';
+            
+            console.log('Install prompt event received!');
+            
+            // Stop engagement timer
+            clearInterval(engagementInterval);
+            document.getElementById('engagement-text').innerHTML = '🎉 Install prompt ready!';
+        });
+
+        // Handle install button click
+        installBtn.addEventListener('click', async () => {
+            if (!deferredPrompt) return;
+            
+            installBtn.disabled = true;
+            installBtn.textContent = '⏳ Installing...';
+            
+            try {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                
+                if (outcome === 'accepted') {
+                    document.getElementById('install-status').innerHTML = '🎉 App Installed!';
+                    installBtn.style.display = 'none';
+                } else {
+                    document.getElementById('install-status').innerHTML = '❌ Install Cancelled';
+                    installBtn.disabled = false;
+                    installBtn.textContent = '📱 Install FromCampus App';
+                }
+                
+                deferredPrompt = null;
+            } catch (error) {
+                document.getElementById('install-status').innerHTML = `❌ Error: ${error.message}`;
+                installBtn.disabled = false;
+                installBtn.textContent = '📱 Install FromCampus App';
+            }
+        });
+
+        // Listen for app installed
+        window.addEventListener('appinstalled', () => {
+            document.getElementById('install-status').innerHTML = '🎉 App Successfully Installed!';
+            installBtn.style.display = 'none';
+            clearInterval(engagementInterval);
+        });
+
+        // Check if already installed
+        const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
+        if (isStandalone) {
+            document.getElementById('install-status').innerHTML = '✅ Already Installed';
+            document.getElementById('engagement-text').innerHTML = 'Running as PWA';
+        }
+
+        // Track user interactions for engagement
+        let interactions = 0;
+        ['click', 'scroll', 'touchstart'].forEach(event => {
+            document.addEventListener(event, () => {
+                interactions++;
+                if (interactions === 1) {
+                    console.log('User engagement detected - install criteria counting...');
+                }
+            }, { once: false });
+        });
+    </script>
+</body>
+</html>

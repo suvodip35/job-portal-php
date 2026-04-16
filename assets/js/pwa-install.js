@@ -8,9 +8,115 @@ window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
     deferredPrompt = e;
     
-    // Show install button
+    // Show install button immediately
     showInstallButton();
+    
+    // Also create banner for mobile
+    if (window.innerWidth <= 768) {
+        showInstallBanner();
+    }
 });
+
+// Create install banner for mobile
+function showInstallBanner() {
+    // Remove existing banner
+    const existingBanner = document.getElementById('pwa-install-banner');
+    if (existingBanner) {
+        existingBanner.remove();
+    }
+    
+    const banner = document.createElement('div');
+    banner.id = 'pwa-install-banner';
+    banner.style.cssText = `
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(135deg, #008dff 0%, #0066cc 100%);
+        color: white;
+        padding: 12px 20px;
+        text-align: center;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        font-size: 14px;
+        font-weight: 600;
+        z-index: 9999;
+        box-shadow: 0 -2px 10px rgba(0,0,0,0.3);
+        animation: slideUp 0.3s ease-out;
+    `;
+    
+    banner.innerHTML = `
+        <div style="display: flex; align-items: center; justify-content: center; gap: 10px;">
+            <span>📱 Install FromCampus App for faster access to jobs</span>
+            <button onclick="installPWA()" style="
+                background: white; 
+                color: #008dff; 
+                border: none; 
+                padding: 6px 12px; 
+                border-radius: 20px; 
+                font-size: 12px; 
+                font-weight: 600; 
+                cursor: pointer;
+                transition: all 0.2s ease;
+            " onmouseover="this.style.transform='scale(1.05)'" 
+               onmouseout="this.style.transform='scale(1)'">
+                Install
+            </button>
+            <button onclick="dismissBanner()" style="
+                background: transparent; 
+                color: white; 
+                border: 1px solid white; 
+                padding: 4px 8px; 
+                border-radius: 50%; 
+                cursor: pointer;
+                font-size: 16px;
+                line-height: 1;
+            ">×</button>
+        </div>
+    `;
+    
+    // Add animation
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+    `;
+    document.head.appendChild(style);
+    
+    document.body.appendChild(banner);
+    
+    // Auto-hide after 10 seconds
+    setTimeout(() => {
+        if (document.getElementById('pwa-install-banner')) {
+            banner.style.opacity = '0.8';
+        }
+    }, 10000);
+}
+
+function dismissBanner() {
+    const banner = document.getElementById('pwa-install-banner');
+    if (banner) {
+        banner.style.animation = 'slideDown 0.3s ease-out';
+        setTimeout(() => banner.remove(), 300);
+    }
+    localStorage.setItem('pwa-banner-dismissed', 'true');
+}
+
+function installPWA() {
+    if (deferredPrompt) {
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then((choiceResult) => {
+            if (choiceResult.outcome === 'accepted') {
+                console.log('User accepted the install prompt');
+                dismissBanner();
+            } else {
+                console.log('User dismissed the install prompt');
+            }
+            deferredPrompt = null;
+        });
+    }
+}
 
 // Show install button if prompt is available
 function showInstallButton() {
@@ -137,6 +243,11 @@ function dismissIOSInstall() {
 document.addEventListener('DOMContentLoaded', () => {
     // Don't show if already installed
     if (localStorage.getItem('pwa-installed') === 'true') {
+        return;
+    }
+    
+    // Don't show if banner was dismissed
+    if (localStorage.getItem('pwa-banner-dismissed') === 'true') {
         return;
     }
     

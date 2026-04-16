@@ -83,6 +83,13 @@ self.addEventListener('activate', (event) => {
     );
 });
 
+// Take control of all open pages immediately
+self.addEventListener('message', (event) => {
+    if (event.data && event.data.type === 'CLAIM_CLIENTS') {
+        self.clients.claim();
+    }
+});
+
 // Fetch event (for offline support and caching)
 self.addEventListener('fetch', (event) => {
     const request = event.request;
