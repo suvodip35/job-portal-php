@@ -119,12 +119,43 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $stmt = $pdo->prepare("INSERT INTO jobs (category_slug, job_title, job_title_slug, meta_title, meta_description, company_name, location, description, requirements, job_type, apply_url, last_date, status, min_salary, max_salary, document_link, created_by, thumbnail, suggested_books) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
         $stmt->execute([$category_slug, $title, $slug, $meta_title, $meta_desc, $company, $location, $description, $requirements, $job_type, $apply_url, $last_date, $status, $min_salary, $max_salary, $document_link, $createdBy, $thumbnail, $suggested_books_json]);
-        
+
         // Get the newly inserted job ID
         $jobId = $pdo->lastInsertId();
-        
-        // Simple success message - FCM notifications can be added later if needed
+
+        // Send FCM push notification to all subscribers for new published jobs
         $success = 'Job posted successfully! It is now live on the website.';
+
+        if ($status === 'published') {
+            try {
+                require_once __DIR__ . '/../../lib/FCMNotificationService.php';
+                $fcmService = new FCMNotificationService($pdo);
+
+                $notificationResult = $fcmService->sendToAll(
+                    "New Job: $title",
+                    "Company: $company | Location: " . ($indianStates[$location] ?? $location),
+                    [
+                        'job_id' => $jobId,
+                        'job_slug' => $slug,
+                        'notification_type' => 'new_job',
+                        'url' => '/job/' . $slug,
+                        'company' => $company,
+                        'location' => $location
+                    ]
+                );
+
+                error_log("FCM notification result for new job: " . json_encode($notificationResult));
+
+                if ($notificationResult['success']) {
+                    $success .= ' Push notifications sent to ' . $notificationResult['sent_count'] . ' subscribers.';
+                } else {
+                    $success .= ' (Push notifications: ' . ($notificationResult['message'] ?? 'no active subscribers') . ')';
+                }
+            } catch (Exception $e) {
+                error_log("Error sending FCM notification for new job: " . $e->getMessage());
+                $success .= ' (Push notification failed: ' . $e->getMessage() . ')';
+            }
+        }
     } else {
         $err = implode('<br>', $errors);
     }

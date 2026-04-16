@@ -22,10 +22,11 @@ async function requestNotificationPermission() {
         let registration;
         if ('serviceWorker' in navigator) {
             try {
-                registration = await navigator.serviceWorker.register('/sw.js');
-                console.log('Service Worker registered with scope:', registration.scope);
-                
-                // Wait a bit for service worker to be ready
+                // Register the Firebase messaging service worker
+                registration = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
+                console.log('Firebase Service Worker registered with scope:', registration.scope);
+
+                // Wait for service worker to be ready
                 await navigator.serviceWorker.ready;
                 console.log('Service Worker is ready');
             } catch (error) {
@@ -39,8 +40,10 @@ async function requestNotificationPermission() {
         if (permission === 'granted') {
             console.log('Notification permission granted.');
             
-            // Now get FCM token
-            const token = await messaging.getToken();
+            // Now get FCM token with VAPID key for web push
+            const token = await messaging.getToken({
+                vapidKey: 'BFTxQwylyJKkYJ8sA3eR9x1Q4Z8-x4z8n8v4k7Q2Xl4N8oP5sT7uW9yZ0a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0u1v2w3x4y5z6' // Replace with your actual VAPID key from Firebase Console
+            });
             
             console.log('FCM Token:', token);
             
@@ -91,10 +94,10 @@ messaging.onMessage((payload) => {
     const notificationTitle = payload.notification.title;
     const notificationOptions = {
         body: payload.notification.body,
-        icon: payload.notification.icon || 'https://localhost:2053/assets/logo/fc_logo_crop.webp',
-        badge: 'https://localhost:2053/favicon.ico',
-        tag: payload.data.tag || 'job-notification',
-        data: payload.data,
+        icon: payload.notification.icon || '/assets/logo/fc_logo_crop.webp',
+        badge: '/favicon.ico',
+        tag: payload.data?.tag || 'job-notification',
+        data: payload.data || {},
         requireInteraction: false,
         renotify: true
     };

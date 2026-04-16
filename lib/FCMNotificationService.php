@@ -1,17 +1,95 @@
 <?php
 
 /**
- * Firebase Cloud Messaging Service
- * Handles sending push notifications via FCM
+ * Firebase Cloud Messaging Service (FCM v1 API with OAuth2)
+ * Handles sending push notifications via FCM using modern OAuth2 authentication
  */
 
 class FCMNotificationService {
     private $pdo;
-    private $serverKey;
+    private $projectId;
+    private $clientEmail;
+    private $privateKey;
+    private $accessToken = null;
+    private $tokenExpiry = 0;
     
-    public function __construct($pdo, $serverKey) {
+    public function __construct($pdo) {
         $this->pdo = $pdo;
-        $this->serverKey = $serverKey;
+        $this->projectId = FIREBASE_PROJECT_ID;
+        $this->clientEmail = FIREBASE_CLIENT_EMAIL;
+        $this->privateKey = FIREBASE_PRIVATE_KEY;
+    }
+    
+    /**
+     * Get OAuth2 access token using service account
+     */
+    private function getAccessToken() {
+        // Return cached token if still valid
+        if ($this->accessToken && time() < $this->tokenExpiry) {
+            return $this->accessToken;
+        }
+        
+        try {
+            // Create JWT header
+            $header = json_encode(['alg' => 'RS256', 'typ' => 'JWT']);
+            
+            // Create JWT claim set
+            $now = time();
+            $claimSet = json_encode([
+                'iss' => $this->clientEmail,
+                'scope' => 'https://www.googleapis.com/auth/firebase.messaging',
+                'aud' => 'https://oauth2.googleapis.com/token',
+                'iat' => $now,
+                'exp' => $now + 3600
+            ]);
+            
+            // Encode header and claim set
+            $headerEncoded = str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($header));
+            $claimSetEncoded = str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($claimSet));
+            
+            // Create signature
+            $signatureInput = $headerEncoded . '.' . $claimSetEncoded;
+            
+            // Format private key properly
+            $privateKey = $this->privateKey;
+            if (!strpos($privateKey, 'BEGIN PRIVATE KEY')) {
+                $privateKey = "-----BEGIN PRIVATE KEY-----\n" . chunk_split($privateKey, 64) . "-----END PRIVATE KEY-----";
+            }
+            
+            openssl_sign($signatureInput, $signature, $privateKey, 'sha256');
+            $signatureEncoded = str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($signature));
+            
+            // Create JWT
+            $jwt = $headerEncoded . '.' . $claimSetEncoded . '.' . $signatureEncoded;
+            
+            // Exchange JWT for access token
+            $ch = curl_init('https://oauth2.googleapis.com/token');
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query([
+                'grant_type' => 'urn:ietf:params:oauth:grant-type:jwt-bearer',
+                'assertion' => $jwt
+            ]));
+            curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/x-www-form-urlencoded']);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+            
+            $response = curl_exec($ch);
+            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            curl_close($ch);
+            
+            if ($httpCode === 200) {
+                $data = json_decode($response, true);
+                $this->accessToken = $data['access_token'];
+                $this->tokenExpiry = time() + ($data['expires_in'] ?? 3600) - 60; // Buffer of 60 seconds
+                return $this->accessToken;
+            } else {
+                error_log("OAuth2 token request failed: HTTP $httpCode - $response");
+                return null;
+            }
+        } catch (Exception $e) {
+            error_log("Error getting OAuth2 token: " . $e->getMessage());
+            return null;
+        }
     }
     
     /**
@@ -47,88 +125,88 @@ class FCMNotificationService {
     }
     
     /**
-     * Send notification to specific tokens
+     * Send notification to specific tokens using FCM v1 API
      */
     private function sendNotification($tokens, $title, $body, $data = []) {
         $sentCount = 0;
         $failedCount = 0;
         $errors = [];
         
-        // Prepare notification payload
-        $notification = [
-            'title' => $title,
-            'body' => $body,
-            'icon' => '/assets/logo/fc_logo_crop.webp',
-            'badge' => '/favicon.ico',
-            'sound' => 'default',
-            'click_action' => '/',
-            'tag' => 'job-notification'
-        ];
+        // Get OAuth2 access token
+        $accessToken = $this->getAccessToken();
+        if (!$accessToken) {
+            return [
+                'success' => false,
+                'message' => 'Failed to obtain OAuth2 access token',
+                'sent_count' => 0,
+                'failed_count' => count($tokens)
+            ];
+        }
         
-        // Android specific settings
-        $android = [
-            'priority' => 'high',
-            'notification' => [
-                'title' => $title,
-                'body' => $body,
-                'icon' => '/assets/logo/fc_logo_crop.webp',
-                'color' => '#28a745',
-                'sound' => 'default',
-                'click_action' => '/'
-            ]
-        ];
+        // FCM v1 API endpoint
+        $url = "https://fcm.googleapis.com/v1/projects/{$this->projectId}/messages:send";
         
-        // Web specific settings
-        $webpush = [
-            'headers' => [
-                'Urgency' => 'high'
-            ],
-            'notification' => [
-                'title' => $title,
-                'body' => $body,
-                'icon' => '/assets/logo/fc_logo_crop.webp',
-                'badge' => '/favicon.ico',
-                'tag' => 'job-notification',
-                'requireInteraction' => false,
-                'renotify' => true
-            ]
-        ];
-        
-        // Split tokens into chunks (FCM supports max 1000 tokens per request)
-        $tokenChunks = array_chunk($tokens, 1000);
-        
-        foreach ($tokenChunks as $chunk) {
-            $tokenList = array_column($chunk, 'token');
+        // Send to each token individually (FCM v1 API doesn't support batch registration_ids)
+        foreach ($tokens as $tokenData) {
+            $token = $tokenData['token'];
+            $tokenId = $tokenData['id'];
             
-            // Prepare FCM payload
-            $payload = [
-                'registration_ids' => $tokenList,
-                'notification' => $notification,
-                'data' => array_merge($data, [
-                    'click_action' => '/',
-                    'notification_type' => $data['notification_type'] ?? 'general'
-                ]),
-                'android' => $android,
-                'webpush' => $webpush,
-                'priority' => 'high'
+            // Prepare FCM v1 payload
+            $message = [
+                'message' => [
+                    'token' => $token,
+                    'notification' => [
+                        'title' => $title,
+                        'body' => $body
+                    ],
+                    'data' => array_merge($data, [
+                        'click_action' => $data['url'] ?? '/',
+                        'notification_type' => $data['notification_type'] ?? 'general'
+                    ]),
+                    'webpush' => [
+                        'headers' => [
+                            'Urgency' => 'high'
+                        ],
+                        'notification' => [
+                            'icon' => '/assets/logo/fc_logo_crop.webp',
+                            'badge' => '/favicon.ico',
+                            'tag' => 'job-notification',
+                            'requireInteraction' => false,
+                            'renotify' => true
+                        ],
+                        'fcm_options' => [
+                            'link' => $data['url'] ?? '/'
+                        ]
+                    ],
+                    'android' => [
+                        'priority' => 'high',
+                        'notification' => [
+                            'title' => $title,
+                            'body' => $body,
+                            'icon' => '/assets/logo/fc_logo_crop.webp',
+                            'color' => '#28a745',
+                            'sound' => 'default',
+                            'click_action' => 'OPEN_JOB'
+                        ]
+                    ]
+                ]
             ];
             
-            // Send to FCM
-            $result = $this->sendToFCM($payload);
+            // Send to FCM v1 API
+            $result = $this->sendToFCM($url, $accessToken, $message);
             
             if ($result['success']) {
-                $sentCount += $result['sent_count'];
-                $failedCount += $result['failed_count'];
-                
-                // Log results
-                $this->logResults($chunk, $title, $body, $data, $result);
-                
-                if (!empty($result['errors'])) {
-                    $errors = array_merge($errors, $result['errors']);
-                }
+                $sentCount++;
+                $this->logResult($tokenId, $title, $body, $data, 'sent', $result['response']);
             } else {
-                $failedCount += count($chunk);
-                $errors[] = $result['error'];
+                $failedCount++;
+                $errors[] = "Token $tokenId: " . $result['error'];
+                $this->logResult($tokenId, $title, $body, $data, 'failed', $result['error']);
+                
+                // Deactivate invalid tokens
+                if (in_array($result['error_code'], ['UNREGISTERED', 'INVALID_ARGUMENT', 'NOT_FOUND'])) {
+                    $this->deactivateToken($token);
+                }
             }
         }
         
@@ -142,13 +220,11 @@ class FCMNotificationService {
     }
     
     /**
-     * Send payload to FCM servers
+     * Send message to FCM v1 API
      */
-    private function sendToFCM($payload) {
-        $url = 'https://fcm.googleapis.com/fcm/send';
-        
+    private function sendToFCM($url, $accessToken, $message) {
         $headers = [
-            'Authorization: key=' . $this->serverKey,
+            'Authorization: Bearer ' . $accessToken,
             'Content-Type: application/json'
         ];
         
@@ -157,7 +233,7 @@ class FCMNotificationService {
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($message));
         curl_setopt($ch, CURLOPT_TIMEOUT, 30);
         
         $response = curl_exec($ch);
@@ -169,46 +245,27 @@ class FCMNotificationService {
             return [
                 'success' => false,
                 'error' => 'cURL error: ' . $error,
-                'sent_count' => 0,
-                'failed_count' => count($payload['registration_ids'])
+                'error_code' => 'CURL_ERROR'
             ];
         }
         
         $result = json_decode($response, true);
         
-        if ($httpCode >= 200 && $httpCode < 300) {
-            $sentCount = $result['success'] ?? 0;
-            $failedCount = $result['failure'] ?? 0;
-            $errors = [];
-            
-            // Process individual results
-            if (isset($result['results'])) {
-                foreach ($result['results'] as $index => $itemResult) {
-                    if (isset($itemResult['error'])) {
-                        $tokenId = $payload['registration_ids'][$index];
-                        $errors[] = "Token $tokenId: " . $itemResult['error'];
-                        
-                        // Deactivate invalid tokens
-                        if (in_array($itemResult['error'], ['NotRegistered', 'InvalidRegistration'])) {
-                            $this->deactivateToken($tokenId);
-                        }
-                    }
-                }
-            }
-            
+        if ($httpCode === 200) {
             return [
                 'success' => true,
-                'sent_count' => $sentCount,
-                'failed_count' => $failedCount,
-                'errors' => $errors,
-                'response' => $result
+                'response' => $result,
+                'name' => $result['name'] ?? null
             ];
         } else {
+            $errorCode = $result['error']['code'] ?? 'UNKNOWN_ERROR';
+            $errorMessage = $result['error']['message'] ?? $result['error']['status'] ?? 'Unknown error';
+            
             return [
                 'success' => false,
-                'error' => "HTTP error: $httpCode - $response",
-                'sent_count' => 0,
-                'failed_count' => count($payload['registration_ids'])
+                'error' => "HTTP $httpCode: $errorMessage",
+                'error_code' => $errorCode,
+                'response' => $result
             ];
         }
     }
@@ -226,29 +283,26 @@ class FCMNotificationService {
     }
     
     /**
-     * Log notification results
+     * Log single notification result
      */
-    private function logResults($tokens, $title, $body, $data, $result) {
+    private function logResult($tokenId, $title, $body, $data, $status, $response) {
         try {
-            foreach ($tokens as $token) {
-                $status = ($result['sent_count'] > 0) ? 'sent' : 'failed';
-                $response = json_encode($result['response'] ?? []);
-                
-                $stmt = $this->pdo->prepare("
-                    INSERT INTO fcm_notification_logs (token_id, title, body, data, status, response) 
-                    VALUES (?, ?, ?, ?, ?, ?)
-                ");
-                $stmt->execute([
-                    $token['id'],
-                    $title,
-                    $body,
-                    json_encode($data),
-                    $status,
-                    $response
-                ]);
-            }
+            $responseJson = is_array($response) ? json_encode($response) : $response;
+            
+            $stmt = $this->pdo->prepare("
+                INSERT INTO fcm_notification_logs (token_id, title, body, data, status, response) 
+                VALUES (?, ?, ?, ?, ?, ?)
+            ");
+            $stmt->execute([
+                $tokenId,
+                $title,
+                $body,
+                json_encode($data),
+                $status,
+                $responseJson
+            ]);
         } catch (Exception $e) {
-            error_log("Error logging FCM results: " . $e->getMessage());
+            error_log("Error logging FCM result: " . $e->getMessage());
         }
     }
     

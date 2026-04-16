@@ -174,33 +174,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Send push notification for job update (only if status is published)
             if ($status === 'published') {
                 try {
-                    require_once __DIR__ . '/../../lib/PushNotificationService.php';
-                    $pushService = new PushNotificationService($pdo);
-                    
-                    $jobData = [
-                        'job_id' => $id,
-                        'job_title' => $title,
-                        'job_title_slug' => $slug,
-                        'company_name' => $company,
-                        'location' => $location
-                    ];
-                    
-                    $notificationResult = $pushService->sendCustomNotification(
-                    'Job Updated: ' . $jobData['job_title'],
-                    'Company: ' . $jobData['company_name'] . ' | Important updates available',
-                    '/job/' . $jobData['job_title_slug'],
-                    ['job_id' => $jobData['job_id'], 'notification_type' => 'job_update']
-                );
-                    error_log("Push notification result for job update: " . json_encode($notificationResult));
-                    
+                    require_once __DIR__ . '/../../lib/FCMNotificationService.php';
+                    $fcmService = new FCMNotificationService($pdo);
+
+                    $notificationResult = $fcmService->sendToAll(
+                        'Job Updated: ' . $title,
+                        'Company: ' . $company . ' | Important updates available',
+                        [
+                            'job_id' => $id,
+                            'job_slug' => $slug,
+                            'notification_type' => 'job_update',
+                            'url' => '/job/' . $slug,
+                            'company' => $company,
+                            'location' => $location
+                        ]
+                    );
+
+                    error_log("FCM notification result for job update: " . json_encode($notificationResult));
+
                     if ($notificationResult['success']) {
                         $success .= ' Push notifications sent to ' . $notificationResult['sent_count'] . ' subscribers.';
                     } else {
-                        $success .= ' (Push notifications had some issues)';
+                        $success .= ' (Push notifications: ' . ($notificationResult['message'] ?? 'no active subscribers') . ')';
                     }
                 } catch (Exception $e) {
-                    error_log("Error sending push notification for job update: " . $e->getMessage());
-                    $success .= ' (Push notifications failed)';
+                    error_log("Error sending FCM notification for job update: " . $e->getMessage());
+                    $success .= ' (Push notification failed: ' . $e->getMessage() . ')';
                 }
             }
             
