@@ -301,8 +301,8 @@
             // Register only the Firebase service worker
             await navigator.serviceWorker.register('/firebase-messaging-sw.js');
             
-            // Wait for it to become active
-            await navigator.serviceWorker.ready;
+            // Don't wait for it to become active
+            // This reduces the delay significantly
             
           } catch (error) {
             alert('Failed to set up notifications. Please try again.');
