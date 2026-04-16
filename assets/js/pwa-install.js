@@ -3,19 +3,46 @@ let deferredPrompt;
 
 // Listen for beforeinstallprompt event
 window.addEventListener('beforeinstallprompt', (e) => {
-    console.log('PWA install prompt available');
+    console.log('🎯 PWA install prompt event fired!', e);
     e.preventDefault();
     deferredPrompt = e;
+    
+    console.log('📱 Mobile check:', window.innerWidth <= 768);
+    console.log('💾 Session check:', sessionStorage.getItem('pwa-banner-shown-session'));
     
     // Only show banner on mobile devices
     if (window.innerWidth <= 768) {
         // Check if banner was shown this session
         if (!sessionStorage.getItem('pwa-banner-shown-session')) {
+            console.log('🚀 Showing install banner...');
             showInstallBanner();
             sessionStorage.setItem('pwa-banner-shown-session', 'true');
+        } else {
+            console.log('⏸️ Banner already shown this session');
         }
+    } else {
+        console.log('💻 Desktop device - no banner');
     }
 });
+
+// Also add manual trigger for testing
+setTimeout(() => {
+    console.log('🔍 Manual check - Mobile:', window.innerWidth <= 768);
+    console.log('🔍 Has deferred prompt:', !!deferredPrompt);
+    if (window.innerWidth <= 768 && !deferredPrompt) {
+        console.log('⚠️ No install prompt yet - trying to show anyway...');
+        showInstallBanner();
+    }
+}, 5000);
+
+// Fallback: Show banner after 10 seconds even if beforeinstallprompt doesn't fire
+setTimeout(() => {
+    if (window.innerWidth <= 768 && !sessionStorage.getItem('pwa-banner-shown-session')) {
+        console.log('🔄 Fallback: Showing banner after delay...');
+        showInstallBanner();
+        sessionStorage.setItem('pwa-banner-shown-session', 'true');
+    }
+}, 10000);
 
 // Create install banner for mobile
 function showInstallBanner() {
