@@ -1,5 +1,5 @@
 // PWA Install Prompt Functionality
-console.log('PWA INSTALL SCRIPT LOADED - Version 3.3 (Compact White & Blue)');
+console.log('PWA INSTALL SCRIPT LOADED - Version 4.0 (Bottom Bar Banner)');
 let deferredPrompt;
 
 // Listen for beforeinstallprompt event
@@ -94,53 +94,48 @@ function showInstallBanner() {
     banner.id = 'pwa-install-banner';
     banner.style.cssText = `
         position: fixed !important;
-        bottom: 20px !important;
-        right: 20px !important;
+        bottom: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
         background: white !important;
         color: #333 !important;
-        padding: 12px !important;
-        border-radius: 12px !important;
+        padding: 16px !important;
+        border-top: 3px solid #008dff !important;
         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
-        font-size: 13px !important;
+        font-size: 14px !important;
         font-weight: 600 !important;
         z-index: 999999 !important;
-        box-shadow: 0 4px 20px rgba(0, 141, 255, 0.2) !important;
-        max-width: 280px !important;
-        width: 280px !important;
-        height: auto !important;
+        box-shadow: 0 -4px 20px rgba(0, 141, 255, 0.15) !important;
         display: block !important;
         visibility: visible !important;
         opacity: 1 !important;
         transform: none !important;
-        border: 2px solid #008dff !important;
-        animation: slideInRight 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55) !important;
+        animation: slideInUp 0.5s ease-out !important;
     `;
     
     banner.innerHTML = `
-        <div style="text-align: center;">
-            <div style="display: flex; align-items: center; justify-content: center; margin-bottom: 8px;">
-                <div style="width: 28px; height: 28px; background: #008dff; border-radius: 6px; display: flex; align-items: center; justify-content: center; margin-right: 10px;">
-                    <span style="font-size: 16px; color: white; font-weight: bold;">FC</span>
+        <div style="display: flex; align-items: center; justify-content: space-between; max-width: 600px; margin: 0 auto;">
+            <div style="display: flex; align-items: center;">
+                <div style="width: 40px; height: 40px; background: #008dff; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-right: 12px;">
+                    <span style="font-size: 18px; color: white; font-weight: bold;">FC</span>
                 </div>
-                <div style="text-align: left;">
-                    <div style="font-size: 14px; font-weight: 700; color: #333;">FromCampus</div>
-                    <div style="font-size: 11px; opacity: 0.7; color: #666;">Job Portal App</div>
+                <div>
+                    <div style="font-size: 16px; font-weight: 700; color: #333;">Install FromCampus App</div>
+                    <div style="font-size: 12px; opacity: 0.8; color: #666;">Get instant job alerts & apply faster</div>
                 </div>
             </div>
-            <div style="font-size: 11px; margin-bottom: 10px; opacity: 0.8; color: #555;">
-                Get instant job alerts & apply faster
-            </div>
-            <div style="display: flex; gap: 6px; justify-content: center;">
+            <div style="display: flex; gap: 8px;">
                 <button onclick="installPWA()" style="
                     background: #008dff; 
                     color: white; 
                     border: none; 
-                    padding: 6px 14px; 
-                    border-radius: 6px; 
-                    font-size: 12px; 
+                    padding: 8px 20px; 
+                    border-radius: 8px; 
+                    font-size: 14px; 
                     font-weight: 700; 
                     cursor: pointer;
                     transition: all 0.2s ease;
+                    box-shadow: 0 2px 8px rgba(0, 141, 255, 0.3);
                 " onmouseover="this.style.transform='scale(1.05)'" 
                    onmouseout="this.style.transform='scale(1)'">
                     Install
@@ -148,10 +143,10 @@ function showInstallBanner() {
                 <button onclick="dismissBanner()" style="
                     background: transparent; 
                     color: #008dff; 
-                    border: 1px solid #008dff; 
-                    padding: 6px 14px; 
-                    border-radius: 6px; 
-                    font-size: 12px; 
+                    border: 2px solid #008dff; 
+                    padding: 8px 20px; 
+                    border-radius: 8px; 
+                    font-size: 14px; 
                     font-weight: 600; 
                     cursor: pointer;
                     transition: all 0.2s ease;
@@ -166,23 +161,23 @@ function showInstallBanner() {
     // Add animations
     const style = document.createElement('style');
     style.textContent = `
-        @keyframes slideInRight {
+        @keyframes slideInUp {
             from { 
-                transform: translateX(400px);
+                transform: translateY(100%);
                 opacity: 0;
             }
             to { 
-                transform: translateX(0);
+                transform: translateY(0);
                 opacity: 1;
             }
         }
-        @keyframes slideOutRight {
+        @keyframes slideOutDown {
             from { 
-                transform: translateX(0);
+                transform: translateY(0);
                 opacity: 1;
             }
             to { 
-                transform: translateX(400px);
+                transform: translateY(100%);
                 opacity: 0;
             }
         }
@@ -205,9 +200,9 @@ function showInstallBanner() {
 function dismissBanner() {
     const banner = document.getElementById('pwa-install-banner');
     if (banner) {
-        // Animate out to right
-        banner.style.animation = 'slideOutRight 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55) !important';
-        setTimeout(() => banner.remove(), 600);
+        // Animate out to bottom
+        banner.style.animation = 'slideOutDown 0.5s ease-in !important';
+        setTimeout(() => banner.remove(), 500);
     }
     // Remember dismissal for 1 week
     const oneWeekFromNow = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
