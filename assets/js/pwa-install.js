@@ -29,24 +29,19 @@ window.addEventListener('beforeinstallprompt', (e) => {
 // Force show banner for debugging (remove this in production)
 document.addEventListener('DOMContentLoaded', () => {
     console.log('DOM loaded - checking mobile...');
-    alert('PWA Script Loaded - Mobile: ' + (window.innerWidth <= 768));
+    console.log('Browser detected:', navigator.userAgent);
     
-    // Create a simple test banner immediately
-    const simpleBanner = document.createElement('div');
-    simpleBanner.style.cssText = `
-        position: fixed !important;
-        top: 0 !important;
-        left: 0 !important;
-        right: 0 !important;
-        background: red !important;
-        color: white !important;
-        padding: 20px !important;
-        text-align: center !important;
-        z-index: 999999 !important;
-        font-size: 20px !important;
-    `;
-    simpleBanner.textContent = 'SIMPLE TEST BANNER - If you see this, JavaScript works!';
-    document.body.appendChild(simpleBanner);
+    // Check if Chrome
+    const isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
+    console.log('Is Chrome:', isChrome);
+    
+    // For Chrome mobile, show banner immediately without waiting for beforeinstallprompt
+    if (window.innerWidth <= 768 && isChrome) {
+        console.log('Chrome mobile detected - showing banner immediately...');
+        setTimeout(() => {
+            showInstallBanner();
+        }, 3000);
+    }
     
     if (window.innerWidth <= 768) {
         console.log('Mobile detected - forcing banner for debugging...');
@@ -84,20 +79,21 @@ function showInstallBanner() {
     banner.id = 'pwa-install-banner';
     banner.style.cssText = `
         position: fixed !important;
-        bottom: 0 !important;
-        left: 0 !important;
-        right: 0 !important;
-        background: linear-gradient(135deg, #ff0000 0%, #cc0000 100%) !important;
+        bottom: 20px !important;
+        left: 20px !important;
+        right: 20px !important;
+        background: linear-gradient(135deg, #008dff 0%, #0066cc 100%) !important;
         color: white !important;
-        padding: 20px !important;
-        border-radius: 0 !important;
+        padding: 16px 20px !important;
+        border-radius: 12px !important;
         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
-        font-size: 16px !important;
+        font-size: 14px !important;
         font-weight: 600 !important;
         z-index: 999999 !important;
-        box-shadow: 0 -4px 20px rgba(0,0,0,0.5) !important;
-        max-width: none !important;
-        width: 100% !important;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.3) !important;
+        animation: slideInRight 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) !important;
+        max-width: 320px !important;
+        width: auto !important;
         height: auto !important;
         display: block !important;
         visibility: visible !important;
@@ -114,7 +110,7 @@ function showInstallBanner() {
             <div style="display: flex; gap: 10px; justify-content: center;">
                 <button onclick="installPWA()" style="
                     background: white; 
-                    color: #ff0000; 
+                    color: #008dff; 
                     border: none; 
                     padding: 12px 24px; 
                     border-radius: 8px; 
@@ -174,28 +170,7 @@ function showInstallBanner() {
     console.log('Appending banner to body...');
     document.body.appendChild(banner);
     
-    console.log('Banner added to DOM. Checking if visible...');
-    const addedBanner = document.getElementById('pwa-install-banner');
-    console.log('Banner in DOM:', !!addedBanner);
-    console.log('Banner styles:', addedBanner ? addedBanner.style.cssText.substring(0, 100) : 'Not found');
-    
-    // Add a simple test element to verify visibility
-    const testDiv = document.createElement('div');
-    testDiv.style.cssText = `
-        position: fixed !important;
-        top: 50px !important;
-        left: 10px !important;
-        background: yellow !important;
-        color: black !important;
-        padding: 10px !important;
-        z-index: 999999 !important;
-        font-size: 16px !important;
-        border: 2px solid black !important;
-    `;
-    testDiv.textContent = 'TEST BANNER VISIBLE';
-    document.body.appendChild(testDiv);
-    
-    console.log('Test div added - if you see this, DOM manipulation works');
+    console.log('Banner added to DOM successfully');
     
     // Auto-hide after 30 seconds
     setTimeout(() => {
@@ -216,7 +191,10 @@ function dismissBanner() {
 }
 
 function installPWA() {
+    const isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
+    
     if (deferredPrompt) {
+        console.log('Using deferred prompt...');
         deferredPrompt.prompt();
         deferredPrompt.userChoice.then((choiceResult) => {
             if (choiceResult.outcome === 'accepted') {
@@ -227,6 +205,14 @@ function installPWA() {
             }
             deferredPrompt = null;
         });
+    } else if (isChrome && window.innerWidth <= 768) {
+        // Chrome mobile manual install instructions
+        alert('To install FromCampus App:\n\n1. Tap the menu button (3 dots) in Chrome\n2. Tap "Add to Home Screen"\n3. Tap "Add" to install the app');
+        dismissBanner();
+    } else {
+        console.log('No install prompt available');
+        alert('To install FromCampus App:\n\nLook for the install option in your browser menu (usually 3 dots) and select "Add to Home Screen"');
+        dismissBanner();
     }
 }
 
