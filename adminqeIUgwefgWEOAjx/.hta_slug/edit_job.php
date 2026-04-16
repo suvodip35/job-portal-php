@@ -79,7 +79,9 @@ function handleThumbnailUpload() {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    csrf_check($_POST['csrf_token'] ?? '');
+    if (!csrf_check_safe($_POST['csrf_token'] ?? '')) {
+        $err = 'CSRF validation failed. Please refresh the page and try again.';
+    } else {
     $title = trim($_POST['job_title'] ?? '');
     $company = trim($_POST['company_name'] ?? '');
     $location = trim($_POST['location'] ?? '');
@@ -239,6 +241,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         $err = 'Please fix the errors below.';
     }
+    } // closing brace for csrf_check_safe else block
 }
 
 // fetch categories for select

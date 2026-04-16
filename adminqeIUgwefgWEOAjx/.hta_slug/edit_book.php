@@ -30,7 +30,9 @@ if (!is_dir($uploadDir)) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    csrf_check($_POST['csrf_token'] ?? '');
+    if (!csrf_check_safe($_POST['csrf_token'] ?? '')) {
+        $err = 'CSRF validation failed. Please refresh the page and try again.';
+    } else {
     $title = trim($_POST['title'] ?? '');
     $book_type = $_POST['book_type'] ?? '';
     $description = trim($_POST['description'] ?? '');
@@ -132,6 +134,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         $err = implode('<br>', $errors);
     }
+    } // closing brace for csrf_check_safe else block
 }
 
 // Function to get book image URL

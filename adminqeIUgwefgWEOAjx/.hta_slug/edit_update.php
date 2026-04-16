@@ -64,7 +64,9 @@ if (!$update) {
 // FORM SUBMISSION
 // ----------------------------------
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    csrf_check($_POST['csrf_token'] ?? '');
+    if (!csrf_check_safe($_POST['csrf_token'] ?? '')) {
+        $err = 'CSRF validation failed. Please refresh the page and try again.';
+    } else {
 
     $title = trim($_POST['title'] ?? '');
     $update_type = $_POST['update_type'] ?? '';
@@ -137,15 +139,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $id
         ]);
 
-        $success = "Update saved successfully!";
+            $success = "Update edited successfully!";
 
-        // reload updated data
-        $stmt = $pdo->prepare("SELECT * FROM updates WHERE id = ?");
-        $stmt->execute([$id]);
-        $update = $stmt->fetch();
-    } else {
-        $err = implode("<br>", $errors);
-    }
+            // reload updated data
+            $stmt = $pdo->prepare("SELECT * FROM updates WHERE id = ?");
+            $stmt->execute([$id]);
+            $update = $stmt->fetch();
+        } else {
+            $err = implode("<br>", $errors);
+        }
+    } // closing brace for csrf_check_safe else block
 }
 ?>
 

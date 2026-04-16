@@ -4,19 +4,23 @@ require_once __DIR__ . '/../../.hta_slug/_header.php';
 $err = $success = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    csrf_check($_POST['csrf_token'] ?? '');
-    $title = trim($_POST['title'] ?? '');
-    $slug = slugify($title);
-    $slug = unique_slug($pdo, 'mock_tests', 'test_slug', $slug);
-    $duration = (int)($_POST['duration_minutes'] ?? 30);
-    $total = (int)($_POST['total_marks'] ?? 100);
-    $neg = (float)($_POST['negative_marking'] ?? 0.0);
-    $status = $_POST['visibility'] ?? 'published';
-    if (!$title) $err = 'Title required';
-    else {
-        $stmt = $pdo->prepare("INSERT INTO mock_tests (title, slug, duration_minutes, total_marks, negative_marking, visibility, created_by) VALUES (?,?,?,?,?,?,?)");
-        $stmt->execute([$title, $slug, $duration, $total, $neg, $status, $_SESSION['admin_id'] ?? null]);
-        $success = 'Mock test created. Now add questions.';
+    if (!csrf_check_safe($_POST['csrf_token'] ?? '')) {
+        $err = 'CSRF validation failed. Please refresh the page and try again.';
+    } else {
+        $title = trim($_POST['title'] ?? '');
+        $slug = slugify($title);
+        $slug = unique_slug($pdo, 'mock_tests', 'test_slug', $slug);
+        $duration = (int)($_POST['duration_minutes'] ?? 30);
+        $total = (int)($_POST['total_marks'] ?? 100);
+        $neg = (float)($_POST['negative_marking'] ?? 0.0);
+        $status = $_POST['visibility'] ?? 'published';
+        if (!$title) {
+            $err = 'Title required';
+        } else {
+            $stmt = $pdo->prepare("INSERT INTO mock_tests (title, slug, duration_minutes, total_marks, negative_marking, visibility, created_by) VALUES (?,?,?,?,?,?,?)");
+            $stmt->execute([$title, $slug, $duration, $total, $neg, $status, $_SESSION['admin_id'] ?? null]);
+            $success = 'Mock test created. Now add questions.';
+        }
     }
 }
 
