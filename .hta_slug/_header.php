@@ -110,7 +110,22 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#008dff">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="FromCampus">
+  <meta name="application-name" content="FromCampus">
+  <meta name="msapplication-TileColor" content="#008dff">
+  <meta name="msapplication-config" content="/browserconfig.xml">
+  
+  <!-- PWA Manifest and Icons -->
+  <link rel="manifest" href="/manifest.json">
   <link rel="icon" href="/favicon.ico" />
+  <link rel="apple-touch-icon" href="/assets/logo/icon-192x192.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="/assets/logo/icon-152x152.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/logo/icon-192x192.png">
+  <link rel="apple-touch-icon" sizes="167x167" href="/assets/logo/icon-168x168.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/logo/icon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/logo/icon-16x16.png">
 
   <!-- Basic Meta Tags -->
   <title><?php echo htmlspecialchars($pageTitle); ?></title>
@@ -573,6 +588,37 @@
 }
 
 </style>
+
+<!-- PWA Install Script -->
+<script src="/assets/js/pwa-install.js"></script>
+
+<!-- Service Worker Registration -->
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js')
+      .then((registration) => {
+        console.log('Service Worker registered successfully:', registration.scope);
+        
+        // Check for updates
+        registration.addEventListener('updatefound', () => {
+          const newWorker = registration.installing;
+          newWorker.addEventListener('statechange', () => {
+            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+              // New version available
+              if (confirm('A new version of the app is available. Would you like to update?')) {
+                newWorker.postMessage({ type: 'SKIP_WAITING' });
+              }
+            }
+          });
+        });
+      })
+      .catch((error) => {
+        console.error('Service Worker registration failed:', error);
+      });
+  });
+}
+</script>
 
 <!-- Push Notification Script -->
 <script>
