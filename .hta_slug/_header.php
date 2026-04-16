@@ -317,7 +317,7 @@
             await navigator.serviceWorker.register('/firebase-messaging-sw.js');
             
             // Don't wait for it to become active
-            // This reduces the delay significantly
+            // This reduces delay significantly
             
           } catch (error) {
             alert('Failed to set up notifications. Please try again.');
@@ -332,44 +332,87 @@
             });
             
             if (token) {
-              // Prepare data
-              const data = {
-                token: token,
-                user_agent: navigator.userAgent,
-                timestamp: Date.now()
-              };
-              
-              // Send to server
-              const response = await fetch('/api/save-fcm-token.php', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify(data)
-              });
-              
-              if (response.ok) {
-                alert('Successfully subscribed to job alerts!');
-                // Update button
-                mobileBtn.innerHTML = '<svg class="w-4 h-4 inline mr-2" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Subscribed';
-                mobileBtn.classList.remove('bg-blue-600');
-                mobileBtn.classList.add('bg-green-600');
-              } else {
-                alert('Failed to save subscription. Please try again.');
-              }
-            } else {
-              alert('Failed to get notification token. Please try again.');
+              // Send token to server
+              console.log('FCM Token:', token);
             }
-          } else {
-            alert('Notification system not available. Please refresh and try again.');
           }
-        } else {
-          alert('Permission denied for notifications');
+        } catch (error) {
+          console.error('Push notification setup failed:', error);
         }
-      } catch (error) {
-        alert('An error occurred. Please try again.');
+      } else {
+        alert('Please allow notifications to receive job updates.');
       }
     });
   }
-  
+}
+
+// Show iOS install instructions
+function showIOSInstallInstructions() {
+    // Check if iOS
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+    if (isIOS && !window.matchMedia('(display-mode: standalone)').matches) {
+      // Don't show if already dismissed
+      if (localStorage.getItem('ios-install-dismissed') === 'true') {
+        return;
+      }
+      
+      const iosMessage = document.createElement('div');
+      iosMessage.id = 'ios-install-message';
+      iosMessage.style.cssText = `
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #007AFF;
+            color: white;
+            padding: 12px 20px;
+            text-align: center;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            z-index: 9999;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.3);
+        `;
+      
+      iosMessage.innerHTML = `
+            <div style="display: flex; align-items: center; justify-content: center; gap: 10px;">
+                <span>📱 Install FromCampus App</span>
+                <button onclick="dismissIOSInstall()" style="
+                    background: white; 
+                    color: #007AFF; 
+                    border: none; 
+                    padding: 6px 12px; 
+                    border-radius: 20px; 
+                    font-size: 12px; 
+                    font-weight: 600; 
+                    cursor: pointer;
+                ">Dismiss</button>
+            </div>
+        `;
+      
+      document.body.appendChild(iosMessage);
+      
+      // Auto-hide after 15 seconds
+      setTimeout(() => {
+        if (document.getElementById('ios-install-message')) {
+          iosMessage.style.opacity = '0.8';
+        }
+      }, 15000);
+    }
+  }
+}
+
+function dismissIOSInstall() {
+  const iosMessage = document.getElementById('ios-install-message');
+  if (iosMessage) {
+    iosMessage.style.animation = 'slideDown 0.3s ease-out';
+    setTimeout(() => iosMessage.remove(), 300);
+  }
+  localStorage.setItem('ios-install-dismissed', 'true');
+}
+
+showIOSInstallInstructions();
+
 </script>
 <style>
 

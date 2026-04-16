@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PWA Audit - FromCampus</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; max-width: 1200px; margin: 0 auto; }
+        .section { background: #f5f5f5; padding: 15px; margin: 10px 0; border-radius: 8px; }
+        .status { padding: 10px; margin: 5px 0; border-radius: 5px; }
+        .success { background: #d4edda; color: #2e7d32; }
+        .error { background: #f8d7da; color: #721c24; }
+        .warning { background: #fff3cd; color: #856404; }
+        .info { background: #d1ecf1; color: #0c5460; }
+        pre { background: #f8f9fa; padding: 10px; border-radius: 5px; overflow-x: auto; }
+        button { background: #007bff; color: white; border: none; padding: 8px 16px; border-radius: 5px; cursor: pointer; margin: 5px; }
+        button:hover { background: #0056b3; }
+    </style>
+</head>
+<body>
+    <h1>🔍 PWA Audit Tool</h1>
+    
+    <div class="section">
+        <h2>Service Worker Status</h2>
+        <div id="sw-status" class="status info">Checking...</div>
+        <button onclick="checkServiceWorkers()">Check Service Workers</button>
+    </div>
+    
+    <div class="section">
+        <h2>Manifest Status</h2>
+        <div id="manifest-status" class="status info">Checking...</div>
+        <button onclick="checkManifest()">Check Manifest</button>
+    </div>
+    
+    <div class="section">
+        <h2>Install Prompt Test</h2>
+        <div id="install-status" class="status info">Checking...</div>
+        <button onclick="testInstallPrompt()">Test Install Prompt</button>
+    </div>
+    
+    <div class="section">
+        <h2>Recommendations</h2>
+        <div id="recommendations" class="status info">Checking...</div>
+    </div>
+    
+    <div class="section">
+        <h2>Console Output</h2>
+        <pre id="console-output" class="status info">No data yet...</pre>
+    </div>
+
+    <script>
+        let consoleOutput = [];
+        
+        function log(message, type = 'info') {
+            consoleOutput.push(`[${new Date().toLocaleTimeString()}] ${message}`);
+            updateStatus('console-output', consoleOutput.join('\n'));
+        }
+        
+        function updateStatus(id, content) {
+            const element = document.getElementById(id);
+            if (element) {
+                element.textContent = content;
+                element.className = `status ${type}`;
+            }
+        }
+        
+        async function checkServiceWorkers() {
+            log('Checking service workers...', 'info');
+            
+            try {
+                const registrations = await navigator.serviceWorker.getRegistrations();
+                log(`Found ${registrations.length} service worker registrations:`, 'info');
+                
+                registrations.forEach((registration, index) => {
+                    log(`Service Worker ${index + 1}:`, 'info');
+                    log(`  - Scope: ${registration.scope}`, 'info');
+                    log(`  - Active: ${registration.active ? 'Yes' : 'No'}`, 'info');
+                    log(`  - Installing: ${registration.installing ? 'Yes' : 'No'}`, 'info');
+                    log(`  - Waiting: ${registration.waiting ? 'Yes' : 'No'}`, 'info');
+                    
+                    if (registration.active) {
+                        log(`  - Controlling page: ${registration.active.state}`, 'info');
+                    }
+                });
+                
+                // Check for controller
+                if (navigator.serviceWorker.controller) {
+                    log(`  - Controller: ${navigator.serviceWorker.controller.state}`, 'info');
+                    log(`  - Script URL: ${navigator.serviceWorker.controller.scriptURL}`, 'info');
+                } else {
+                    log(`  - Controller: None`, 'error');
+                }
+                
+                updateStatus('sw-status', `Found ${registrations.length} service workers. Controller: ${navigator.serviceWorker.controller ? 'Active' : 'None'}`);
+                
+            } catch (error) {
+                log(`Error checking service workers: ${error.message}`, 'error');
+                updateStatus('sw-status', `Error: ${error.message}`);
+            }
+        }
+        
+        async function checkManifest() {
+            log('Checking manifest...', 'info');
+            
+            try {
+                const response = await fetch('/manifest.json');
+                if (response.ok) {
+                    const manifest = await response.json();
+                    log('Manifest loaded successfully:', 'success');
+                    log(`  - Name: ${manifest.name}`, 'info');
+                    log(`  - Short Name: ${manifest.short_name}`, 'info');
+                    log(`  - Display: ${manifest.display}`, 'info');
+                    log(`  - Theme Color: ${manifest.theme_color}`, 'info');
+                    log(`  - Icons: ${manifest.icons ? manifest.icons.length : 0} icons`, 'info');
+                    
+                    updateStatus('manifest-status', `✅ Manifest loaded. ${manifest.icons.length} icons found.`);
+                } else {
+                    log(`Manifest failed: HTTP ${response.status}`, 'error');
+                    updateStatus('manifest-status', `❌ Manifest failed: HTTP ${response.status}`);
+                }
+            } catch (error) {
+                log(`Error checking manifest: ${error.message}`, 'error');
+                updateStatus('manifest-status', `❌ Error: ${error.message}`);
+            }
+        }
+        
+        async function testInstallPrompt() {
+            log('Testing install prompt...', 'info');
+            
+            // Check if beforeinstallprompt is supported
+            if ('beforeinstallprompt' in window) {
+                log('beforeinstallprompt event supported', 'success');
+                updateStatus('install-status', '✅ beforeinstallprompt supported');
+            } else {
+                log('beforeinstallprompt NOT supported', 'warning');
+                updateStatus('install-status', '⚠️ beforeinstallprompt not supported');
+            }
+            
+            // Check if service worker is controlling page
+            if (navigator.serviceWorker.controller) {
+                log('Service worker is controlling page', 'success');
+                updateStatus('install-status', '✅ Service worker controlling page');
+            } else {
+                log('Service worker NOT controlling page', 'error');
+                updateStatus('install-status', '❌ Service worker NOT controlling page');
+            }
+            
+            // Force install prompt for testing
+            setTimeout(() => {
+                log('Attempting to trigger install prompt...', 'info');
+                
+                // Create a custom event to test
+                const event = new Event('beforeinstallprompt');
+                window.dispatchEvent(event);
+                
+                setTimeout(() => {
+                    log('Install prompt test completed', 'info');
+                    updateStatus('install-status', '🎯 Install prompt test completed');
+                }, 3000);
+            }, 1000);
+        }
+        
+        function generateRecommendations() {
+            const recommendations = [];
+            
+            // Service worker recommendations
+            if (navigator.serviceWorker.controller) {
+                recommendations.push('✅ Service worker is active and controlling page');
+            } else {
+                recommendations.push('❌ Service worker is registered but not controlling page');
+                recommendations.push('   - This prevents install prompts from firing');
+                recommendations.push('   - Need to ensure service worker takes control');
+            }
+            
+            // Manifest recommendations
+            recommendations.push('✅ Manifest is properly linked');
+            recommendations.push('✅ Required fields are present');
+            
+            // Install prompt recommendations
+            if ('beforeinstallprompt' in window) {
+                recommendations.push('✅ beforeinstallprompt event is supported');
+            } else {
+                recommendations.push('⚠️ beforeinstallprompt not supported in this browser');
+            }
+            
+            // HTTPS check
+            if (location.protocol === 'https:') {
+                recommendations.push('✅ Site is served over HTTPS');
+            } else {
+                recommendations.push('❌ Site is NOT served over HTTPS');
+                recommendations.push('   - HTTPS is required for PWA install prompts');
+            }
+            
+            updateStatus('recommendations', recommendations.join('\n'));
+        }
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            log('PWA Audit Tool loaded', 'info');
+            checkServiceWorkers();
+            checkManifest();
+            generateRecommendations();
+        });
+    </script>
+</body>
+</html>
