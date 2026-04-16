@@ -41,9 +41,6 @@ function handleThumbnailUpload() {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (!csrf_check_safe($_POST['csrf_token'] ?? '')) {
-        $err = 'CSRF validation failed. Please refresh the page and try again.';
-    } else {
     $title = trim($_POST['job_title'] ?? '');
     $company = trim($_POST['company_name'] ?? '');
     $location = trim($_POST['location'] ?? '');
@@ -161,7 +158,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         $err = implode('<br>', $errors);
     }
-    } // closing brace for csrf_check_safe else block
 }
 
 // fetch categories for select
@@ -205,8 +201,6 @@ $allBooks = $pdo->query("SELECT * FROM books WHERE status = 'active' ORDER BY cr
 <?php endif; ?>
 
 <form method="post" class="space-y-6" enctype="multipart/form-data" accept-charset="UTF-8">
-  <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
-  
   <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
     <h2 class="text-lg font-semibold mb-4 text-gray-800 dark:text-white border-b pb-2">Basic Information</h2>
     

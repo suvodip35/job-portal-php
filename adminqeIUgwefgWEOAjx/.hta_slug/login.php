@@ -14,10 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   // var_dump($_POST);
     $email = trim($_POST['email'] ?? '');
     $pass = $_POST['password'] ?? '';
-    $token = $_POST['csrf_token'] ?? '';
-    if (!csrf_check_safe($token)) {
-        $err = 'CSRF validation failed. Please refresh the page and try again.';
-    } elseif ($email && $pass) {
+    if ($email && $pass) {
         $stmt = $pdo->prepare("SELECT user_id, name, email, password, role FROM users WHERE email = ?");
         $stmt->execute([$email]);
         $user = $stmt->fetch();
@@ -71,8 +68,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <?php endif; ?>
         
         <form method="post" class="space-y-5">
-          <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
-          
           <div>
             <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Email</label>
             <input 

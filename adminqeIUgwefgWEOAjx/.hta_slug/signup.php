@@ -8,8 +8,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $name  = trim($_POST['name'] ?? '');
     $email = trim($_POST['email'] ?? '');
     $pass  = $_POST['password'] ?? '';
-    $token = $_POST['csrf_token'] ?? '';
-    csrf_check($token);
 
     if ($name && $email && $pass) {
         // check if email exists
@@ -52,8 +50,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <?php endif; ?>
         
         <form method="post" class="space-y-5">
-          <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
-          
           <div>
             <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Full Name</label>
             <input 

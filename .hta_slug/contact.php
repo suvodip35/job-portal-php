@@ -37,8 +37,6 @@ $message = '';
 
 // ================= FORM PROCESS =================
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    csrf_check($_POST['csrf_token'] ?? '');
-
     $name = trim($_POST['name'] ?? '');
     $email = trim($_POST['email'] ?? '');
     $message = trim($_POST['message'] ?? '');
@@ -154,8 +152,6 @@ if (!function_exists('e')) {
     </div>
 
     <form method="post" class="md:w-2/3 p-8 space-y-4">
-        <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
-
         <div class="grid md:grid-cols-2 gap-4">
             <input type="text" name="name" placeholder="Full Name"
                 value="<?= e($name) ?>"

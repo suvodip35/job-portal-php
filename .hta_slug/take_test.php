@@ -12,7 +12,6 @@ if (!$test) { header('Location: mock_tests.php'); exit; }
 
 // On first load (GET) show start page. On POST, create attempt and show questions
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    csrf_check($_POST['csrf_token'] ?? '');
     // create attempt
     $userId = $_SESSION['admin_id'] ?? null; // optional - allow guest attempts by null
     $stmt = $pdo->prepare("INSERT INTO test_attempts (user_id, mock_test_id, started_at) VALUES (?,?,NOW())");
@@ -54,7 +53,6 @@ if (isset($_GET['attempt'])) {
     ?>
     <h1 class="text-2xl font-bold mb-4"><?= e($test['title']) ?></h1>
     <form method="post" action="submit_test.php">
-      <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
       <input type="hidden" name="attempt_id" value="<?= e($attemptId) ?>">
       <?php foreach ($questions as $i => $q): ?>
         <?php
@@ -89,7 +87,6 @@ if (isset($_GET['attempt'])) {
 <p class="text-gray-700 dark:text-gray-300"><?= e($test['total_marks']) ?> marks • <?= e($test['duration_minutes']) ?> minutes</p>
 
 <form method="post">
-  <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
   <div class="mt-4">
     <button class="px-4 py-2 bg-blue-600 text-white rounded">Start Test</button>
   </div>

@@ -4,10 +4,7 @@ require_once __DIR__ . '/../../.hta_slug/_header.php';
 $err = $success = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (!csrf_check_safe($_POST['csrf_token'] ?? '')) {
-        $err = 'CSRF validation failed. Please refresh the page and try again.';
-    } else {
-        $title = trim($_POST['title'] ?? '');
+    $title = trim($_POST['title'] ?? '');
         $slug = slugify($title);
         $slug = unique_slug($pdo, 'mock_tests', 'test_slug', $slug);
         $duration = (int)($_POST['duration_minutes'] ?? 30);
@@ -21,7 +18,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->execute([$title, $slug, $duration, $total, $neg, $status, $_SESSION['admin_id'] ?? null]);
             $success = 'Mock test created. Now add questions.';
         }
-    }
 }
 
 // include header
@@ -31,7 +27,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <?php if ($success): ?><div class="p-2 bg-green-100 text-green-800 mb-3 rounded"><?= e($success) ?></div><?php endif; ?>
 
 <form method="post" class="space-y-3">
-  <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
   <label>Title<input name="title" class="w-full p-2 border rounded"></label>
   <div class="grid grid-cols-3 gap-3">
     <label>Duration (minutes)<input type="number" name="duration_minutes" value="30" class="w-full p-2 border rounded"></label>

@@ -20,8 +20,6 @@ $err = '';
 $success = '';
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    csrf_check($_POST['csrf_token'] ?? '');
-
     $name = trim($_POST["name"] ?? "");
     $email = trim($_POST["email"] ?? "");
     $rating = (int)($_POST["rating"] ?? 0);
@@ -190,8 +188,6 @@ if ($totalReviews > 0) {
             </div>
             
             <form method="post" class="space-y-5">
-                <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
-
                 <?php if ($err): ?>
                     <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400 px-4 py-3 rounded-lg"><?= $err ?></div>
                 <?php endif; ?>

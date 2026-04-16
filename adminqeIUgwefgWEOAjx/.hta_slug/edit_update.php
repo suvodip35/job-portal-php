@@ -64,10 +64,6 @@ if (!$update) {
 // FORM SUBMISSION
 // ----------------------------------
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (!csrf_check_safe($_POST['csrf_token'] ?? '')) {
-        $err = 'CSRF validation failed. Please refresh the page and try again.';
-    } else {
-
     $title = trim($_POST['title'] ?? '');
     $update_type = $_POST['update_type'] ?? '';
     $description = trim($_POST['description'] ?? '');
@@ -148,7 +144,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             $err = implode("<br>", $errors);
         }
-    } // closing brace for csrf_check_safe else block
 }
 ?>
 
@@ -171,8 +166,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <?php endif; ?>
 
 <form method="post" enctype="multipart/form-data" class="space-y-6">
-
-<input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
 
 <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow border dark:border-gray-700">
     

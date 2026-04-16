@@ -63,8 +63,6 @@
     </div>
 
     <form method="post" class="md:w-2/3 p-8 space-y-4">
-        <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
-        
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label class="block text-sm font-medium mb-1 dark:text-gray-300">Full Name <span class="text-red-500">*</span></label>

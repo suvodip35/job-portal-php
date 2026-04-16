@@ -5,7 +5,6 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     header('Location: mock_tests.php');
     exit;
 }
-csrf_check($_POST['csrf_token'] ?? '');
 $attemptId = (int)($_POST['attempt_id'] ?? 0);
 $state = $_SESSION['attempt_'.$attemptId] ?? null;
 if (!$state) { die('Attempt not found or expired'); }

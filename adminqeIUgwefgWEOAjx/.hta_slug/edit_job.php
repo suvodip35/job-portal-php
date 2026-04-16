@@ -79,9 +79,6 @@ function handleThumbnailUpload() {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (!csrf_check_safe($_POST['csrf_token'] ?? '')) {
-        $err = 'CSRF validation failed. Please refresh the page and try again.';
-    } else {
     $title = trim($_POST['job_title'] ?? '');
     $company = trim($_POST['company_name'] ?? '');
     $location = trim($_POST['location'] ?? '');
@@ -241,7 +238,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         $err = 'Please fix the errors below.';
     }
-    } // closing brace for csrf_check_safe else block
 }
 
 // fetch categories for select
@@ -283,8 +279,6 @@ $cats = $pdo->query("SELECT * FROM job_categories ORDER BY category_name ASC")->
 <?php endif; ?>
 
 <form method="post" class="space-y-6" enctype="multipart/form-data" accept-charset="UTF-8">
-  <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
-  
   <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
     <h2 class="text-lg font-semibold mb-4 text-gray-800 dark:text-white border-b pb-2">Basic Information</h2>
     
