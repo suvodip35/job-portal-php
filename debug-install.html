@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PWA Install Debug - FromCampus</title>
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#008dff">
+    <style>
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+            padding: 15px; 
+            max-width: 800px; 
+            margin: 0 auto;
+            background: #f5f5f5;
+        }
+        .card { 
+            background: white; 
+            border-radius: 10px; 
+            padding: 20px; 
+            margin: 15px 0; 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .status { 
+            padding: 10px; 
+            margin: 10px 0; 
+            border-radius: 5px; 
+            border-left: 4px solid #008dff;
+            background: #f0f8ff;
+        }
+        .success { background: #e8f5e8; color: #2e7d32; border-left-color: #4caf50; }
+        .error { background: #ffebee; color: #c62828; border-left-color: #f44336; }
+        .warning { background: #fff3e0; color: #f57c00; border-left-color: #ff9800; }
+        .info { background: #e3f2fd; color: #1565c0; border-left-color: #2196f3; }
+        button { 
+            background: #008dff; 
+            color: white; 
+            border: none; 
+            padding: 10px 20px; 
+            border-radius: 5px; 
+            cursor: pointer; 
+            margin: 10px 5px;
+        }
+        button:hover { background: #0066cc; }
+        .debug-info {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-family: monospace;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔍 PWA Install Debug</h1>
+    
+    <div class="card">
+        <div class="status info">
+            <strong>📋 PWA Requirements Status:</strong><br>
+            • HTTPS: <span id="https-status">Checking...</span><br>
+            • Service Worker: <span id="sw-status">Checking...</span><br>
+            • Manifest: <span id="manifest-status">Checking...</span><br>
+            • Service Worker Controller: <span id="controller-status">Checking...</span><br>
+            • Install Prompt Support: <span id="prompt-support">Checking...</span><br>
+            • Install Prompt Fired: <span id="prompt-fired">Waiting...</span>
+        </div>
+        
+        <button onclick="forceInstallPrompt()">🔧 Force Install Prompt Check</button>
+        <button onclick="clearAllStorage()">🗑️ Clear All Storage</button>
+        <button onclick="reloadPage()">🔄 Reload Page</button>
+    </div>
+    
+    <div class="card debug-info">
+        <h3>🔧 Debug Information:</h3>
+        <div id="debug-info">Loading...</div>
+    </div>
+
+    <script>
+        let deferredPrompt;
+        let debugInfo = {};
+
+        // Check basic requirements
+        function checkRequirements() {
+            // HTTPS check
+            const isHttps = location.protocol === 'https:';
+            document.getElementById('https-status').innerHTML = isHttps ? '✅ Yes' : '❌ No';
+            
+            // Service Worker check
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.getRegistration().then(registration => {
+                    const hasController = !!navigator.serviceWorker.controller;
+                    document.getElementById('controller-status').innerHTML = hasController ? '✅ Yes' : '❌ No';
+                    document.getElementById('sw-status').innerHTML = registration ? '✅ Registered' : '❌ Not Registered';
+                });
+            } else {
+                document.getElementById('sw-status').innerHTML = '❌ Not Supported';
+                document.getElementById('controller-status').innerHTML = '❌ N/A';
+            }
+            
+            // Install prompt support
+            const supportsInstall = 'beforeinstallprompt' in window;
+            document.getElementById('prompt-support').innerHTML = supportsInstall ? '✅ Yes' : '❌ No';
+            
+            updateDebugInfo();
+        }
+
+        // Force install prompt (for testing)
+        function forceInstallPrompt() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                document.getElementById('prompt-fired').innerHTML = '✅ Forced!';
+            } else {
+                document.getElementById('prompt-fired').innerHTML = '❌ No prompt available';
+            }
+        }
+
+        // Clear all storage
+        function clearAllStorage() {
+            localStorage.clear();
+            sessionStorage.clear();
+            
+            // Unregister service worker
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.getRegistrations().then(registrations => {
+                    registrations.forEach(registration => {
+                        registration.unregister();
+                    });
+                });
+            }
+            
+            alert('All storage cleared. Page will reload.');
+            setTimeout(() => location.reload(), 1000);
+        }
+
+        // Update debug info
+        function updateDebugInfo() {
+            debugInfo = {
+                userAgent: navigator.userAgent,
+                platform: navigator.platform,
+                vendor: navigator.vendor,
+                isMobile: /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent),
+                isChrome: /Chrome/.test(navigator.userAgent),
+                isStandalone: window.matchMedia('(display-mode: standalone)').matches,
+                localStorage: Object.keys(localStorage),
+                sessionStorage: Object.keys(sessionStorage)
+            };
+            
+            document.getElementById('debug-info').innerHTML = `
+                <strong>User Agent:</strong> ${debugInfo.userAgent}<br>
+                <strong>Platform:</strong> ${debugInfo.platform}<br>
+                <strong>Mobile:</strong> ${debugInfo.isMobile}<br>
+                <strong>Chrome:</strong> ${debugInfo.isChrome}<br>
+                <strong>Standalone:</strong> ${debugInfo.isStandalone}<br>
+                <strong>Local Storage:</strong> ${JSON.stringify(debugInfo.localStorage, null, 2)}<br>
+                <strong>Session Storage:</strong> ${JSON.stringify(debugInfo.sessionStorage, null, 2)}
+            `;
+        }
+
+        // Listen for install prompt
+        window.addEventListener('beforeinstallprompt', (e) => {
+            console.log('Install prompt event received!');
+            e.preventDefault();
+            deferredPrompt = e;
+            document.getElementById('prompt-fired').innerHTML = '✅ Yes';
+        });
+
+        // Listen for app installed
+        window.addEventListener('appinstalled', () => {
+            console.log('App installed!');
+            alert('🎉 App was installed successfully!');
+        });
+
+        // Initial check
+        checkRequirements();
+    </script>
+</body>
+</html>

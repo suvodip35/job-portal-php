@@ -600,6 +600,11 @@ if ('serviceWorker' in navigator) {
       .then((registration) => {
         console.log('Service Worker registered successfully:', registration.scope);
         
+        // Force service worker to take control immediately
+        if (registration.active) {
+          registration.active.postMessage({ type: 'CLAIM_CLIENTS' });
+        }
+        
         // Check for updates
         registration.addEventListener('updatefound', () => {
           const newWorker = registration.installing;
