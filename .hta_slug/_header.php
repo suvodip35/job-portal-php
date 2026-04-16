@@ -313,17 +313,32 @@
           // Try direct service worker registration
           try {
             console.log('HEADER SCRIPT: Attempting service worker registration...');
-            const registration = await navigator.serviceWorker.register('/sw.js');
+            
+            // First unregister any existing service workers
+            const registrations = await navigator.serviceWorker.getRegistrations();
+            for (let reg of registrations) {
+              await reg.unregister();
+              console.log('HEADER SCRIPT: Unregistered existing SW:', reg.scope);
+            }
+            
+            // Register with explicit root scope for mobile compatibility
+            const registration = await navigator.serviceWorker.register('/sw.js', {
+              scope: '/'
+            });
             console.log('HEADER SCRIPT: Registration successful:', registration.scope);
+            
+            // Force update to ensure fresh version
+            await registration.update();
             
             // Wait for service worker to be ready properly
             console.log('HEADER SCRIPT: Waiting for service worker ready...');
             const readyReg = await navigator.serviceWorker.ready;
             console.log('HEADER SCRIPT: Ready registration:', readyReg);
+            console.log('HEADER SCRIPT: Active worker:', readyReg.active);
             console.log('HEADER SCRIPT: Has pushManager:', !!readyReg.pushManager);
             
             // Additional delay to ensure PushManager is available
-            await new Promise(resolve => setTimeout(resolve, 2000));
+            await new Promise(resolve => setTimeout(resolve, 3000));
             
             // Try direct push subscription first
             if (readyReg.pushManager) {
