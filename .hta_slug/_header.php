@@ -287,57 +287,6 @@
     mobileMenu.classList.toggle('hidden');
   });
   
-  // Integrate mobile button with existing push notification system
-  const mobilePushNotificationBtn = document.getElementById('mobilePushNotificationBtn');
-  mobilePushNotificationBtn.addEventListener('click', handleSubscribePushClick);
-
-  window.handleSubscribePushClick = async function() {
-    try {
-      // Request notification permission
-      const permission = await Notification.requestPermission();
-      
-      if (permission === 'granted') {
-        // Register service worker
-        const registration = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
-        await navigator.serviceWorker.ready;
-        
-        // Get FCM token
-        if (typeof firebase !== 'undefined' && firebase.messaging) {
-          const messaging = firebase.messaging();
-          const token = await messaging.getToken({
-            vapidKey: 'BOt9XnxPzEX2b8pn0-kGRNqpS1rfby1CEbV-Dc_G87H9Wp5qnd6E_nyDBTHiD_NLoXGyx4Y0RhwbxTNSI9O9dtA'
-          });
-          
-          if (token) {
-            // Send to server
-            const response = await fetch('/api/save-fcm-token.php', {
-              method: 'POST',
-              headers: {'Content-Type': 'application/json'},
-              body: JSON.stringify({token, user_agent: navigator.userAgent, timestamp: Date.now()})
-            });
-            
-            if (response.ok) {
-              alert('SUCCESS: Subscribed to job alerts!');
-              // Update button
-              const btn = document.getElementById('mobilePushNotificationBtn');
-              if (btn) {
-                btn.innerHTML = '<svg class="w-4 h-4 inline mr-2" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Subscribed';
-                btn.classList.remove('bg-blue-600');
-                btn.classList.add('bg-green-600');
-              }
-            } else {
-              alert('ERROR: Failed to save token');
-            }
-          }
-        }
-      }
-    } catch (error) {
-      alert('ERROR: ' + error.message);
-    }
-  };
-
-  const subscribePushBtn = document.getElementById('subscribePushBtn');
-  subscribePushBtn.addEventListener('click', handleSubscribePushClick);
 </script>
 <style>
 
