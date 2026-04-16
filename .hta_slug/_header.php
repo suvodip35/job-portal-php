@@ -303,67 +303,33 @@
         console.log('HEADER SCRIPT: Permission result:', permission);
         
         if (permission === 'granted') {
-          // Register and activate service worker with retry logic
-          console.log('HEADER SCRIPT: Registering service worker...');
-          let registration;
+          // Simple service worker registration for mobile compatibility
+          console.log('HEADER SCRIPT: Setting up service worker...');
           
           try {
-            registration = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
-            console.log('HEADER SCRIPT: Service worker registered successfully');
-          } catch (error) {
-            console.error('HEADER SCRIPT: Service worker registration failed:', error);
-            alert('ERROR: Service worker registration failed: ' + error.message);
-            return;
-          }
-          
-          // Wait for service worker to be fully active with timeout
-          console.log('HEADER SCRIPT: Waiting for service worker activation...');
-          try {
-            const timeoutPromise = new Promise((_, reject) => 
-              setTimeout(() => reject(new Error('Service worker activation timeout')), 10000)
-            );
+            // First try to get existing registration
+            let registration = await navigator.serviceWorker.getRegistration('/firebase-messaging-sw.js');
             
-            const activationPromise = new Promise(resolve => {
-              if (registration.active) {
-                console.log('HEADER SCRIPT: Service worker already active');
-                resolve(registration.active);
-              } else if (registration.installing) {
-                console.log('HEADER SCRIPT: Service worker is installing...');
-                registration.installing.addEventListener('statechange', () => {
-                  if (registration.installing.state === 'activated') {
-                    console.log('HEADER SCRIPT: Service worker activated');
-                    resolve(registration.installing);
-                  }
-                });
-              } else {
-                const checkActive = () => {
-                  if (registration.active) {
-                    console.log('HEADER SCRIPT: Service worker is now active');
-                    resolve(registration.active);
-                  } else {
-                    setTimeout(checkActive, 100);
-                  }
-                };
-                checkActive();
-              }
-            });
-            
-            await Promise.race([activationPromise, timeoutPromise]);
-            console.log('HEADER SCRIPT: Service worker is ready');
-            
-            // Verify service worker has pushManager
-            if (!registration.pushManager) {
-              throw new Error('Service worker does not have pushManager');
+            if (!registration) {
+              console.log('HEADER SCRIPT: No existing registration, creating new one...');
+              registration = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
+            } else {
+              console.log('HEADER SCRIPT: Using existing service worker registration');
             }
             
+            // Use navigator.serviceWorker.ready which is more reliable
+            console.log('HEADER SCRIPT: Waiting for service worker to be ready...');
+            await navigator.serviceWorker.ready;
+            console.log('HEADER SCRIPT: Service worker is ready');
+            
+            // Short delay to ensure everything settles
+            await new Promise(resolve => setTimeout(resolve, 500));
+            
           } catch (error) {
-            console.error('HEADER SCRIPT: Service worker activation failed:', error);
-            alert('ERROR: Service worker activation failed: ' + error.message);
+            console.error('HEADER SCRIPT: Service worker setup failed:', error);
+            alert('ERROR: Service worker setup failed: ' + error.message);
             return;
           }
-          
-          // Additional delay to ensure everything is ready
-          await new Promise(resolve => setTimeout(resolve, 1000));
           
           // Get FCM token
           if (typeof firebase !== 'undefined' && firebase.messaging) {
