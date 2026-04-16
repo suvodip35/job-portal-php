@@ -43,32 +43,47 @@ function showInstallBanner() {
     `;
     
     banner.innerHTML = `
-        <div style="display: flex; align-items: center; justify-content: center; gap: 10px;">
-            <span>📱 Install FromCampus App for faster access to jobs</span>
-            <button onclick="installPWA()" style="
-                background: white; 
-                color: #008dff; 
-                border: none; 
-                padding: 6px 12px; 
-                border-radius: 20px; 
-                font-size: 12px; 
-                font-weight: 600; 
-                cursor: pointer;
-                transition: all 0.2s ease;
-            " onmouseover="this.style.transform='scale(1.05)'" 
-               onmouseout="this.style.transform='scale(1)'">
-                Install
-            </button>
-            <button onclick="dismissBanner()" style="
-                background: transparent; 
-                color: white; 
-                border: 1px solid white; 
-                padding: 4px 8px; 
-                border-radius: 50%; 
-                cursor: pointer;
-                font-size: 16px;
-                line-height: 1;
-            ">×</button>
+        <div style="display: flex; align-items: center; justify-content: center; gap: 15px; padding: 10px;">
+            <div style="text-align: center; margin-bottom: 10px;">
+                <strong style="font-size: 16px; margin-bottom: 5px;">📱 Install FromCampus App</strong>
+                <div style="font-size: 12px; opacity: 0.8;">Get faster access to latest jobs</div>
+            </div>
+            <div style="display: flex; gap: 10px;">
+                <button onclick="installPWA()" style="
+                    background: white; 
+                    color: #008dff; 
+                    border: 2px solid #008dff; 
+                    padding: 8px 16px; 
+                    border-radius: 25px; 
+                    font-size: 14px; 
+                    font-weight: 600; 
+                    cursor: pointer; 
+                    transition: all 0.2s ease;
+                    box-shadow: 0 2px 8px rgba(0,141,255,0.3);
+                " onmouseover="this.style.transform='scale(1.05)'" 
+                   onmouseout="this.style.transform='scale(1)'">
+                    Install Now
+                </button>
+                <button onclick="showManualTrigger()" style="
+                    background: #f8f9fa; 
+                    color: #333; 
+                    border: 1px solid #ddd; 
+                    padding: 6px 12px; 
+                    border-radius: 20px; 
+                    font-size: 12px; 
+                    cursor: pointer;
+                ">Test Prompt</button>
+                <button onclick="dismissBanner()" style="
+                    background: transparent; 
+                    color: white; 
+                    border: 1px solid white; 
+                    padding: 4px 8px; 
+                    border-radius: 50%; 
+                    cursor: pointer;
+                    font-size: 16px;
+                    line-height: 1;
+                ">×</button>
+            </div>
         </div>
     `;
     
@@ -89,12 +104,12 @@ function showInstallBanner() {
     
     document.body.appendChild(banner);
     
-    // Don't auto-hide banner - let user decide
-    // setTimeout(() => {
-    //     if (document.getElementById('pwa-install-banner')) {
-    //         banner.style.opacity = '0.8';
-    //     }
-    // }, 10000);
+    // Auto-hide after 30 seconds (more time to see)
+    setTimeout(() => {
+        if (document.getElementById('pwa-install-banner')) {
+            banner.style.opacity = '0.7';
+        }
+    }, 30000);
 }
 
 function dismissBanner() {
@@ -118,6 +133,17 @@ function installPWA() {
             }
             deferredPrompt = null;
         });
+    }
+}
+
+function showManualTrigger() {
+    console.log('Manual install trigger activated');
+    if (deferredPrompt) {
+        console.log('Install prompt is available - showing banner again');
+        showInstallBanner();
+    } else {
+        console.log('No install prompt available yet');
+        alert('Install prompt not available yet. Try browsing the site for 30+ seconds.');
     }
 }
 
