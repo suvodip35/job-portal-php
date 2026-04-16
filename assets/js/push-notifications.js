@@ -259,7 +259,11 @@ class PushNotificationManager {
     }
 }
 
+// Test if JavaScript loads
+alert('JavaScript is loading!');
+
 // Initialize when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
-    window.pushManager = new PushNotificationManager();
+    alert('DOM loaded, initializing PushNotificationManager...');
+    new PushNotificationManager();
 });
