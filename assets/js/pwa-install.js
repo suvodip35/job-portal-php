@@ -1,5 +1,5 @@
 // PWA Install Prompt Functionality
-console.log('PWA INSTALL SCRIPT LOADED - Version 1.0');
+console.log('PWA INSTALL SCRIPT LOADED - Version 2.0 (Blue Banner)');
 let deferredPrompt;
 
 // Listen for beforeinstallprompt event
