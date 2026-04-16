@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PWA Debug - FromCampus</title>
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#008dff">
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .log { background: #f5f5f5; padding: 10px; margin: 10px 0; border-radius: 5px; }
+        .error { background: #ffebee; color: #c62828; }
+        .success { background: #e8f5e8; color: #2e7d32; }
+        .info { background: #e3f2fd; color: #1565c0; }
+        pre { white-space: pre-wrap; }
+    </style>
+</head>
+<body>
+    <h1>🔍 PWA Debug Console</h1>
+    <div id="log"></div>
+    
+    <script>
+        const logDiv = document.getElementById('log');
+        
+        function log(message, type = 'info') {
+            const entry = document.createElement('div');
+            entry.className = `log ${type}`;
+            entry.innerHTML = `<strong>${new Date().toLocaleTimeString()}</strong>: ${message}`;
+            logDiv.appendChild(entry);
+            console.log(message);
+        }
+        
+        // Check basic PWA requirements
+        log('Starting PWA debug...', 'info');
+        
+        // Check HTTPS
+        if (location.protocol === 'https:') {
+            log('✅ HTTPS is active', 'success');
+        } else {
+            log('❌ HTTPS required for PWA', 'error');
+        }
+        
+        // Check Service Worker support
+        if ('serviceWorker' in navigator) {
+            log('✅ Service Worker supported', 'success');
+            
+            // Unregister existing SW to start fresh
+            navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                for(let registration of registrations) {
+                    registration.unregister();
+                    log('🔄 Unregistered existing Service Worker', 'info');
+                }
+                
+                // Register new Service Worker (try simplified version first)
+                navigator.serviceWorker.register('/sw-simple.js')
+                    .then(function(registration) {
+                        log(`✅ Service Worker registered: ${registration.scope}`, 'success');
+                        
+                        // Check if SW is active
+                        if (registration.active) {
+                            log('✅ Service Worker is active', 'success');
+                        } else if (registration.installing) {
+                            log('⏳ Service Worker is installing...', 'info');
+                            registration.installing.addEventListener('statechange', function() {
+                                if (this.state === 'activated') {
+                                    log('✅ Service Worker activated', 'success');
+                                }
+                            });
+                        } else if (registration.waiting) {
+                            log('⏳ Service Worker is waiting', 'info');
+                        }
+                    })
+                    .catch(function(error) {
+                        log(`❌ Service Worker registration failed: ${error.message}`, 'error');
+                    });
+            });
+        } else {
+            log('❌ Service Worker not supported', 'error');
+        }
+        
+        // Check Manifest
+        fetch('/manifest.json')
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+            })
+            .then(manifest => {
+                log('✅ Manifest loaded successfully', 'success');
+                log(`Name: ${manifest.name}`, 'info');
+                log(`Short Name: ${manifest.short_name}`, 'info');
+                log(`Theme Color: ${manifest.theme_color}`, 'info');
+                log(`Display: ${manifest.display}`, 'info');
+                log(`Icons: ${manifest.icons ? manifest.icons.length : 0} defined`, 'info');
+                
+                // Check if icons exist
+                if (manifest.icons && manifest.icons.length > 0) {
+                    const testIcon = manifest.icons[0];
+                    fetch(testIcon.src)
+                        .then(response => {
+                            if (response.ok) {
+                                log(`✅ Icon accessible: ${testIcon.src}`, 'success');
+                            } else {
+                                log(`❌ Icon not accessible: ${testIcon.src}`, 'error');
+                            }
+                        })
+                        .catch(error => {
+                            log(`❌ Icon fetch failed: ${testIcon.src} - ${error.message}`, 'error');
+                        });
+                }
+            })
+            .catch(error => {
+                log(`❌ Manifest failed: ${error.message}`, 'error');
+            });
+        
+        // Check for install prompt
+        window.addEventListener('beforeinstallprompt', function(e) {
+            e.preventDefault();
+            log('✅ Install prompt event received!', 'success');
+            
+            // Show install button
+            const installBtn = document.createElement('button');
+            installBtn.textContent = '📱 Install App';
+            installBtn.style.cssText = 'position: fixed; bottom: 20px; right: 20px; padding: 15px; background: #008dff; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 16px;';
+            
+            installBtn.addEventListener('click', async function() {
+                e.prompt();
+                const result = await e.userChoice;
+                log(`Install result: ${result.outcome}`, result.outcome === 'accepted' ? 'success' : 'info');
+                installBtn.remove();
+            });
+            
+            document.body.appendChild(installBtn);
+        });
+        
+        // Check if already installed
+        window.addEventListener('appinstalled', function() {
+            log('🎉 App was installed!', 'success');
+        });
+        
+        // Check display mode
+        const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
+        if (isStandalone) {
+            log('✅ Running in standalone mode (PWA)', 'success');
+        } else {
+            log('ℹ️ Running in browser mode', 'info');
+        }
+        
+        // Check Cache API
+        if ('caches' in window) {
+            log('✅ Cache API available', 'success');
+            caches.keys().then(keys => {
+                log(`Found ${keys.length} caches: ${keys.join(', ')}`, 'info');
+            });
+        } else {
+            log('❌ Cache API not available', 'error');
+        }
+        
+        // Check for iOS
+        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+        if (isIOS) {
+            log('ℹ️ iOS detected - manual install required', 'info');
+            log('Use Share button → "Add to Home Screen"', 'info');
+        }
+        
+        // Check browser
+        log(`Browser: ${navigator.userAgent}`, 'info');
+    </script>
+</body>
+</html>
