@@ -590,7 +590,7 @@
 </style>
 
 <!-- PWA Install Script -->
-<script src="/assets/js/pwa-install.js?v=4.1"></script>
+<script src="/assets/js/pwa-install.js?v=4.2"></script>
 
 <!-- Service Worker Registration -->
 <script>
@@ -598,8 +598,6 @@ if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('/sw.js')
       .then((registration) => {
-        console.log('Service Worker registered successfully:', registration.scope);
-        
         // Force service worker to take control immediately
         if (registration.active) {
           registration.active.postMessage({ type: 'CLAIM_CLIENTS' });
@@ -617,7 +615,7 @@ if ('serviceWorker' in navigator) {
         });
       })
       .catch((error) => {
-        console.error('Service Worker registration failed:', error);
+        // Service Worker registration failed
       });
   });
 }
@@ -627,15 +625,8 @@ if ('serviceWorker' in navigator) {
 <script>
 // Load push notification script with delay for mobile compatibility
 setTimeout(() => {
-  console.log('HEADER: Loading push notification script...');
   const script = document.createElement('script');
   script.src = '/assets/js/push-notifications.js';
-  script.onload = () => {
-    console.log('HEADER: Push notification script loaded successfully');
-  };
-  script.onerror = () => {
-    console.error('HEADER: Failed to load push notification script');
-  };
   document.head.appendChild(script);
 }, 1000); // 1 second delay
 </script>

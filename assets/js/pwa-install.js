@@ -1,15 +1,10 @@
-// PWA Install Prompt Functionality
-console.log('PWA INSTALL SCRIPT LOADED - Version 4.1 (Bottom Bar with Logo)');
+// PWA Install Prompt Functionality - Production Ready
 let deferredPrompt;
 
 // Listen for beforeinstallprompt event
 window.addEventListener('beforeinstallprompt', (e) => {
-    console.log('PWA install prompt event fired!', e);
     e.preventDefault();
     deferredPrompt = e;
-    
-    console.log('Mobile check:', window.innerWidth <= 768);
-    console.log('Dismissed session check:', sessionStorage.getItem('pwa-banner-dismissed-session'));
     
     // Only show banner on mobile devices
     if (window.innerWidth <= 768) {
@@ -19,26 +14,18 @@ window.addEventListener('beforeinstallprompt', (e) => {
         const isDismissed = dismissedUntil && new Date(dismissedUntil) > now;
         
         if (isDismissed) {
-            console.log('Banner dismissed until:', dismissedUntil);
             return;
         }
         
-        console.log('Showing install banner...');
         showInstallBanner();
         sessionStorage.setItem('pwa-banner-shown-session', 'true');
-    } else {
-        console.log('Desktop device - no banner');
     }
 });
 
-// Force show banner for debugging (remove this in production)
+// Show banner on page load
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('DOM loaded - checking mobile...');
-    console.log('Browser detected:', navigator.userAgent);
-    
     // Check if Chrome
     const isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
-    console.log('Is Chrome:', isChrome);
     
     // Check 1-week dismissal before showing banner
     const dismissedUntil = localStorage.getItem('pwa-banner-dismissed-until');
@@ -46,20 +33,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const isDismissed = dismissedUntil && new Date(dismissedUntil) > now;
     
     if (isDismissed) {
-        console.log('Banner dismissed until:', dismissedUntil);
         return;
     }
     
     // For Chrome mobile, show banner immediately without waiting for beforeinstallprompt
     if (window.innerWidth <= 768 && isChrome) {
-        console.log('Chrome mobile detected - showing banner immediately...');
         setTimeout(() => {
             showInstallBanner();
         }, 3000);
     }
     
     if (window.innerWidth <= 768) {
-        console.log('Mobile detected - showing banner...');
         setTimeout(() => {
             showInstallBanner();
         }, 2000);
@@ -68,11 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Simple fallback - show banner after 5 seconds if no event
 setTimeout(() => {
-    console.log('Fallback check - Mobile:', window.innerWidth <= 768);
-    console.log('Has deferred prompt:', !!deferredPrompt);
-    console.log('🔍 Has deferred prompt:', !!deferredPrompt);
     if (window.innerWidth <= 768 && !sessionStorage.getItem('pwa-banner-shown-session')) {
-        console.log('🔄 Fallback: Showing banner anyway...');
         showInstallBanner();
         sessionStorage.setItem('pwa-banner-shown-session', 'true');
     }
@@ -80,16 +60,12 @@ setTimeout(() => {
 
 // Create install banner for mobile
 function showInstallBanner() {
-    console.log('showInstallBanner() called - creating banner...');
-    
     // Remove existing banner
     const existingBanner = document.getElementById('pwa-install-banner');
     if (existingBanner) {
-        console.log('Removing existing banner...');
         existingBanner.remove();
     }
     
-    console.log('Creating new banner element...');
     const banner = document.createElement('div');
     banner.id = 'pwa-install-banner';
     banner.style.cssText = `
@@ -184,10 +160,7 @@ function showInstallBanner() {
     `;
     document.head.appendChild(style);
     
-    console.log('Appending banner to body...');
     document.body.appendChild(banner);
-    
-    console.log('Banner added to DOM successfully');
     
     // Auto-hide after 30 seconds
     setTimeout(() => {
@@ -207,21 +180,16 @@ function dismissBanner() {
     // Remember dismissal for 1 week
     const oneWeekFromNow = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
     localStorage.setItem('pwa-banner-dismissed-until', oneWeekFromNow.toISOString());
-    console.log('Banner dismissed until:', oneWeekFromNow.toISOString());
 }
 
 function installPWA() {
     const isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
     
     if (deferredPrompt) {
-        console.log('Using deferred prompt...');
         deferredPrompt.prompt();
         deferredPrompt.userChoice.then((choiceResult) => {
             if (choiceResult.outcome === 'accepted') {
-                console.log('User accepted the install prompt');
                 dismissBanner();
-            } else {
-                console.log('User dismissed the install prompt');
             }
             deferredPrompt = null;
         });
@@ -230,26 +198,21 @@ function installPWA() {
         alert('To install FromCampus App:\n\n1. Tap the menu button (3 dots) in Chrome\n2. Tap "Add to Home Screen"\n3. Tap "Add" to install the app');
         dismissBanner();
     } else {
-        console.log('No install prompt available');
         alert('To install FromCampus App:\n\nLook for the install option in your browser menu (usually 3 dots) and select "Add to Home Screen"');
         dismissBanner();
     }
 }
 
 function showManualTrigger() {
-    console.log('Manual install trigger activated');
     if (deferredPrompt) {
-        console.log('Install prompt is available - showing banner again');
         showInstallBanner();
     } else {
-        console.log('No install prompt available yet');
         alert('Install prompt not available yet. Try browsing the site for 30+ seconds.');
     }
 }
 
 // Check if app is already installed
 window.addEventListener('appinstalled', () => {
-    console.log('PWA was installed');
     dismissBanner();
     
     // Save installation status
@@ -265,7 +228,6 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Check if running as PWA
     if (window.matchMedia('(display-mode: standalone)').matches) {
-        console.log('Running in standalone mode (PWA)');
         localStorage.setItem('pwa-installed', 'true');
     }
 });
@@ -273,7 +235,6 @@ document.addEventListener('DOMContentLoaded', () => {
 // Handle service worker updates
 if ('serviceWorker' in navigator) {
     navigator.serviceWorker.addEventListener('controllerchange', () => {
-        console.log('Service worker updated');
         window.location.reload();
     });
 }

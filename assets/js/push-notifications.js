@@ -9,12 +9,8 @@ class PushNotificationManager {
     }
 
     async init() {
-        console.log('PushNotificationManager: Initializing...');
-        // Show immediate debug to confirm script loaded
-        this.showDebug('PushNotificationManager: Script loaded');
         // Check if notifications are supported
         if (!('Notification' in window) || !('serviceWorker' in navigator)) {
-            console.log('Push notifications not supported');
             this.updateUI(false);
             return;
         }
@@ -39,7 +35,6 @@ class PushNotificationManager {
         // Retry if buttons not found (might be loaded later)
         if (!document.getElementById('subscribePushBtn') || !document.getElementById('mobilePushNotificationBtn')) {
             setTimeout(() => {
-                this.showDebug('Retrying button setup...');
                 this.setupButtonListeners();
             }, 1000);
         }
@@ -49,25 +44,16 @@ class PushNotificationManager {
         const desktopBtn = document.getElementById('subscribePushBtn');
         const mobileBtn = document.getElementById('mobilePushNotificationBtn');
 
-        // Debug: Show which buttons were found
-        this.showDebug('Desktop button found: ' + (desktopBtn ? 'YES' : 'NO'));
-        this.showDebug('Mobile button found: ' + (mobileBtn ? 'YES' : 'NO'));
-
         if (desktopBtn) {
             desktopBtn.addEventListener('click', () => this.handleSubscribeClick());
-            this.showDebug('Desktop button event attached');
         }
 
         if (mobileBtn) {
             mobileBtn.addEventListener('click', () => this.handleSubscribeClick());
-            this.showDebug('Mobile button event attached');
         }
     }
 
     async handleSubscribeClick() {
-        console.log('PushNotificationManager: Subscribe clicked');
-        this.showDebug('Step 1: Subscribe clicked');
-        
         if (this.isSubscribed) {
             // Already subscribed, show message
             this.showMessage('You are already subscribed to job alerts!');
@@ -75,9 +61,7 @@ class PushNotificationManager {
         }
 
         // Request permission
-        this.showDebug('Step 2: Requesting permission...');
         const permission = await Notification.requestPermission();
-        this.showDebug('Step 3: Permission=' + permission);
 
         if (permission === 'granted') {
             this.isSubscribed = true;
@@ -95,7 +79,6 @@ class PushNotificationManager {
         try {
             // Register Firebase messaging service worker
             this.registration = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
-            console.log('Service Worker registered:', this.registration.scope);
 
             // Wait for service worker to be ready
             await navigator.serviceWorker.ready;
@@ -103,27 +86,19 @@ class PushNotificationManager {
             // Initialize Firebase and get token
             await this.initializeFirebase();
         } catch (error) {
-            console.error('Service Worker registration failed:', error);
+            // Service Worker registration failed
         }
     }
 
     async initializeFirebase() {
-        console.log('PushNotificationManager: Initializing Firebase...');
-        this.showDebug('Step 4: Initializing Firebase...');
         try {
             // Check if Firebase is already loaded
             if (typeof firebase === 'undefined') {
-                console.log('Firebase not loaded yet, will retry...');
-                this.showDebug('Step 4a: Firebase not loaded, retrying...');
                 setTimeout(() => this.initializeFirebase(), 1000);
                 return;
             }
-            console.log('PushNotificationManager: Firebase loaded');
-            this.showDebug('Step 4b: Firebase loaded');
             
             const messaging = firebase.messaging();
-            console.log('PushNotificationManager: Got messaging instance');
-            this.showDebug('Step 4c: Got messaging, requesting token...');
 
             // Get FCM token
             // VAPID Key: Copy from Firebase Console > Project Settings > Cloud Messaging > Web Push certificates > Key pair
@@ -132,12 +107,8 @@ class PushNotificationManager {
             });
 
             if (token) {
-                console.log('PushNotificationManager: FCM Token obtained');
-                this.showDebug('Step 5: Got token, sending to server...');
                 await this.sendTokenToServer(token);
             } else {
-                console.log('PushNotificationManager: No FCM token');
-                this.showDebug('Step 5 ERROR: No token received');
                 this.showMessage('Failed to get token. Please try again.', 'error');
             }
 
@@ -146,18 +117,15 @@ class PushNotificationManager {
                 const refreshedToken = await messaging.getToken({
                     vapidKey: 'BOt9XnxPzEX2b8pn0-kGRNqpS1rfby1CEbV-Dc_G87H9Wp5qnd6E_nyDBTHiD_NLoXGyx4Y0RhwbxTNSI9O9dtA'
                 });
-                console.log('Token refreshed:', refreshedToken);
                 await this.sendTokenToServer(refreshedToken);
             });
 
         } catch (error) {
-            console.error('Error initializing Firebase:', error);
+            // Error initializing Firebase
         }
     }
 
     async sendTokenToServer(token) {
-        console.log('PushNotificationManager: Sending token to server...');
-        this.showDebug('Step 6: Sending token to server...');
         try {
             const response = await fetch('/api/save-fcm-token.php', {
                 method: 'POST',
@@ -173,15 +141,9 @@ class PushNotificationManager {
 
             if (response.ok) {
                 const data = await response.json();
-                console.log('PushNotificationManager: Token saved');
-                this.showDebug('Step 7: Token saved to server!');
-            } else {
-                const errorText = await response.text();
-                console.error('PushNotificationManager: Failed, status:', response.status);
-                this.showDebug('Step 7 ERROR: Failed to save, status=' + response.status);
             }
         } catch (error) {
-            console.error('PushNotificationManager: Error sending token to server:', error);
+            // Error sending token to server
         }
     }
 
@@ -241,20 +203,7 @@ class PushNotificationManager {
         }, 3000);
     }
 
-    showDebug(message) {
-        // Create visible debug panel for mobile testing
-        let debugPanel = document.getElementById('pushDebugPanel');
-        if (!debugPanel) {
-            debugPanel = document.createElement('div');
-            debugPanel.id = 'pushDebugPanel';
-            debugPanel.className = 'fixed top-0 left-0 right-0 bg-black text-white text-xs p-2 z-[9999] max-h-40 overflow-y-auto';
-            document.body.appendChild(debugPanel);
-        }
-        const entry = document.createElement('div');
-        entry.textContent = new Date().toLocaleTimeString() + ': ' + message;
-        debugPanel.appendChild(entry);
-    }
-
+    
     showUnsupportedMessage() {
         const desktopBtn = document.getElementById('subscribePushBtn');
         const mobileBtn = document.getElementById('mobileSubscribePushBtn');
