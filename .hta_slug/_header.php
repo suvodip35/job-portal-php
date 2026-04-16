@@ -318,7 +318,7 @@
             
             // Register with explicit scope and force update
             console.log('HEADER SCRIPT: Registering new service worker...');
-            const registration = await navigator.serviceWorker.register('/firebase-messaging-sw.js', {
+            const registration = await navigator.serviceWorker.register('/sw.js', {
               scope: '/',
               updateViaCache: 'none'
             });
