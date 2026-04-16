@@ -91,8 +91,8 @@ messaging.onMessage((payload) => {
     const notificationTitle = payload.notification.title;
     const notificationOptions = {
         body: payload.notification.body,
-        icon: payload.notification.icon || '/assets/logo/fc_logo_crop.webp',
-        badge: '/favicon.ico',
+        icon: payload.notification.icon || 'https://localhost:2053/assets/logo/fc_logo_crop.webp',
+        badge: 'https://localhost:2053/favicon.ico',
         tag: payload.data.tag || 'job-notification',
         data: payload.data,
         requireInteraction: false,

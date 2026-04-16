@@ -236,7 +236,7 @@ messaging.onBackgroundMessage((payload) => {
     const notificationTitle = payload.notification.title || 'New Job Notification';
     const notificationOptions = {
         body: payload.notification.body || 'Check out the latest job opportunities!',
-        icon: payload.notification.icon || '/assets/logo/fc_logo_crop.webp',
+        icon: '/assets/logo/fc_logo_crop.webp',
         badge: '/favicon.ico',
         tag: payload.data.tag || 'job-notification',
         data: payload.data || {},
