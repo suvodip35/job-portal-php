@@ -53,11 +53,19 @@ self.addEventListener('notificationclick', function(event) {
     
     event.notification.close();
     
+    // Get the URL from notification data or fallback to homepage
+    const urlToOpen = event.notification.data.url || 
+                      event.notification.data.link || 
+                      event.notification.data.job_url ||
+                      '/';
+    
+    console.log('[firebase-messaging-sw.js] Opening URL:', urlToOpen);
+    
     // Handle different action clicks
     if (event.action === 'view') {
-        // Open the job page or homepage
+        // Open the job page
         event.waitUntil(
-            clients.openWindow(event.notification.data.url || '/')
+            clients.openWindow(urlToOpen)
         );
     } else if (event.action === 'dismiss') {
         // Just close the notification
@@ -65,7 +73,7 @@ self.addEventListener('notificationclick', function(event) {
     } else {
         // Default action - open the URL
         event.waitUntil(
-            clients.openWindow(event.notification.data.url || '/')
+            clients.openWindow(urlToOpen)
         );
     }
 });
