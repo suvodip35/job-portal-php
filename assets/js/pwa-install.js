@@ -1,4 +1,4 @@
-// PWA Install Prompt Functionality - Production Ready
+// PWA Install Prompt Functionality - Production Ready (No Alerts)
 let deferredPrompt;
 
 // Listen for beforeinstallprompt event
@@ -193,12 +193,8 @@ function installPWA() {
             }
             deferredPrompt = null;
         });
-    } else if (isChrome && window.innerWidth <= 768) {
-        // Chrome mobile manual install instructions
-        alert('To install FromCampus App:\n\n1. Tap the menu button (3 dots) in Chrome\n2. Tap "Add to Home Screen"\n3. Tap "Add" to install the app');
-        dismissBanner();
     } else {
-        alert('To install FromCampus App:\n\nLook for the install option in your browser menu (usually 3 dots) and select "Add to Home Screen"');
+        // Just dismiss the banner - user can install manually if needed
         dismissBanner();
     }
 }
@@ -206,8 +202,6 @@ function installPWA() {
 function showManualTrigger() {
     if (deferredPrompt) {
         showInstallBanner();
-    } else {
-        alert('Install prompt not available yet. Try browsing the site for 30+ seconds.');
     }
 }
 

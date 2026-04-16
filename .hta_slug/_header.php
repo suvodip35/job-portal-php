@@ -590,7 +590,7 @@
 </style>
 
 <!-- PWA Install Script -->
-<script src="/assets/js/pwa-install.js?v=4.2"></script>
+<script src="/assets/js/pwa-install.js?v=4.3"></script>
 
 <!-- Service Worker Registration -->
 <script>
