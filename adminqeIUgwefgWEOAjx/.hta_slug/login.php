@@ -15,8 +15,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = trim($_POST['email'] ?? '');
     $pass = $_POST['password'] ?? '';
     $token = $_POST['csrf_token'] ?? '';
-    csrf_check($token);
-    if ($email && $pass) {
+    if (!csrf_check_safe($token)) {
+        $err = 'CSRF validation failed. Please refresh the page and try again.';
+    } elseif ($email && $pass) {
         $stmt = $pdo->prepare("SELECT user_id, name, email, password, role FROM users WHERE email = ?");
         $stmt->execute([$email]);
         $user = $stmt->fetch();

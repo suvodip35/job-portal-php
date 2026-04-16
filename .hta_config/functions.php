@@ -67,6 +67,20 @@ function csrf_check(string $token) {
         http_response_code(400);
         die('CSRF validation failed.');
     }
+    // Clear token after successful validation to prevent replay attacks
+    unset($_SESSION['csrf_token']);
+}
+
+/**
+ * CSRF check that returns boolean instead of dying - for forms that need graceful error handling
+ */
+function csrf_check_safe(string $token): bool {
+    if (empty($_SESSION['csrf_token']) || !hash_equals($_SESSION['csrf_token'], $token)) {
+        return false;
+    }
+    // Clear token after successful validation to prevent replay attacks
+    unset($_SESSION['csrf_token']);
+    return true;
 }
 
 /**
