@@ -35,13 +35,11 @@ class PushNotificationManager {
 
     setupEventListeners() {
         const desktopBtn = document.getElementById('subscribePushBtn');
-        const mobileBtn = document.getElementById('mobileSubscribePushBtn');
-        const mobileMenuBtn = document.getElementById('mobileMenuSubscribePushBtn');
+        const mobileBtn = document.getElementById('mobilePushNotificationBtn');
 
         // Debug: Show which buttons were found
         this.showDebug('Desktop button found: ' + (desktopBtn ? 'YES' : 'NO'));
         this.showDebug('Mobile button found: ' + (mobileBtn ? 'YES' : 'NO'));
-        this.showDebug('Mobile menu button found: ' + (mobileMenuBtn ? 'YES' : 'NO'));
 
         if (desktopBtn) {
             desktopBtn.addEventListener('click', () => this.handleSubscribeClick());
@@ -51,11 +49,6 @@ class PushNotificationManager {
         if (mobileBtn) {
             mobileBtn.addEventListener('click', () => this.handleSubscribeClick());
             this.showDebug('Mobile button event attached');
-        }
-
-        if (mobileMenuBtn) {
-            mobileMenuBtn.addEventListener('click', () => this.handleSubscribeClick());
-            this.showDebug('Mobile menu button event attached');
         }
     }
 
@@ -182,8 +175,7 @@ class PushNotificationManager {
 
     updateUI(isSubscribed) {
         const desktopBtn = document.getElementById('subscribePushBtn');
-        const mobileBtn = document.getElementById('mobileSubscribePushBtn');
-        const mobileMenuBtn = document.getElementById('mobileMenuSubscribePushBtn');
+        const mobileBtn = document.getElementById('mobilePushNotificationBtn');
 
         if (desktopBtn) {
             if (isSubscribed) {
@@ -200,7 +192,7 @@ class PushNotificationManager {
         if (mobileBtn) {
             if (isSubscribed) {
                 mobileBtn.innerHTML = `
-                    <svg class="w-4 h-4 inline mr-1" fill="currentColor" viewBox="0 0 20 20">
+                    <svg class="w-4 h-4 inline mr-2" fill="currentColor" viewBox="0 0 20 20">
                         <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
                     </svg>
                     Subscribed
@@ -209,24 +201,13 @@ class PushNotificationManager {
                 mobileBtn.classList.add('bg-green-600', 'hover:bg-green-700');
             } else {
                 mobileBtn.innerHTML = `
-                    <svg class="w-4 h-4 inline mr-1" fill="currentColor" viewBox="0 0 20 20">
+                    <svg class="w-4 h-4 inline mr-2" fill="currentColor" viewBox="0 0 20 20">
                         <path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z"></path>
                     </svg>
-                    Alerts
+                    Get Alerts
                 `;
                 mobileBtn.classList.remove('bg-green-600', 'hover:bg-green-700');
                 mobileBtn.classList.add('bg-blue-600', 'hover:bg-blue-700');
-            }
-        }
-
-        // Update mobile menu button (inside dropdown)
-        if (mobileMenuBtn) {
-            if (isSubscribed) {
-                mobileMenuBtn.innerHTML = 'Subscribed ✓';
-                mobileMenuBtn.classList.add('text-green-600');
-            } else {
-                mobileMenuBtn.innerHTML = 'Get Job Alerts';
-                mobileMenuBtn.classList.remove('text-green-600');
             }
         }
     }
