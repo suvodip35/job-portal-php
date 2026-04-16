@@ -1,5 +1,5 @@
 // PWA Install Prompt Functionality
-console.log('PWA INSTALL SCRIPT LOADED - Version 3.1 (Fixed Animation)');
+console.log('PWA INSTALL SCRIPT LOADED - Version 3.2 (White & Blue Design)');
 let deferredPrompt;
 
 // Listen for beforeinstallprompt event
@@ -96,15 +96,15 @@ function showInstallBanner() {
         position: fixed !important;
         bottom: 20px !important;
         right: 20px !important;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
-        color: white !important;
+        background: white !important;
+        color: #333 !important;
         padding: 20px !important;
         border-radius: 16px !important;
         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
         font-size: 14px !important;
         font-weight: 600 !important;
         z-index: 999999 !important;
-        box-shadow: 0 10px 40px rgba(102, 126, 234, 0.4) !important;
+        box-shadow: 0 10px 40px rgba(0, 141, 255, 0.15) !important;
         max-width: 320px !important;
         width: 320px !important;
         height: auto !important;
@@ -112,7 +112,7 @@ function showInstallBanner() {
         visibility: visible !important;
         opacity: 1 !important;
         transform: none !important;
-        border: none !important;
+        border: 2px solid #008dff !important;
         backdrop-filter: blur(20px) !important;
         animation: slideInRight 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55) !important;
     `;
@@ -120,21 +120,21 @@ function showInstallBanner() {
     banner.innerHTML = `
         <div style="text-align: center;">
             <div style="display: flex; align-items: center; justify-content: center; margin-bottom: 12px;">
-                <div style="width: 32px; height: 32px; background: white; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-right: 12px;">
-                    <span style="font-size: 20px;">FC</span>
+                <div style="width: 32px; height: 32px; background: #008dff; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-right: 12px;">
+                    <span style="font-size: 20px; color: white;">FC</span>
                 </div>
                 <div style="text-align: left;">
-                    <div style="font-size: 16px; font-weight: 700; margin-bottom: 2px;">FromCampus</div>
-                    <div style="font-size: 12px; opacity: 0.9;">Job Portal App</div>
+                    <div style="font-size: 16px; font-weight: 700; margin-bottom: 2px; color: #333;">FromCampus</div>
+                    <div style="font-size: 12px; opacity: 0.7; color: #666;">Job Portal App</div>
                 </div>
             </div>
-            <div style="font-size: 13px; margin-bottom: 16px; opacity: 0.95; line-height: 1.4;">
+            <div style="font-size: 13px; margin-bottom: 16px; opacity: 0.8; line-height: 1.4; color: #555;">
                 Get instant job alerts & apply faster
             </div>
             <div style="display: flex; gap: 8px; justify-content: center;">
                 <button onclick="installPWA()" style="
-                    background: white; 
-                    color: #667eea; 
+                    background: #008dff; 
+                    color: white; 
                     border: none; 
                     padding: 10px 20px; 
                     border-radius: 10px; 
@@ -142,23 +142,23 @@ function showInstallBanner() {
                     font-weight: 700; 
                     cursor: pointer;
                     transition: all 0.2s ease;
-                    box-shadow: 0 4px 15px rgba(255,255,255,0.2);
+                    box-shadow: 0 4px 15px rgba(0, 141, 255, 0.3);
                 " onmouseover="this.style.transform='scale(1.05)'" 
                    onmouseout="this.style.transform='scale(1)'">
                     Install
                 </button>
                 <button onclick="dismissBanner()" style="
-                    background: rgba(255,255,255,0.2); 
-                    color: white; 
-                    border: 1px solid rgba(255,255,255,0.3); 
+                    background: transparent; 
+                    color: #008dff; 
+                    border: 2px solid #008dff; 
                     padding: 10px 20px; 
                     border-radius: 10px; 
                     font-size: 14px; 
                     font-weight: 600; 
                     cursor: pointer;
                     transition: all 0.2s ease;
-                " onmouseover="this.style.background='rgba(255,255,255,0.3)'" 
-                   onmouseout="this.style.background='rgba(255,255,255,0.2)'">
+                " onmouseover="this.style.background='#008dff'; this.style.color='white'" 
+                   onmouseout="this.style.background='transparent'; this.style.color='#008dff'">
                     Later
                 </button>
             </div>
