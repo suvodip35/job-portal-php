@@ -349,12 +349,29 @@
             
             if (token) {
               console.log('HEADER SCRIPT: Got token, sending to server...');
+              console.log('HEADER SCRIPT: Token:', token.substring(0, 20) + '...');
+              
+              // Prepare data
+              const data = {
+                token: token,
+                user_agent: navigator.userAgent,
+                timestamp: Date.now()
+              };
+              console.log('HEADER SCRIPT: Sending data:', JSON.stringify(data, null, 2));
+              
               // Send to server
               const response = await fetch('/api/save-fcm-token.php', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({token, user_agent: navigator.userAgent, timestamp: Date.now()})
+                body: JSON.stringify(data)
               });
+              
+              console.log('HEADER SCRIPT: Response status:', response.status);
+              console.log('HEADER SCRIPT: Response ok:', response.ok);
+              
+              // Get response text for debugging
+              const responseText = await response.text();
+              console.log('HEADER SCRIPT: Response body:', responseText);
               
               if (response.ok) {
                 console.log('HEADER SCRIPT: Token saved successfully!');
@@ -364,8 +381,8 @@
                 mobileBtn.classList.remove('bg-blue-600');
                 mobileBtn.classList.add('bg-green-600');
               } else {
-                console.error('HEADER SCRIPT: Failed to save token');
-                alert('ERROR: Failed to save token');
+                console.error('HEADER SCRIPT: Failed to save token. Status:', response.status, 'Response:', responseText);
+                alert('ERROR: Failed to save token. Status: ' + response.status);
               }
             } else {
               console.error('HEADER SCRIPT: No token received');
