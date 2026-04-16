@@ -1,5 +1,5 @@
 // PWA Install Prompt Functionality
-console.log('PWA INSTALL SCRIPT LOADED - Version 4.0 (Bottom Bar Banner)');
+console.log('PWA INSTALL SCRIPT LOADED - Version 4.1 (Bottom Bar with Logo)');
 let deferredPrompt;
 
 // Listen for beforeinstallprompt event
@@ -116,8 +116,8 @@ function showInstallBanner() {
     banner.innerHTML = `
         <div style="display: flex; align-items: center; justify-content: space-between; max-width: 600px; margin: 0 auto;">
             <div style="display: flex; align-items: center;">
-                <div style="width: 40px; height: 40px; background: #008dff; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-right: 12px;">
-                    <span style="font-size: 18px; color: white; font-weight: bold;">FC</span>
+                <div style="width: 40px; height: 40px; background: white; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-right: 12px; border: 1px solid #e0e0e0;">
+                    <img src="/assets/logo/fc_logo_crop.png" alt="FromCampus" style="width: 32px; height: 32px; object-fit: contain;">
                 </div>
                 <div>
                     <div style="font-size: 16px; font-weight: 700; color: #333;">Install FromCampus App</div>
