@@ -1,5 +1,5 @@
 // PWA Install Prompt Functionality
-console.log('PWA INSTALL SCRIPT LOADED - Version 2.0 (Blue Banner)');
+console.log('PWA INSTALL SCRIPT LOADED - Version 3.0 (Production Banner)');
 let deferredPrompt;
 
 // Listen for beforeinstallprompt event
@@ -13,14 +13,19 @@ window.addEventListener('beforeinstallprompt', (e) => {
     
     // Only show banner on mobile devices
     if (window.innerWidth <= 768) {
-        // Simple check - only hide if explicitly dismissed this session
-        if (!sessionStorage.getItem('pwa-banner-dismissed-session')) {
-            console.log('Showing install banner...');
-            showInstallBanner();
-            sessionStorage.setItem('pwa-banner-shown-session', 'true');
-        } else {
-            console.log('Banner already dismissed this session');
+        // Check if user dismissed within last week
+        const dismissedUntil = localStorage.getItem('pwa-banner-dismissed-until');
+        const now = new Date();
+        const isDismissed = dismissedUntil && new Date(dismissedUntil) > now;
+        
+        if (isDismissed) {
+            console.log('Banner dismissed until:', dismissedUntil);
+            return;
         }
+        
+        console.log('Showing install banner...');
+        showInstallBanner();
+        sessionStorage.setItem('pwa-banner-shown-session', 'true');
     } else {
         console.log('Desktop device - no banner');
     }
@@ -35,6 +40,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
     console.log('Is Chrome:', isChrome);
     
+    // Check 1-week dismissal before showing banner
+    const dismissedUntil = localStorage.getItem('pwa-banner-dismissed-until');
+    const now = new Date();
+    const isDismissed = dismissedUntil && new Date(dismissedUntil) > now;
+    
+    if (isDismissed) {
+        console.log('Banner dismissed until:', dismissedUntil);
+        return;
+    }
+    
     // For Chrome mobile, show banner immediately without waiting for beforeinstallprompt
     if (window.innerWidth <= 768 && isChrome) {
         console.log('Chrome mobile detected - showing banner immediately...');
@@ -44,7 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     if (window.innerWidth <= 768) {
-        console.log('Mobile detected - forcing banner for debugging...');
+        console.log('Mobile detected - showing banner...');
         setTimeout(() => {
             showInstallBanner();
         }, 2000);
@@ -80,56 +95,75 @@ function showInstallBanner() {
     banner.style.cssText = `
         position: fixed !important;
         bottom: 20px !important;
-        left: 20px !important;
-        right: 20px !important;
-        background: linear-gradient(135deg, #008dff 0%, #0066cc 100%) !important;
+        right: -400px !important;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
         color: white !important;
-        padding: 16px 20px !important;
-        border-radius: 12px !important;
+        padding: 20px !important;
+        border-radius: 16px !important;
         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
         font-size: 14px !important;
         font-weight: 600 !important;
         z-index: 999999 !important;
-        box-shadow: 0 8px 25px rgba(0,0,0,0.3) !important;
-        animation: slideInRight 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) !important;
+        box-shadow: 0 10px 40px rgba(102, 126, 234, 0.4) !important;
         max-width: 320px !important;
-        width: auto !important;
+        width: 320px !important;
         height: auto !important;
         display: block !important;
         visibility: visible !important;
         opacity: 1 !important;
         transform: none !important;
         border: none !important;
-        text-align: center !important;
+        backdrop-filter: blur(20px) !important;
+        transition: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55) !important;
     `;
+    
+    // Animate in from right
+    setTimeout(() => {
+        banner.style.right = '20px !important';
+    }, 100);
     
     banner.innerHTML = `
         <div style="text-align: center;">
-            <div style="font-size: 18px; margin-bottom: 8px;">Install FromCampus App</div>
-            <div style="font-size: 14px; margin-bottom: 12px;">Get faster access to latest jobs</div>
-            <div style="display: flex; gap: 10px; justify-content: center;">
+            <div style="display: flex; align-items: center; justify-content: center; margin-bottom: 12px;">
+                <div style="width: 32px; height: 32px; background: white; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-right: 12px;">
+                    <span style="font-size: 20px;">FC</span>
+                </div>
+                <div style="text-align: left;">
+                    <div style="font-size: 16px; font-weight: 700; margin-bottom: 2px;">FromCampus</div>
+                    <div style="font-size: 12px; opacity: 0.9;">Job Portal App</div>
+                </div>
+            </div>
+            <div style="font-size: 13px; margin-bottom: 16px; opacity: 0.95; line-height: 1.4;">
+                Get instant job alerts & apply faster
+            </div>
+            <div style="display: flex; gap: 8px; justify-content: center;">
                 <button onclick="installPWA()" style="
                     background: white; 
-                    color: #008dff; 
+                    color: #667eea; 
                     border: none; 
-                    padding: 12px 24px; 
-                    border-radius: 8px; 
-                    font-size: 16px; 
-                    font-weight: 600; 
+                    padding: 10px 20px; 
+                    border-radius: 10px; 
+                    font-size: 14px; 
+                    font-weight: 700; 
                     cursor: pointer;
-                ">
+                    transition: all 0.2s ease;
+                    box-shadow: 0 4px 15px rgba(255,255,255,0.2);
+                " onmouseover="this.style.transform='scale(1.05)'" 
+                   onmouseout="this.style.transform='scale(1)'">
                     Install
                 </button>
                 <button onclick="dismissBanner()" style="
-                    background: transparent; 
+                    background: rgba(255,255,255,0.2); 
                     color: white; 
-                    border: 2px solid white; 
-                    padding: 12px 24px; 
-                    border-radius: 8px; 
-                    font-size: 16px; 
+                    border: 1px solid rgba(255,255,255,0.3); 
+                    padding: 10px 20px; 
+                    border-radius: 10px; 
+                    font-size: 14px; 
                     font-weight: 600; 
                     cursor: pointer;
-                ">
+                    transition: all 0.2s ease;
+                " onmouseover="this.style.background='rgba(255,255,255,0.3)'" 
+                   onmouseout="this.style.background='rgba(255,255,255,0.2)'">
                     Later
                 </button>
             </div>
@@ -183,11 +217,15 @@ function showInstallBanner() {
 function dismissBanner() {
     const banner = document.getElementById('pwa-install-banner');
     if (banner) {
-        banner.style.animation = 'slideOutRight 0.3s ease-out';
-        setTimeout(() => banner.remove(), 300);
+        // Animate out to right
+        banner.style.right = '-400px !important';
+        banner.style.opacity = '0 !important';
+        setTimeout(() => banner.remove(), 600);
     }
-    // Remember dismissal for this session
-    sessionStorage.setItem('pwa-banner-dismissed-session', 'true');
+    // Remember dismissal for 1 week
+    const oneWeekFromNow = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+    localStorage.setItem('pwa-banner-dismissed-until', oneWeekFromNow.toISOString());
+    console.log('Banner dismissed until:', oneWeekFromNow.toISOString());
 }
 
 function installPWA() {
