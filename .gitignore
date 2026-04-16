@@ -20,4 +20,4 @@ robots_copy.txt
 s-assets/
 node_modules/
 package-lock.json
-tailwind.config.js
+tailwind.config.jsservice-account.json
