@@ -200,60 +200,18 @@ function showInstallButton() {
         document.body.appendChild(installButton);
     }
     
-    // Also show desktop install icon in address bar area
-    setTimeout(() => {
-        if (!document.getElementById('desktop-install-icon')) {
-            const desktopIcon = document.createElement('div');
-            desktopIcon.id = 'desktop-install-icon';
-            desktopIcon.innerHTML = '📱';
-            desktopIcon.style.cssText = `
-                position: fixed;
-                top: 20px;
-                right: 180px;
-                background: #008dff;
-                color: white;
-                width: 30px;
-                height: 30px;
-                border-radius: 50%;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-size: 16px;
-                z-index: 9997;
-                box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-                animation: pulse 2s infinite;
-                cursor: pointer;
-            `;
-            desktopIcon.onclick = () => {
-                if (deferredPrompt) {
-                    deferredPrompt.prompt();
-                    deferredPrompt.userChoice.then((choiceResult) => {
-                        if (choiceResult.outcome === 'accepted') {
-                            desktopIcon.style.background = '#4caf50';
-                            desktopIcon.innerHTML = '✓';
-                            setTimeout(() => desktopIcon.remove(), 2000);
-                        } else {
-                            desktopIcon.style.background = '#f44336';
-                            setTimeout(() => desktopIcon.remove(), 2000);
-                        }
-                        deferredPrompt = null;
-                    });
-                }
-            };
-            
-            document.body.appendChild(desktopIcon);
-        }
-    }, 2000);
+    // Desktop install icon removed - only showing floating banner on mobile
     
-    installButton.addEventListener('click', async () => {
-        if (deferredPrompt) {
-            deferredPrompt.prompt();
-            const { outcome } = await deferredPrompt.userChoice;
-            console.log(`User response to the install prompt: ${outcome}`);
-            
-            if (outcome === 'accepted') {
-                console.log('User accepted the install prompt');
-                // Hide the button
+    if (installButton) {
+        installButton.addEventListener('click', async () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                console.log(`User response to the install prompt: ${outcome}`);
+                
+                if (outcome === 'accepted') {
+                    console.log('User accepted the install prompt');
+                    // Hide the button
                 hideInstallButton();
                 // Show success message
                 showInstallMessage('App installed successfully!', 'success');
