@@ -9,6 +9,7 @@ window.addEventListener('beforeinstallprompt', (e) => {
     
     // Show install banner immediately
     showInstallBanner();
+    showInstallButton();
 });
 
 // Create install banner
@@ -119,10 +120,10 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
     
-    // Don't show if banner was dismissed
-    if (localStorage.getItem('pwa-banner-dismissed') === 'true') {
-        return;
-    }
+    // Show iOS instructions after a delay
+    setTimeout(() => {
+        showIOSInstallInstructions();
+    }, 5000);
     
     // Check if running as PWA
     if (window.matchMedia('(display-mode: standalone)').matches) {
