@@ -509,7 +509,7 @@ $shareText = urlencode("Check out this job opportunity: " . $job['job_title'] . 
       <h2 class="text-2xl font-bold dark:text-white mb-4">Related Jobs</h2>
       <div class="space-y-4">
         <?php foreach ($relatedJobs as $rJob): ?>
-        <a href="job/<?= e($rJob['job_title_slug']) ?>" class="block p-4 border rounded-lg hover:shadow-md transition dark:border-gray-700 dark:hover:bg-gray-800">
+        <a href="/<?= e($rJob['job_title_slug']) ?>" class="block p-4 border rounded-lg hover:shadow-md transition dark:border-gray-700 dark:hover:bg-gray-800">
           <h1 class="font-semibold dark:text-white"><?= e($rJob['job_title']) ?></h1>
           <p class="text-sm text-gray-600 dark:text-gray-400 mt-1"><?= e($rJob['company_name']) ?></p>
           <p class="text-xs text-gray-500 dark:text-gray-500 mt-2">Posted <?= date('M d, Y', strtotime($rJob['posted_date'])) ?></p>
