@@ -3,31 +3,43 @@ let deferredPrompt;
 
 // Listen for beforeinstallprompt event
 window.addEventListener('beforeinstallprompt', (e) => {
-    console.log('🎯 PWA install prompt event fired!', e);
+    console.log('PWA install prompt event fired!', e);
     e.preventDefault();
     deferredPrompt = e;
     
-    console.log('📱 Mobile check:', window.innerWidth <= 768);
-    console.log('💾 Session check:', sessionStorage.getItem('pwa-banner-shown-session'));
+    console.log('Mobile check:', window.innerWidth <= 768);
+    console.log('Dismissed session check:', sessionStorage.getItem('pwa-banner-dismissed-session'));
     
     // Only show banner on mobile devices
     if (window.innerWidth <= 768) {
         // Simple check - only hide if explicitly dismissed this session
         if (!sessionStorage.getItem('pwa-banner-dismissed-session')) {
-            console.log('🚀 Showing install banner...');
+            console.log('Showing install banner...');
             showInstallBanner();
             sessionStorage.setItem('pwa-banner-shown-session', 'true');
         } else {
-            console.log('⏸️ Banner already dismissed this session');
+            console.log('Banner already dismissed this session');
         }
     } else {
-        console.log('💻 Desktop device - no banner');
+        console.log('Desktop device - no banner');
+    }
+});
+
+// Force show banner for debugging (remove this in production)
+document.addEventListener('DOMContentLoaded', () => {
+    console.log('DOM loaded - checking mobile...');
+    if (window.innerWidth <= 768) {
+        console.log('Mobile detected - forcing banner for debugging...');
+        setTimeout(() => {
+            showInstallBanner();
+        }, 2000);
     }
 });
 
 // Simple fallback - show banner after 5 seconds if no event
 setTimeout(() => {
-    console.log('🔍 Fallback check - Mobile:', window.innerWidth <= 768);
+    console.log('Fallback check - Mobile:', window.innerWidth <= 768);
+    console.log('Has deferred prompt:', !!deferredPrompt);
     console.log('🔍 Has deferred prompt:', !!deferredPrompt);
     if (window.innerWidth <= 768 && !sessionStorage.getItem('pwa-banner-shown-session')) {
         console.log('🔄 Fallback: Showing banner anyway...');
@@ -38,12 +50,16 @@ setTimeout(() => {
 
 // Create install banner for mobile
 function showInstallBanner() {
+    console.log('showInstallBanner() called - creating banner...');
+    
     // Remove existing banner
     const existingBanner = document.getElementById('pwa-install-banner');
     if (existingBanner) {
+        console.log('Removing existing banner...');
         existingBanner.remove();
     }
     
+    console.log('Creating new banner element...');
     const banner = document.createElement('div');
     banner.id = 'pwa-install-banner';
     banner.style.cssText = `
@@ -62,6 +78,7 @@ function showInstallBanner() {
         animation: slideInRight 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
         max-width: 320px;
         backdrop-filter: blur(10px);
+        border: 3px solid red !important;
     `;
     
     banner.innerHTML = `
@@ -140,7 +157,13 @@ function showInstallBanner() {
     `;
     document.head.appendChild(style);
     
+    console.log('Appending banner to body...');
     document.body.appendChild(banner);
+    
+    console.log('Banner added to DOM. Checking if visible...');
+    const addedBanner = document.getElementById('pwa-install-banner');
+    console.log('Banner in DOM:', !!addedBanner);
+    console.log('Banner styles:', addedBanner ? addedBanner.style.cssText.substring(0, 100) : 'Not found');
     
     // Auto-hide after 30 seconds
     setTimeout(() => {
