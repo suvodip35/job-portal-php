@@ -11,10 +11,8 @@ window.addEventListener('beforeinstallprompt', (e) => {
     // Show install button immediately
     showInstallButton();
     
-    // Also create banner for mobile
-    if (window.innerWidth <= 768) {
-        showInstallBanner();
-    }
+    // Also create banner for all devices (desktop and mobile)
+    showInstallBanner();
 });
 
 // Create install banner for mobile
