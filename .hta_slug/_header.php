@@ -303,27 +303,55 @@
         console.log('HEADER SCRIPT: Permission result:', permission);
         
         if (permission === 'granted') {
-          // Simple service worker registration for mobile compatibility
+          // Force service worker registration with explicit scope
           console.log('HEADER SCRIPT: Setting up service worker...');
           
           try {
-            // First try to get existing registration
-            let registration = await navigator.serviceWorker.getRegistration('/firebase-messaging-sw.js');
-            
-            if (!registration) {
-              console.log('HEADER SCRIPT: No existing registration, creating new one...');
-              registration = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
-            } else {
-              console.log('HEADER SCRIPT: Using existing service worker registration');
+            // Unregister any existing service workers first
+            const registrations = await navigator.serviceWorker.getRegistrations();
+            for (let reg of registrations) {
+              if (reg.scope.includes(window.location.origin)) {
+                await reg.unregister();
+                console.log('HEADER SCRIPT: Unregistered existing service worker');
+              }
             }
             
-            // Use navigator.serviceWorker.ready which is more reliable
-            console.log('HEADER SCRIPT: Waiting for service worker to be ready...');
-            await navigator.serviceWorker.ready;
+            // Register with explicit scope and force update
+            console.log('HEADER SCRIPT: Registering new service worker...');
+            const registration = await navigator.serviceWorker.register('/firebase-messaging-sw.js', {
+              scope: '/',
+              updateViaCache: 'none'
+            });
+            
+            console.log('HEADER SCRIPT: Service worker registered, forcing update...');
+            await registration.update();
+            
+            // Wait for installation and activation
+            if (registration.installing) {
+              console.log('HEADER SCRIPT: Waiting for installation...');
+              await new Promise(resolve => {
+                registration.installing.addEventListener('statechange', () => {
+                  if (registration.installing.state === 'activated') {
+                    console.log('HEADER SCRIPT: Service worker activated');
+                    resolve();
+                  }
+                });
+              });
+            } else {
+              console.log('HEADER SCRIPT: Waiting for ready state...');
+              await navigator.serviceWorker.ready;
+            }
+            
             console.log('HEADER SCRIPT: Service worker is ready');
             
-            // Short delay to ensure everything settles
-            await new Promise(resolve => setTimeout(resolve, 500));
+            // Verify it's working by checking pushManager
+            const readyReg = await navigator.serviceWorker.ready;
+            if (!readyReg.pushManager) {
+              throw new Error('PushManager not available');
+            }
+            
+            // Additional delay
+            await new Promise(resolve => setTimeout(resolve, 1000));
             
           } catch (error) {
             console.error('HEADER SCRIPT: Service worker setup failed:', error);
