@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test PWA Install - FromCampus</title>
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#008dff">
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; max-width: 600px; margin: 0 auto; }
+        .install-btn { 
+            background: #008dff; 
+            color: white; 
+            border: none; 
+            padding: 15px 30px; 
+            border-radius: 8px; 
+            font-size: 18px; 
+            cursor: pointer; 
+            margin: 20px 0;
+            display: block;
+        }
+        .install-btn:hover { background: #0066cc; }
+        .install-btn:disabled { background: #ccc; cursor: not-allowed; }
+        .status { 
+            padding: 15px; 
+            margin: 15px 0; 
+            border-radius: 8px; 
+            border-left: 4px solid #008dff;
+            background: #f0f8ff;
+        }
+        .success { border-left-color: #4caf50; background: #f1f8e9; }
+        .error { border-left-color: #f44336; background: #ffebee; }
+        .info { border-left-color: #2196f3; background: #e3f2fd; }
+    </style>
+</head>
+<body>
+    <h1>📱 Test PWA Installation</h1>
+    
+    <div class="status info">
+        <strong>Current Status:</strong><br>
+        • Service Worker: ✅ Active<br>
+        • Manifest: ✅ Loaded<br>
+        • HTTPS: ✅ Enabled<br>
+        • Install Prompt: ⏳ Waiting for user interaction
+    </div>
+    
+    <button id="installBtn" class="install-btn" style="display: none;">
+        📱 Install FromCampus App
+    </button>
+    
+    <div id="status" class="status info">
+        Click the button below when it appears to install the app.
+    </div>
+    
+    <div class="status info">
+        <strong>Tips:</strong><br>
+        1. <strong>Mobile:</strong> Browse for 30+ seconds, then look for install icon<br>
+        2. <strong>Desktop:</strong> Use Chrome DevTools → Application → Manifest → "Add to homescreen"<br>
+        3. <strong>iOS:</strong> Share → "Add to Home Screen"
+    </div>
+
+    <script>
+        let deferredPrompt;
+        const installBtn = document.getElementById('installBtn');
+        const statusDiv = document.getElementById('status');
+
+        // Listen for install prompt
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            
+            // Show install button
+            installBtn.style.display = 'block';
+            statusDiv.className = 'status success';
+            statusDiv.innerHTML = '✅ Install prompt available! Click the button below to install.';
+            
+            console.log('Install prompt event received');
+        });
+
+        // Handle install button click
+        installBtn.addEventListener('click', async () => {
+            if (!deferredPrompt) return;
+            
+            installBtn.disabled = true;
+            installBtn.textContent = '⏳ Installing...';
+            
+            try {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                
+                if (outcome === 'accepted') {
+                    statusDiv.className = 'status success';
+                    statusDiv.innerHTML = '🎉 App installed successfully!';
+                    installBtn.style.display = 'none';
+                } else {
+                    statusDiv.className = 'status info';
+                    statusDiv.innerHTML = 'Install cancelled. You can try again later.';
+                    installBtn.disabled = false;
+                    installBtn.textContent = '📱 Install FromCampus App';
+                }
+                
+                deferredPrompt = null;
+            } catch (error) {
+                statusDiv.className = 'status error';
+                statusDiv.innerHTML = `❌ Install failed: ${error.message}`;
+                installBtn.disabled = false;
+                installBtn.textContent = '📱 Install FromCampus App';
+            }
+        });
+
+        // Listen for app installed
+        window.addEventListener('appinstalled', () => {
+            statusDiv.className = 'status success';
+            statusDiv.innerHTML = '🎉 FromCampus app is now installed!';
+            installBtn.style.display = 'none';
+        });
+
+        // Check if already installed
+        const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
+        if (isStandalone) {
+            statusDiv.className = 'status success';
+            statusDiv.innerHTML = '✅ App is already installed and running in standalone mode!';
+        }
+
+        // Simulate user engagement (helps trigger install prompt)
+        let engagementTime = 0;
+        setInterval(() => {
+            engagementTime++;
+            console.log(`User engagement time: ${engagementTime}s`);
+            
+            // After 30 seconds, log that install criteria might be met
+            if (engagementTime === 30) {
+                console.log('Install criteria likely met. Try refreshing or switching to mobile.');
+                statusDiv.className = 'status info';
+                statusDiv.innerHTML = '⏳ 30 seconds of engagement reached. Install prompt may appear on mobile or after refresh.';
+            }
+        }, 1000);
+    </script>
+</body>
+</html>
