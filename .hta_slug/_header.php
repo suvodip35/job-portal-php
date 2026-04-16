@@ -289,119 +289,50 @@
   
   // Backup function for mobile button click
   window.handleMobileAlertClick = async function() {
-    alert('TEST: Function called!');
-    console.log('Mobile button clicked via inline handler');
-    alert('Step 1: Button clicked!');
-    
-    // Check if Notification API is available
-    if (!('Notification' in window)) {
-      alert('ERROR: Notification API not supported');
-      return;
-    }
-    alert('Step 2: Notification API supported');
+    alert('Mobile button clicked!');
     
     try {
-      alert('Step 3: Requesting permission...');
+      // Request notification permission
       const permission = await Notification.requestPermission();
-      alert('Step 4: Permission result: ' + permission);
+      alert('Permission: ' + permission);
       
       if (permission === 'granted') {
-        alert('Step 5: Permission granted, checking Firebase...');
+        // Register service worker
+        const registration = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
+        await navigator.serviceWorker.ready;
         
-        // Check if Firebase is loaded
-        if (typeof firebase === 'undefined') {
-          alert('ERROR: Firebase not loaded');
-          return;
-        }
-        alert('Step 6: Firebase loaded');
-        
-        if (!firebase.messaging) {
-          alert('ERROR: Firebase messaging not available');
-          return;
-        }
-        alert('Step 7: Firebase messaging available');
-        
-        // Register service worker first
-        alert('Step 8: Registering service worker...');
-        let registration;
-        try {
-          registration = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
-          alert('Step 8a: Service Worker registered: ' + registration.scope);
-        } catch (error) {
-          alert('Step 8a ERROR: Service Worker registration failed: ' + error.message);
-          return;
-        }
-        
-        // Wait for service worker to be ready
-        alert('Step 8b: Waiting for service worker to be ready...');
-        const registration = await navigator.serviceWorker.ready;
-        alert('Step 8c: Service Worker is ready: ' + registration.scope);
-        
-        // Check if service worker is active
-        if (registration.active) {
-          alert('Step 8d: Service Worker is ACTIVE');
-        } else {
-          alert('Step 8d: Service Worker is NOT ACTIVE yet, waiting...');
-          // Wait a bit more for activation
-          await new Promise(resolve => setTimeout(resolve, 2000));
-          const registration2 = await navigator.serviceWorker.ready;
-          if (registration2.active) {
-            alert('Step 8d: Service Worker is now ACTIVE');
-          } else {
-            alert('ERROR: Service Worker still not active');
-            return;
-          }
-        }
-        
-        // Try to get FCM token
-        const messaging = firebase.messaging();
-        alert('Step 9: Getting FCM token...');
-        
-        const token = await messaging.getToken({
-          vapidKey: 'BOt9XnxPzEX2b8pn0-kGRNqpS1rfby1CEbV-Dc_G87H9Wp5qnd6E_nyDBTHiD_NLoXGyx4Y0RhwbxTNSI9O9dtA'
-        });
-        
-        if (!token) {
-          alert('ERROR: No token received from Firebase');
-          return;
-        }
-        alert('Step 9: Token received: ' + token.substring(0, 30) + '...');
-        
-        // Send to server
-        alert('Step 10: Sending token to server...');
-        const response = await fetch('/api/save-fcm-token.php', {
-          method: 'POST',
-          headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify({
-            token: token,
-            user_agent: navigator.userAgent,
-            timestamp: Date.now()
-          })
-        });
-        
-        alert('Step 11: Server response status: ' + response.status);
-        
-        if (response.ok) {
-          const data = await response.json();
-          alert('Step 12: Token saved! Server: ' + JSON.stringify(data));
+        // Get FCM token
+        if (typeof firebase !== 'undefined' && firebase.messaging) {
+          const messaging = firebase.messaging();
+          const token = await messaging.getToken({
+            vapidKey: 'BOt9XnxPzEX2b8pn0-kGRNqpS1rfby1CEbV-Dc_G87H9Wp5qnd6E_nyDBTHiD_NLoXGyx4Y0RhwbxTNSI9O9dtA'
+          });
           
-          // Update button
-          const btn = document.getElementById('mobilePushNotificationBtn');
-          if (btn) {
-            btn.innerHTML = '<svg class="w-4 h-4 inline mr-2" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Subscribed';
-            btn.classList.remove('bg-blue-600');
-            btn.classList.add('bg-green-600');
-            alert('Step 13: SUCCESS! Button updated to Subscribed');
+          if (token) {
+            // Send to server
+            const response = await fetch('/api/save-fcm-token.php', {
+              method: 'POST',
+              headers: {'Content-Type': 'application/json'},
+              body: JSON.stringify({token, user_agent: navigator.userAgent, timestamp: Date.now()})
+            });
+            
+            if (response.ok) {
+              alert('SUCCESS: Subscribed to job alerts!');
+              // Update button
+              const btn = document.getElementById('mobilePushNotificationBtn');
+              if (btn) {
+                btn.innerHTML = '<svg class="w-4 h-4 inline mr-2" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Subscribed';
+                btn.classList.remove('bg-blue-600');
+                btn.classList.add('bg-green-600');
+              }
+            } else {
+              alert('ERROR: Failed to save token');
+            }
           }
-        } else {
-          const errorText = await response.text();
-          alert('ERROR: Failed to save token. Status: ' + response.status + ' - ' + errorText);
         }
-      } else {
-        alert('INFO: Permission not granted: ' + permission);
       }
     } catch (error) {
-      alert('CATCH ERROR: ' + error.message + '\n\nStack: ' + error.stack);
+      alert('ERROR: ' + error.message);
     }
   };
 </script>
