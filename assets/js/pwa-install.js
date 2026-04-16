@@ -63,63 +63,57 @@ function showInstallBanner() {
     const banner = document.createElement('div');
     banner.id = 'pwa-install-banner';
     banner.style.cssText = `
-        position: fixed;
-        bottom: 20px;
-        right: 20px;
-        background: linear-gradient(135deg, #008dff 0%, #0066cc 100%);
-        color: white;
-        padding: 16px 20px;
-        border-radius: 12px;
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-        font-size: 14px;
-        font-weight: 600;
-        z-index: 9999;
-        box-shadow: 0 8px 25px rgba(0,0,0,0.3);
-        animation: slideInRight 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-        max-width: 320px;
-        backdrop-filter: blur(10px);
-        border: 3px solid red !important;
+        position: fixed !important;
+        bottom: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        background: linear-gradient(135deg, #ff0000 0%, #cc0000 100%) !important;
+        color: white !important;
+        padding: 20px !important;
+        border-radius: 0 !important;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+        font-size: 16px !important;
+        font-weight: 600 !important;
+        z-index: 999999 !important;
+        box-shadow: 0 -4px 20px rgba(0,0,0,0.5) !important;
+        max-width: none !important;
+        width: 100% !important;
+        height: auto !important;
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        transform: none !important;
+        border: none !important;
+        text-align: center !important;
     `;
     
     banner.innerHTML = `
-        <div style="display: flex; flex-direction: column; gap: 12px;">
-            <div style="display: flex; align-items: center; gap: 12px;">
-                <span style="font-size: 18px;">FromCampus</span>
-                <div style="flex: 1;">
-                    <div style="font-size: 14px; font-weight: 600;">Install App</div>
-                    <div style="font-size: 12px; opacity: 0.8;">Get faster access to jobs</div>
-                </div>
-            </div>
-            <div style="display: flex; gap: 8px;">
+        <div style="text-align: center;">
+            <div style="font-size: 18px; margin-bottom: 8px;">Install FromCampus App</div>
+            <div style="font-size: 14px; margin-bottom: 12px;">Get faster access to latest jobs</div>
+            <div style="display: flex; gap: 10px; justify-content: center;">
                 <button onclick="installPWA()" style="
-                    flex: 1;
                     background: white; 
-                    color: #008dff; 
+                    color: #ff0000; 
                     border: none; 
-                    padding: 10px 16px; 
+                    padding: 12px 24px; 
                     border-radius: 8px; 
-                    font-size: 14px; 
+                    font-size: 16px; 
                     font-weight: 600; 
-                    cursor: pointer; 
-                    transition: all 0.2s ease;
-                    box-shadow: 0 2px 8px rgba(0,141,255,0.3);
-                " onmouseover="this.style.transform='scale(1.02)'" 
-                   onmouseout="this.style.transform='scale(1)'">
+                    cursor: pointer;
+                ">
                     Install
                 </button>
                 <button onclick="dismissBanner()" style="
-                    flex: 1;
                     background: transparent; 
                     color: white; 
-                    border: 1px solid rgba(255,255,255,0.3); 
-                    padding: 10px 16px; 
+                    border: 2px solid white; 
+                    padding: 12px 24px; 
                     border-radius: 8px; 
-                    font-size: 14px; 
+                    font-size: 16px; 
                     font-weight: 600; 
                     cursor: pointer;
-                    transition: all 0.2s ease;
-                " onmouseover="this.style.background='rgba(255,255,255,0.1)'" 
-                   onmouseout="this.style.background='transparent'">
+                ">
                     Later
                 </button>
             </div>
