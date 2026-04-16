@@ -303,60 +303,27 @@
         console.log('HEADER SCRIPT: Permission result:', permission);
         
         if (permission === 'granted') {
-          // Force service worker registration with explicit scope
+          // Ultra-simple service worker registration for mobile
           console.log('HEADER SCRIPT: Setting up service worker...');
           
           try {
-            // Unregister any existing service workers first
-            const registrations = await navigator.serviceWorker.getRegistrations();
-            for (let reg of registrations) {
-              if (reg.scope.includes(window.location.origin)) {
-                await reg.unregister();
-                console.log('HEADER SCRIPT: Unregistered existing service worker');
-              }
-            }
+            // Most basic registration possible
+            console.log('HEADER SCRIPT: Basic service worker registration...');
+            await navigator.serviceWorker.register('/sw.js');
+            console.log('HEADER SCRIPT: Service worker registered');
             
-            // Register with explicit scope and force update
-            console.log('HEADER SCRIPT: Registering new service worker...');
-            const registration = await navigator.serviceWorker.register('/sw.js', {
-              scope: '/',
-              updateViaCache: 'none'
-            });
+            // Just wait for ready - no complex activation logic
+            console.log('HEADER SCRIPT: Waiting for service worker ready...');
+            await navigator.serviceWorker.ready;
+            console.log('HEADER SCRIPT: Service worker ready');
             
-            console.log('HEADER SCRIPT: Service worker registered, forcing update...');
-            await registration.update();
-            
-            // Wait for installation and activation
-            if (registration.installing) {
-              console.log('HEADER SCRIPT: Waiting for installation...');
-              await new Promise(resolve => {
-                registration.installing.addEventListener('statechange', () => {
-                  if (registration.installing.state === 'activated') {
-                    console.log('HEADER SCRIPT: Service worker activated');
-                    resolve();
-                  }
-                });
-              });
-            } else {
-              console.log('HEADER SCRIPT: Waiting for ready state...');
-              await navigator.serviceWorker.ready;
-            }
-            
-            console.log('HEADER SCRIPT: Service worker is ready');
-            
-            // Verify it's working by checking pushManager
-            const readyReg = await navigator.serviceWorker.ready;
-            if (!readyReg.pushManager) {
-              throw new Error('PushManager not available');
-            }
-            
-            // Additional delay
-            await new Promise(resolve => setTimeout(resolve, 1000));
+            // Small delay
+            await new Promise(resolve => setTimeout(resolve, 500));
             
           } catch (error) {
-            console.error('HEADER SCRIPT: Service worker setup failed:', error);
-            alert('ERROR: Service worker setup failed: ' + error.message);
-            return;
+            console.error('HEADER SCRIPT: Service worker failed:', error);
+            // Don't return - try to continue anyway
+            console.log('HEADER SCRIPT: Continuing despite service worker error...');
           }
           
           // Get FCM token
