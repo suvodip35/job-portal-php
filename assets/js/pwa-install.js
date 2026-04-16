@@ -1,5 +1,5 @@
 // PWA Install Prompt Functionality
-console.log('PWA INSTALL SCRIPT LOADED - Version 3.0 (Production Banner)');
+console.log('PWA INSTALL SCRIPT LOADED - Version 3.1 (Fixed Animation)');
 let deferredPrompt;
 
 // Listen for beforeinstallprompt event
@@ -95,7 +95,7 @@ function showInstallBanner() {
     banner.style.cssText = `
         position: fixed !important;
         bottom: 20px !important;
-        right: -400px !important;
+        right: 20px !important;
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
         color: white !important;
         padding: 20px !important;
@@ -114,13 +114,8 @@ function showInstallBanner() {
         transform: none !important;
         border: none !important;
         backdrop-filter: blur(20px) !important;
-        transition: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55) !important;
+        animation: slideInRight 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55) !important;
     `;
-    
-    // Animate in from right
-    setTimeout(() => {
-        banner.style.right = '20px !important';
-    }, 100);
     
     banner.innerHTML = `
         <div style="text-align: center;">
@@ -175,7 +170,7 @@ function showInstallBanner() {
     style.textContent = `
         @keyframes slideInRight {
             from { 
-                transform: translateX(100%);
+                transform: translateX(400px);
                 opacity: 0;
             }
             to { 
@@ -189,14 +184,9 @@ function showInstallBanner() {
                 opacity: 1;
             }
             to { 
-                transform: translateX(100%);
+                transform: translateX(400px);
                 opacity: 0;
             }
-        }
-        @keyframes pulse {
-            0% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.05); opacity: 1; }
-            100% { transform: scale(1); opacity: 1; }
         }
     `;
     document.head.appendChild(style);
@@ -218,8 +208,7 @@ function dismissBanner() {
     const banner = document.getElementById('pwa-install-banner');
     if (banner) {
         // Animate out to right
-        banner.style.right = '-400px !important';
-        banner.style.opacity = '0 !important';
+        banner.style.animation = 'slideOutRight 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55) !important';
         setTimeout(() => banner.remove(), 600);
     }
     // Remember dismissal for 1 week
