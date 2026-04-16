@@ -33,6 +33,7 @@ class PushNotificationManager {
     setupEventListeners() {
         const desktopBtn = document.getElementById('subscribePushBtn');
         const mobileBtn = document.getElementById('mobileSubscribePushBtn');
+        const mobileMenuBtn = document.getElementById('mobileMenuSubscribePushBtn');
 
         if (desktopBtn) {
             desktopBtn.addEventListener('click', () => this.handleSubscribeClick());
@@ -40,6 +41,10 @@ class PushNotificationManager {
 
         if (mobileBtn) {
             mobileBtn.addEventListener('click', () => this.handleSubscribeClick());
+        }
+
+        if (mobileMenuBtn) {
+            mobileMenuBtn.addEventListener('click', () => this.handleSubscribeClick());
         }
     }
 
@@ -146,6 +151,7 @@ class PushNotificationManager {
     updateUI(isSubscribed) {
         const desktopBtn = document.getElementById('subscribePushBtn');
         const mobileBtn = document.getElementById('mobileSubscribePushBtn');
+        const mobileMenuBtn = document.getElementById('mobileMenuSubscribePushBtn');
 
         if (desktopBtn) {
             if (isSubscribed) {
@@ -178,6 +184,17 @@ class PushNotificationManager {
                 `;
                 mobileBtn.classList.remove('bg-green-600', 'hover:bg-green-700');
                 mobileBtn.classList.add('bg-blue-600', 'hover:bg-blue-700');
+            }
+        }
+
+        // Update mobile menu button (inside dropdown)
+        if (mobileMenuBtn) {
+            if (isSubscribed) {
+                mobileMenuBtn.innerHTML = 'Subscribed ✓';
+                mobileMenuBtn.classList.add('text-green-600');
+            } else {
+                mobileMenuBtn.innerHTML = 'Get Job Alerts';
+                mobileMenuBtn.classList.remove('text-green-600');
             }
         }
     }
