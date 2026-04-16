@@ -333,8 +333,24 @@
         
         // Wait for service worker to be ready
         alert('Step 8b: Waiting for service worker to be ready...');
-        await navigator.serviceWorker.ready;
-        alert('Step 8c: Service Worker is ready');
+        const registration = await navigator.serviceWorker.ready;
+        alert('Step 8c: Service Worker is ready: ' + registration.scope);
+        
+        // Check if service worker is active
+        if (registration.active) {
+          alert('Step 8d: Service Worker is ACTIVE');
+        } else {
+          alert('Step 8d: Service Worker is NOT ACTIVE yet, waiting...');
+          // Wait a bit more for activation
+          await new Promise(resolve => setTimeout(resolve, 2000));
+          const registration2 = await navigator.serviceWorker.ready;
+          if (registration2.active) {
+            alert('Step 8d: Service Worker is now ACTIVE');
+          } else {
+            alert('ERROR: Service Worker still not active');
+            return;
+          }
+        }
         
         // Try to get FCM token
         const messaging = firebase.messaging();
