@@ -29,37 +29,12 @@ window.addEventListener('beforeinstallprompt', (e) => {
 setTimeout(() => {
     console.log('🔍 Fallback check - Mobile:', window.innerWidth <= 768);
     console.log('🔍 Has deferred prompt:', !!deferredPrompt);
-    if (window.innerWidth <= 768 && !sessionStorage.getItem('pwa-banner-shown')) {
+    if (window.innerWidth <= 768 && !sessionStorage.getItem('pwa-banner-shown-session')) {
         console.log('🔄 Fallback: Showing banner anyway...');
         showInstallBanner();
         sessionStorage.setItem('pwa-banner-shown-session', 'true');
     }
 }, 5000);
-
-// Immediate manual trigger for testing
-if (window.innerWidth <= 768) {
-    const manualBtn = document.createElement('button');
-    manualBtn.textContent = '🎯 Show Banner';
-    manualBtn.style.cssText = `
-        position: fixed;
-        top: 60px;
-        right: 10px;
-        background: #ff6b6b;
-        color: white;
-        border: none;
-        padding: 8px 12px;
-        border-radius: 6px;
-        font-size: 12px;
-        z-index: 10001;
-        cursor: pointer;
-    `;
-    manualBtn.onclick = () => {
-        console.log('🎯 Manual banner trigger clicked');
-        showInstallBanner();
-        manualBtn.remove();
-    };
-    document.body.appendChild(manualBtn);
-}
 
 // Create install banner for mobile
 function showInstallBanner() {
