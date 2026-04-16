@@ -11,8 +11,10 @@ window.addEventListener('beforeinstallprompt', (e) => {
     // Show install button immediately
     showInstallButton();
     
-    // Also create banner for all devices (desktop and mobile)
-    showInstallBanner();
+    // Only show banner on mobile devices
+    if (window.innerWidth <= 768) {
+        showInstallBanner();
+    }
 });
 
 // Create install banner for mobile
@@ -27,62 +29,63 @@ function showInstallBanner() {
     banner.id = 'pwa-install-banner';
     banner.style.cssText = `
         position: fixed;
-        bottom: 0;
-        left: 0;
-        right: 0;
+        bottom: 20px;
+        right: 20px;
         background: linear-gradient(135deg, #008dff 0%, #0066cc 100%);
         color: white;
-        padding: 12px 20px;
-        text-align: center;
+        padding: 16px 20px;
+        border-radius: 12px;
         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         font-size: 14px;
         font-weight: 600;
         z-index: 9999;
-        box-shadow: 0 -2px 10px rgba(0,0,0,0.3);
-        animation: slideUp 0.3s ease-out;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+        animation: slideInRight 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        max-width: 320px;
+        backdrop-filter: blur(10px);
     `;
     
     banner.innerHTML = `
-        <div style="display: flex; align-items: center; justify-content: center; gap: 15px; padding: 10px;">
-            <div style="text-align: center; margin-bottom: 10px;">
-                <strong style="font-size: 16px; margin-bottom: 5px;">📱 Install FromCampus App</strong>
-                <div style="font-size: 12px; opacity: 0.8;">Get faster access to latest jobs</div>
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <span style="font-size: 24px;">FromCampus</span>
+                <div style="flex: 1;">
+                    <div style="font-size: 14px; font-weight: 600;">Install App</div>
+                    <div style="font-size: 12px; opacity: 0.8;">Get faster access to jobs</div>
+                </div>
             </div>
-            <div style="display: flex; gap: 10px;">
+            <div style="display: flex; gap: 8px;">
                 <button onclick="installPWA()" style="
+                    flex: 1;
                     background: white; 
                     color: #008dff; 
-                    border: 2px solid #008dff; 
-                    padding: 8px 16px; 
-                    border-radius: 25px; 
+                    border: none; 
+                    padding: 10px 16px; 
+                    border-radius: 8px; 
                     font-size: 14px; 
                     font-weight: 600; 
                     cursor: pointer; 
                     transition: all 0.2s ease;
                     box-shadow: 0 2px 8px rgba(0,141,255,0.3);
-                " onmouseover="this.style.transform='scale(1.05)'" 
+                " onmouseover="this.style.transform='scale(1.02)'" 
                    onmouseout="this.style.transform='scale(1)'">
-                    Install Now
+                    Install
                 </button>
-                <button onclick="showManualTrigger()" style="
-                    background: #f8f9fa; 
-                    color: #333; 
-                    border: 1px solid #ddd; 
-                    padding: 6px 12px; 
-                    border-radius: 20px; 
-                    font-size: 12px; 
-                    cursor: pointer;
-                ">Test Prompt</button>
                 <button onclick="dismissBanner()" style="
+                    flex: 1;
                     background: transparent; 
                     color: white; 
-                    border: 1px solid white; 
-                    padding: 4px 8px; 
-                    border-radius: 50%; 
+                    border: 1px solid rgba(255,255,255,0.3); 
+                    padding: 10px 16px; 
+                    border-radius: 8px; 
+                    font-size: 14px; 
+                    font-weight: 600; 
                     cursor: pointer;
-                    font-size: 16px;
-                    line-height: 1;
-                ">×</button>
+                    transition: all 0.2s ease;
+                " onmouseover="this.style.background='rgba(255,255,255,0.1)'" 
+                   onmouseout="this.style.background='transparent'">
+                    Later
+                </button>
             </div>
         </div>
     `;
@@ -90,9 +93,25 @@ function showInstallBanner() {
     // Add animations
     const style = document.createElement('style');
     style.textContent = `
-        @keyframes slideUp {
-            from { transform: translateY(100%); }
-            to { transform: translateY(0); }
+        @keyframes slideInRight {
+            from { 
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to { 
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        @keyframes slideOutRight {
+            from { 
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to { 
+                transform: translateX(100%);
+                opacity: 0;
+            }
         }
         @keyframes pulse {
             0% { transform: scale(1); opacity: 1; }
@@ -115,7 +134,7 @@ function showInstallBanner() {
 function dismissBanner() {
     const banner = document.getElementById('pwa-install-banner');
     if (banner) {
-        banner.style.animation = 'slideDown 0.3s ease-out';
+        banner.style.animation = 'slideOutRight 0.3s ease-out';
         setTimeout(() => banner.remove(), 300);
     }
     localStorage.setItem('pwa-banner-dismissed', 'true');
@@ -155,29 +174,31 @@ function showInstallButton() {
         existingBtn.remove();
     }
     
-    // Create install button (desktop fallback)
-    installButton = document.createElement('button');
-    installButton.id = 'pwa-install-btn';
-    installButton.className = 'install-btn';
-    installButton.textContent = '📱 Install FromCampus App';
-    installButton.style.cssText = `
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        background: #008dff;
-        color: white;
-        border: none;
-        padding: 12px 20px;
-        border-radius: 8px;
-        font-size: 14px;
-        font-weight: 600;
-        cursor: pointer;
-        z-index: 9998;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-        transition: all 0.3s ease;
-    `;
-    
-    document.body.appendChild(installButton);
+    // Only create install button on mobile (desktop uses address bar icon)
+    if (window.innerWidth <= 768) {
+        installButton = document.createElement('button');
+        installButton.id = 'pwa-install-btn';
+        installButton.className = 'install-btn';
+        installButton.textContent = 'Install FromCampus App';
+        installButton.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #008dff;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            z-index: 9998;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+        `;
+        
+        document.body.appendChild(installButton);
+    }
     
     // Also show desktop install icon in address bar area
     setTimeout(() => {
