@@ -12,13 +12,18 @@ window.addEventListener('beforeinstallprompt', (e) => {
     
     // Only show banner on mobile devices
     if (window.innerWidth <= 768) {
+        // Check if user dismissed within last week
+        const dismissedUntil = localStorage.getItem('pwa-banner-dismissed-until');
+        const now = new Date();
+        const isDismissed = dismissedUntil && new Date(dismissedUntil) > now;
+        
         // Check if banner was shown this session
-        if (!sessionStorage.getItem('pwa-banner-shown-session')) {
+        if (!sessionStorage.getItem('pwa-banner-shown-session') && !isDismissed) {
             console.log('🚀 Showing install banner...');
             showInstallBanner();
             sessionStorage.setItem('pwa-banner-shown-session', 'true');
         } else {
-            console.log('⏸️ Banner already shown this session');
+            console.log('⏸️ Banner already shown this session or dismissed within last week');
         }
     } else {
         console.log('💻 Desktop device - no banner');
@@ -32,6 +37,31 @@ setTimeout(() => {
     if (window.innerWidth <= 768 && !deferredPrompt) {
         console.log('⚠️ No install prompt yet - trying to show anyway...');
         showInstallBanner();
+    }
+    
+    // Add manual trigger button for testing
+    if (window.innerWidth <= 768) {
+        const manualBtn = document.createElement('button');
+        manualBtn.textContent = '🎯 Show Banner';
+        manualBtn.style.cssText = `
+            position: fixed;
+            top: 110px;
+            right: 10px;
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            z-index: 10002;
+            cursor: pointer;
+        `;
+        manualBtn.onclick = () => {
+            console.log('🎯 Manual banner trigger clicked');
+            showInstallBanner();
+            manualBtn.remove();
+        };
+        document.body.appendChild(manualBtn);
     }
 }, 5000);
 
@@ -100,7 +130,7 @@ function showInstallBanner() {
     banner.innerHTML = `
         <div style="display: flex; flex-direction: column; gap: 12px;">
             <div style="display: flex; align-items: center; gap: 12px;">
-                <span style="font-size: 24px;">FromCampus</span>
+                <span style="font-size: 18px;">FromCampus</span>
                 <div style="flex: 1;">
                     <div style="font-size: 14px; font-weight: 600;">Install App</div>
                     <div style="font-size: 12px; opacity: 0.8;">Get faster access to jobs</div>
@@ -175,7 +205,12 @@ function showInstallBanner() {
     
     document.body.appendChild(banner);
     
-    // No auto-hide - banner stays visible until user action
+    // Auto-hide after 30 seconds
+    setTimeout(() => {
+        if (document.getElementById('pwa-install-banner')) {
+            banner.style.opacity = '0.7';
+        }
+    }, 30000);
 }
 
 function dismissBanner() {
@@ -184,6 +219,9 @@ function dismissBanner() {
         banner.style.animation = 'slideOutRight 0.3s ease-out';
         setTimeout(() => banner.remove(), 300);
     }
+    // Remember dismissal for 1 week
+    const oneWeekFromNow = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+    localStorage.setItem('pwa-banner-dismissed-until', oneWeekFromNow.toISOString());
 }
 
 function installPWA() {
