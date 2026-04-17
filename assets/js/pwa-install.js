@@ -1,4 +1,4 @@
-// PWA Install Prompt Functionality - Production Ready (No Alerts)
+// PWA Install Prompt Functionality - Production Ready (Fixed PWA Detection)
 let deferredPrompt;
 
 // Listen for beforeinstallprompt event
@@ -24,6 +24,17 @@ window.addEventListener('beforeinstallprompt', (e) => {
 
 // Show banner on page load
 document.addEventListener('DOMContentLoaded', () => {
+    // Don't show if already installed
+    if (localStorage.getItem('pwa-installed') === 'true') {
+        return;
+    }
+    
+    // Check if running as PWA
+    if (window.matchMedia('(display-mode: standalone)').matches) {
+        localStorage.setItem('pwa-installed', 'true');
+        return;
+    }
+    
     // Check if Chrome
     const isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
     
