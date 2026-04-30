@@ -57,17 +57,7 @@ if (!$slug) {
     $jobs = $pdo->query("SELECT * FROM jobs WHERE status='published' ORDER BY posted_date DESC")->fetchAll();
 
     $pageTitle = "FromCampus - JOB Notification Portal";
-    // Debug: Check if BASE_URL is defined
-if (!defined('BASE_URL')) {
-    // Fallback if BASE_URL is not defined
-    $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
-    $host = $_SERVER['HTTP_HOST'];
-    $baseUrl = $protocol . '://' . $host . '/';
-} else {
-    $baseUrl = BASE_URL;
-}
-
-$canonicalUrl = rtrim($baseUrl, '/') . "/job";
+    $canonicalUrl = "https://fromcampus.com/job";
 ?>
 <!doctype html>
 <html amp lang="en">
@@ -134,17 +124,7 @@ $job = $stmt->fetch();
 if (!$job) { echo "Not found"; exit; }
 
 $pageTitle = $job['meta_title'] ?: $job['job_title'];
-// Debug: Check if BASE_URL is defined
-if (!defined('BASE_URL')) {
-    // Fallback if BASE_URL is not defined
-    $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
-    $host = $_SERVER['HTTP_HOST'];
-    $baseUrl = $protocol . '://' . $host . '/';
-} else {
-    $baseUrl = BASE_URL;
-}
-
-$canonicalUrl = rtrim($baseUrl, '/') . "/job/" . $job['job_title_slug'];
+$canonicalUrl = "https://fromcampus.com/job/" . $job['job_title_slug'];
 $thumbnailUrl = "https://fromcampus.com".$job['thumbnail'];
 $jobDescriptionAMP = ampSanitizeJobDescription($job['description']);
 ?>
