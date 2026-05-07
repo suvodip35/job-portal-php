@@ -7,7 +7,8 @@ $page_to_load = null;
 
 // Handle /job/{slug} pattern
 if ($url[1] === 'job' && !empty($url[2])) {
-    $_GET['slug'] = $url[2];
+    // Remove trailing slash from slug if present
+    $_GET['slug'] = rtrim($url[2], '/');
     $page_to_load = '.hta_slug/job.php';
 }
 // Handle existing query string format for backward compatibility

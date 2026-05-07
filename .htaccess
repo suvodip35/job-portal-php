@@ -20,6 +20,13 @@ RewriteCond %{THE_REQUEST} \s/job\?slug=([^\s&]+) [NC]
 RewriteRule ^ /job/%1? [R=301,L]
 
 # =========================
+# Redirect job URLs without trailing slash to with trailing slash
+# =========================
+RewriteCond %{REQUEST_URI} ^/job/[^/]+$
+RewriteCond %{QUERY_STRING} ^(.*)$
+RewriteRule ^(.*)$ /$1/?%1 [R=301,L]
+
+# =========================
 # Redirect old AMP job URLs to new clean URLs
 # =========================
 RewriteCond %{THE_REQUEST} \s/amp/job\?slug=([^\s&]+) [NC]
