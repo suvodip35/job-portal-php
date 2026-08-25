@@ -53,6 +53,10 @@ $schema = [
     ],
     "description" => $pageDescription
 ];
+
+require_once('_header.php');
+require_once __DIR__ . '/../lib/parsedown-master/Parsedown.php';
+$Parsedown = new Parsedown();
 ?>
 
 <!-- Include NewsArticle JSON-LD -->
@@ -116,7 +120,7 @@ $schema = [
 
     <!-- Article Content -->
     <div class="prose dark:prose-invert max-w-none text-gray-800 dark:text-gray-200 leading-relaxed mb-10 text-base" id="markdownContent">
-        <?= Parsedown::instance()->text($article['description']) ?>
+        <?= $Parsedown->text($article['description']) ?>
     </div>
 
     <!-- Social Share Buttons -->
@@ -156,3 +160,5 @@ $schema = [
         </div>
     <?php endif; ?>
 </div>
+
+<?php require_once('_footer.php'); ?>

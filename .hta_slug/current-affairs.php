@@ -38,6 +38,8 @@ $totalPages = max(1, ceil($total / $perPage));
 $stmt = $pdo->prepare("SELECT id, title, slug, category, description, event_date, thumbnail, pdf_link, views, created_at FROM current_affairs $whereSql ORDER BY event_date DESC, created_at DESC LIMIT $perPage OFFSET $offset");
 $stmt->execute($params);
 $articles = $stmt->fetchAll();
+
+require_once('_header.php');
 ?>
 
 <div class="max-w-6xl mx-auto px-4 py-8">
@@ -137,3 +139,5 @@ $articles = $stmt->fetchAll();
         </div>
     <?php endif; ?>
 </div>
+
+<?php require_once('_footer.php'); ?>

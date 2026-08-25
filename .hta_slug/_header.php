@@ -162,7 +162,14 @@
   <meta name="robots" content="index, follow">
   <meta name="googlebot" content="index, follow">
 
-  <!-- Google tag (gtag.js) & AdSense (Deferred on Browser Idle) -->
+  <!-- Global site tag (gtag.js) - Google Analytics & AdSense -->
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){ window.dataLayer.push(arguments); }
+    window.gtag = gtag;
+    gtag('js', new Date());
+    gtag('config', 'G-7JQW8FVNQ2');
+  </script>
   <script id="opt1">
     (function () {
       let loaded = false;
@@ -174,25 +181,24 @@
           window.removeEventListener(evt, loadThirdParty, { passive: true });
         });
 
-        const runIdle = window.requestIdleCallback || function(cb){ setTimeout(cb, 200); };
+        const runIdle = window.requestIdleCallback || function(cb){ setTimeout(cb, 150); };
         runIdle(function() {
-          // Google Analytics
-          var gtagScript = document.createElement('script');
-          gtagScript.src = "https://www.googletagmanager.com/gtag/js?id=G-7JQW8FVNQ2";
-          gtagScript.async = true;
-          document.head.appendChild(gtagScript);
+          // Load Google Analytics (gtag.js)
+          if (!document.querySelector('script[src*="googletagmanager.com/gtag/js"]')) {
+            var gtagScript = document.createElement('script');
+            gtagScript.src = "https://www.googletagmanager.com/gtag/js?id=G-7JQW8FVNQ2";
+            gtagScript.async = true;
+            document.head.appendChild(gtagScript);
+          }
 
-          window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);}
-          gtag('js', new Date());
-          gtag('config', 'G-7JQW8FVNQ2');
-
-          // Google Ads
-          var adsScript = document.createElement('script');
-          adsScript.src = "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4941413774457326";
-          adsScript.async = true;
-          adsScript.crossOrigin = "anonymous";
-          document.head.appendChild(adsScript);
+          // Load Google AdSense
+          if (!document.querySelector('script[src*="adsbygoogle.js"]')) {
+            var adsScript = document.createElement('script');
+            adsScript.src = "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4941413774457326";
+            adsScript.async = true;
+            adsScript.crossOrigin = "anonymous";
+            document.head.appendChild(adsScript);
+          }
         });
       }
 
@@ -201,7 +207,7 @@
       });
 
       // Fallback for non-interactive visitors / bots
-      setTimeout(loadThirdParty, 6000);
+      setTimeout(loadThirdParty, 3500);
     })();
   </script>
   <meta name="google-adsense-account" content="ca-pub-4941413774457326">
