@@ -160,8 +160,11 @@
 
   <!-- <link rel="stylesheet" href="/assets/css/tailwind.css?v=1.0.4" /> -->
 
-<link rel="preload" href="/assets/css/tailwind.css?v=1.0.4" as="style">
-<link rel="stylesheet" href="/assets/css/tailwind.css?v=1.0.4">
+  <link rel="dns-prefetch" href="//www.googletagmanager.com">
+  <link rel="dns-prefetch" href="//pagead2.googlesyndication.com">
+  <link rel="preload" href="/assets/logo/fc_logo_crop.webp" as="image" fetchpriority="high">
+  <link rel="preload" href="/assets/css/tailwind.css?v=1.0.4" as="style">
+  <link rel="stylesheet" href="/assets/css/tailwind.css?v=1.0.4">
   
   <!-- Canonical URL -->
   <link rel="canonical" href="<?php echo htmlspecialchars($canonicalUrl); ?>">
@@ -170,11 +173,18 @@
   <meta name="robots" content="index, follow">
   <meta name="googlebot" content="index, follow">
 
-  <!-- Google tag (gtag.js) -->
+  <!-- Google tag (gtag.js) & AdSense (Deferred on User Interaction) -->
   <script id="opt1">
-    window.addEventListener('load', function () {
-      const runIdle = window.requestIdleCallback || function(cb){ setTimeout(cb, 2000); };
-      runIdle(function () {
+    (function () {
+      let loaded = false;
+      function loadThirdParty() {
+        if (loaded) return;
+        loaded = true;
+
+        ['scroll', 'mousemove', 'touchstart', 'click', 'keydown'].forEach(function(evt) {
+          window.removeEventListener(evt, loadThirdParty, { passive: true });
+        });
+
         // Google Analytics
         var gtagScript = document.createElement('script');
         gtagScript.src = "https://www.googletagmanager.com/gtag/js?id=G-7JQW8FVNQ2";
@@ -192,8 +202,15 @@
         adsScript.async = true;
         adsScript.crossOrigin = "anonymous";
         document.head.appendChild(adsScript);
+      }
+
+      ['scroll', 'mousemove', 'touchstart', 'click', 'keydown'].forEach(function(evt) {
+        window.addEventListener(evt, loadThirdParty, { passive: true });
       });
-    });
+
+      // 7s fallback for non-interactive visitors / bots
+      setTimeout(loadThirdParty, 7000);
+    })();
   </script>
   <meta name="google-adsense-account" content="ca-pub-4941413774457326">
   <meta property="fb:app_id" content="1469923257657008" />
