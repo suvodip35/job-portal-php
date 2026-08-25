@@ -605,8 +605,16 @@
 
 </style>
 
+<!-- Early PWA Prompt Capture -->
+<script>
+  window.addEventListener('beforeinstallprompt', function(e) {
+    e.preventDefault();
+    window.deferredPwaPrompt = e;
+  });
+</script>
+
 <!-- PWA Install Script -->
-<script src="/assets/js/pwa-install.js?v=4.4" defer></script>
+<script src="/assets/js/pwa-install.js?v=4.5" defer></script>
 
 <!-- Service Worker Registration -->
 <script>
