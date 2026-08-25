@@ -145,22 +145,22 @@ $Parsedown = new Parsedown();
     </div>
 
     <!-- Social Share Buttons Toolbar -->
-    <div class="bg-gray-50 dark:bg-gray-800 rounded-2xl p-4 sm:p-5 border border-gray-200 dark:border-gray-700 mb-10 flex items-center justify-between flex-wrap gap-4">
-        <span class="font-bold text-gray-800 dark:text-gray-200 text-sm flex items-center gap-2">
-            <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/></svg>
+    <div class="ca-share-panel" style="padding: 1.25rem 1.5rem; margin-bottom: 2.5rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; border-radius: 1rem; border: 1px solid #e2e8f0;">
+        <span class="font-bold text-gray-800 dark:text-gray-200 text-sm flex items-center gap-2" style="font-weight: 700; font-size: 14px; display: inline-flex; align-items: center; gap: 0.5rem;">
+            <svg style="width: 16px; height: 16px; color: #2563eb;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/></svg>
             Share Article:
         </span>
-        <div class="flex items-center gap-2 flex-wrap">
-            <a href="https://api.whatsapp.com/send?text=<?= urlencode($article['title'] . ' ' . $canonicalUrl) ?>" target="_blank" rel="noopener" class="px-3.5 py-2 bg-green-600 hover:bg-green-700 text-white text-xs rounded-xl font-bold transition shadow-sm">
+        <div style="display: flex; align-items: center; gap: 0.625rem; flex-wrap: wrap;">
+            <a href="https://api.whatsapp.com/send?text=<?= urlencode($article['title'] . ' ' . $canonicalUrl) ?>" target="_blank" rel="noopener" class="ca-btn-share ca-btn-whatsapp" style="padding: 10px 18px; border-radius: 12px; font-size: 13px; font-weight: 700; background-color: #16a34a; color: #ffffff; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">
                 WhatsApp
             </a>
-            <a href="https://t.me/share/url?url=<?= urlencode($canonicalUrl) ?>&text=<?= urlencode($article['title']) ?>" target="_blank" rel="noopener" class="px-3.5 py-2 bg-blue-500 hover:bg-blue-600 text-white text-xs rounded-xl font-bold transition shadow-sm">
+            <a href="https://t.me/share/url?url=<?= urlencode($canonicalUrl) ?>&text=<?= urlencode($article['title']) ?>" target="_blank" rel="noopener" class="ca-btn-share ca-btn-telegram" style="padding: 10px 18px; border-radius: 12px; font-size: 13px; font-weight: 700; background-color: #0284c7; color: #ffffff; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">
                 Telegram
             </a>
-            <a href="https://www.facebook.com/sharer/sharer.php?u=<?= urlencode($canonicalUrl) ?>" target="_blank" rel="noopener" class="px-3.5 py-2 bg-blue-700 hover:bg-blue-800 text-white text-xs rounded-xl font-bold transition shadow-sm">
+            <a href="https://www.facebook.com/sharer/sharer.php?u=<?= urlencode($canonicalUrl) ?>" target="_blank" rel="noopener" class="ca-btn-share ca-btn-facebook" style="padding: 10px 18px; border-radius: 12px; font-size: 13px; font-weight: 700; background-color: #1d4ed8; color: #ffffff; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">
                 Facebook
             </a>
-            <button onclick="navigator.clipboard.writeText('<?= $canonicalUrl ?>'); alert('Link copied to clipboard!');" class="px-3.5 py-2 bg-gray-600 hover:bg-gray-700 text-white text-xs rounded-xl font-bold transition shadow-sm cursor-pointer border-none">
+            <button onclick="navigator.clipboard.writeText('<?= $canonicalUrl ?>'); alert('Link copied to clipboard!');" class="ca-btn-share ca-btn-copy" style="padding: 10px 18px; border-radius: 12px; font-size: 13px; font-weight: 700; background-color: #475569; color: #ffffff; border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;">
                 Copy Link
             </button>
         </div>

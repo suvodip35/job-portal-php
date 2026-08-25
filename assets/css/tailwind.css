@@ -4481,5 +4481,56 @@ video {
     -ms-overflow-style: none;
     scrollbar-width: none;
 }
+
+/* Share Panel & Shareable Buttons */
+.ca-share-panel {
+    background-color: #f8fafc;
+    border-radius: 1rem;
+    padding: 1.25rem 1.5rem;
+    border: 1px solid #e2e8f0;
+    margin-bottom: 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+.dark .ca-share-panel {
+    background-color: #131c2e;
+    border-color: rgba(255, 255, 255, 0.08);
+}
+
+.ca-btn-share {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.625rem 1.25rem !important;
+    border-radius: 0.75rem !important;
+    font-size: 0.8125rem !important;
+    font-weight: 700 !important;
+    color: #ffffff !important;
+    text-decoration: none !important;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+}
+.ca-btn-share:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.ca-btn-whatsapp { background-color: #16a34a !important; }
+.ca-btn-whatsapp:hover { background-color: #15803d !important; }
+
+.ca-btn-telegram { background-color: #0284c7 !important; }
+.ca-btn-telegram:hover { background-color: #0369a1 !important; }
+
+.ca-btn-facebook { background-color: #1d4ed8 !important; }
+.ca-btn-facebook:hover { background-color: #1e40af !important; }
+
+.ca-btn-copy { background-color: #475569 !important; }
+.ca-btn-copy:hover { background-color: #334155 !important; }
 }
 }
