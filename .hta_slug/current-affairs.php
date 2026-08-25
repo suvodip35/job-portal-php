@@ -52,23 +52,23 @@ if (!function_exists('clean_markdown_snippet')) {
     }
 }
 
-// Category Gradient Color Generator
-function get_category_gradient($cat) {
+// Category Linear-Gradient Style Generator (Direct CSS for 100% Reliability)
+function get_category_style($cat) {
     switch ($cat) {
         case 'Science & Tech':
-            return 'from-blue-600 via-indigo-600 to-cyan-600';
+            return 'background: linear-gradient(135deg, #2563eb 0%, #4f46e5 50%, #0891b2 100%); color: #ffffff;';
         case 'Economy':
-            return 'from-emerald-600 via-teal-600 to-cyan-700';
+            return 'background: linear-gradient(135deg, #059669 0%, #0d9488 50%, #0891b2 100%); color: #ffffff;';
         case 'National':
-            return 'from-indigo-600 via-purple-600 to-blue-700';
+            return 'background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #2563eb 100%); color: #ffffff;';
         case 'International':
-            return 'from-sky-600 via-blue-700 to-indigo-800';
+            return 'background: linear-gradient(135deg, #0284c7 0%, #1d4ed8 50%, #4338ca 100%); color: #ffffff;';
         case 'Sports':
-            return 'from-amber-500 via-orange-600 to-red-600';
+            return 'background: linear-gradient(135deg, #d97706 0%, #ea580c 50%, #dc2626 100%); color: #ffffff;';
         case 'Awards & Honours':
-            return 'from-purple-600 via-pink-600 to-rose-600';
+            return 'background: linear-gradient(135deg, #9333ea 0%, #db2777 50%, #e11d48 100%); color: #ffffff;';
         default:
-            return 'from-blue-600 via-indigo-600 to-purple-700';
+            return 'background: linear-gradient(135deg, #2563eb 0%, #4f46e5 50%, #7c3aed 100%); color: #ffffff;';
     }
 }
 
@@ -139,7 +139,7 @@ require_once('_header.php');
     <?php else: ?>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             <?php foreach ($articles as $item): 
-                $gradientClass = get_category_gradient($item['category'] ?? 'General');
+                $headerStyle = get_category_style($item['category'] ?? 'General');
                 $hasCustomImage = !empty($item['thumbnail']) && strpos($item['thumbnail'], 'fc_logo') === false && strpos($item['thumbnail'], 'logo') === false;
             ?>
                 <article 
@@ -148,7 +148,7 @@ require_once('_header.php');
                     
                     <div>
                         <!-- Header Banner -->
-                        <div class="w-full aspect-[16/9] relative overflow-hidden bg-gradient-to-r <?= $gradientClass ?> p-5 flex flex-col justify-between" style="aspect-ratio: 16/9; min-height: 180px;">
+                        <div class="w-full aspect-[16/9] relative overflow-hidden p-5 flex flex-col justify-between" style="aspect-ratio: 16/9; min-height: 180px; <?= $headerStyle ?>">
                             <?php if ($hasCustomImage): ?>
                                 <img src="<?= e($item['thumbnail']) ?>" alt="<?= e($item['title']) ?>" width="640" height="360" loading="lazy" decoding="async" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                                 <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
@@ -165,7 +165,7 @@ require_once('_header.php');
                                 </span>
                             </div>
 
-                            <!-- Branded Vector Graphic (If no custom photo) -->
+                            <!-- Branded Title inside Header (If no custom photo) -->
                             <?php if (!$hasCustomImage): ?>
                                 <div class="relative z-10 my-auto text-center">
                                     <h3 class="text-white font-black text-lg sm:text-xl drop-shadow tracking-tight line-clamp-2 opacity-95">

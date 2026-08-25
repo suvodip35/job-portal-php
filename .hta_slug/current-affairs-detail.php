@@ -60,22 +60,29 @@ if (preg_match('/^#+\s+' . preg_quote($article['title'], '/') . '/i', trim($clea
     $cleanDescription = preg_replace('/^#+\s+.*?\n+/i', '', trim($cleanDescription));
 }
 
-// Category Gradient Color Generator
-if (!function_exists('get_category_gradient')) {
-    function get_category_gradient($cat) {
+// Category Linear-Gradient Style Generator (Direct CSS for 100% Reliability)
+if (!function_exists('get_category_style')) {
+    function get_category_style($cat) {
         switch ($cat) {
-            case 'Science & Tech': return 'from-blue-600 via-indigo-600 to-cyan-600';
-            case 'Economy': return 'from-emerald-600 via-teal-600 to-cyan-700';
-            case 'National': return 'from-indigo-600 via-purple-600 to-blue-700';
-            case 'International': return 'from-sky-600 via-blue-700 to-indigo-800';
-            case 'Sports': return 'from-amber-500 via-orange-600 to-red-600';
-            case 'Awards & Honours': return 'from-purple-600 via-pink-600 to-rose-600';
-            default: return 'from-blue-600 via-indigo-600 to-purple-700';
+            case 'Science & Tech':
+                return 'background: linear-gradient(135deg, #2563eb 0%, #4f46e5 50%, #0891b2 100%); color: #ffffff;';
+            case 'Economy':
+                return 'background: linear-gradient(135deg, #059669 0%, #0d9488 50%, #0891b2 100%); color: #ffffff;';
+            case 'National':
+                return 'background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #2563eb 100%); color: #ffffff;';
+            case 'International':
+                return 'background: linear-gradient(135deg, #0284c7 0%, #1d4ed8 50%, #4338ca 100%); color: #ffffff;';
+            case 'Sports':
+                return 'background: linear-gradient(135deg, #d97706 0%, #ea580c 50%, #dc2626 100%); color: #ffffff;';
+            case 'Awards & Honours':
+                return 'background: linear-gradient(135deg, #9333ea 0%, #db2777 50%, #e11d48 100%); color: #ffffff;';
+            default:
+                return 'background: linear-gradient(135deg, #2563eb 0%, #4f46e5 50%, #7c3aed 100%); color: #ffffff;';
         }
     }
 }
 
-$gradientClass = get_category_gradient($article['category'] ?? 'General');
+$headerStyle = get_category_style($article['category'] ?? 'General');
 $hasCustomImage = !empty($article['thumbnail']) && strpos($article['thumbnail'], 'fc_logo') === false && strpos($article['thumbnail'], 'logo') === false;
 
 require_once('_header.php');
@@ -117,7 +124,7 @@ $Parsedown = new Parsedown();
     <article class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700/80 overflow-hidden">
         
         <!-- Hero Header Banner -->
-        <div class="w-full aspect-[16/9] max-h-[360px] relative overflow-hidden bg-gradient-to-r <?= $gradientClass ?> p-6 md:p-10 flex flex-col justify-between">
+        <div class="w-full aspect-[16/9] max-h-[360px] relative overflow-hidden p-6 md:p-10 flex flex-col justify-between" style="aspect-ratio: 16/9; <?= $headerStyle ?>">
             <?php if ($hasCustomImage): ?>
                 <img src="<?= e($article['thumbnail']) ?>" alt="<?= e($article['title']) ?>" width="800" height="450" loading="eager" fetchpriority="high" class="absolute inset-0 w-full h-full object-cover">
                 <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"></div>
@@ -210,14 +217,14 @@ $Parsedown = new Parsedown();
             <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-4">Related Current Affairs</h2>
             <div class="grid sm:grid-cols-2 gap-4">
                 <?php foreach ($relatedArticles as $rel): 
-                    $relGradient = get_category_gradient($rel['category'] ?? 'General');
+                    $relStyle = get_category_style($rel['category'] ?? 'General');
                     $relHasImage = !empty($rel['thumbnail']) && strpos($rel['thumbnail'], 'fc_logo') === false && strpos($rel['thumbnail'], 'logo') === false;
                 ?>
                     <a href="/current-affairs/<?= e($rel['slug']) ?>" class="p-4 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-blue-500/50 hover:shadow-md transition flex items-center gap-4 group">
                         <?php if ($relHasImage): ?>
                             <img src="<?= e($rel['thumbnail']) ?>" alt="" width="64" height="64" loading="lazy" decoding="async" class="w-16 h-16 object-cover rounded-lg shrink-0 group-hover:scale-105 transition duration-300">
                         <?php else: ?>
-                            <div class="w-16 h-16 rounded-lg bg-gradient-to-r <?= $relGradient ?> flex items-center justify-center shrink-0 shadow-sm">
+                            <div class="w-16 h-16 rounded-lg flex items-center justify-center shrink-0 shadow-sm" style="<?= $relStyle ?>">
                                 <img src="/assets/logo/fc_logo_crop.webp" alt="" width="28" height="28" class="w-7 h-7 object-contain filter brightness-0 invert">
                             </div>
                         <?php endif; ?>
