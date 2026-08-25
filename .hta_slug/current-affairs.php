@@ -88,7 +88,7 @@ $articles = $stmt->fetchAll();
                 <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden flex flex-col hover:shadow-md transition">
                     <?php if (!empty($item['thumbnail'])): ?>
                         <a href="/current-affairs/<?= e($item['slug']) ?>" class="aspect-video overflow-hidden bg-gray-100 dark:bg-gray-900">
-                            <img src="<?= e($item['thumbnail']) ?>" alt="<?= e($item['title']) ?>" loading="lazy" class="w-full h-full object-cover hover:scale-105 transition duration-300" style="width: 100%; height: 180px;">
+                            <img src="<?= e($item['thumbnail']) ?>" alt="<?= e($item['title']) ?>" width="600" height="400" loading="lazy" decoding="async" class="w-full h-full object-cover hover:scale-105 transition duration-300" style="width: 100%; height: 180px;">
                         </a>
                     <?php endif; ?>
                     <div class="p-5 flex-1 flex flex-col justify-between">

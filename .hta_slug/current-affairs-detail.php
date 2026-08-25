@@ -93,7 +93,7 @@ $schema = [
     <!-- Featured Image -->
     <?php if (!empty($article['thumbnail'])): ?>
         <div class="mb-8 rounded-xl overflow-hidden shadow-sm border border-gray-200 dark:border-gray-700 max-h-[450px]">
-            <img src="<?= e($article['thumbnail']) ?>" alt="<?= e($article['title']) ?>" class="w-full h-full object-cover">
+            <img src="<?= e($article['thumbnail']) ?>" alt="<?= e($article['title']) ?>" width="800" height="450" fetchpriority="high" decoding="async" class="w-full h-full object-cover">
         </div>
     <?php endif; ?>
 
@@ -143,7 +143,7 @@ $schema = [
                 <?php foreach ($relatedArticles as $rel): ?>
                     <a href="/current-affairs/<?= e($rel['slug']) ?>" class="p-4 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 hover:shadow-md transition flex items-center gap-4">
                         <?php if (!empty($rel['thumbnail'])): ?>
-                            <img src="<?= e($rel['thumbnail']) ?>" alt="" class="w-16 h-16 object-cover rounded-lg flex-shrink-0">
+                            <img src="<?= e($rel['thumbnail']) ?>" alt="" width="64" height="64" loading="lazy" decoding="async" class="w-16 h-16 object-cover rounded-lg flex-shrink-0">
                         <?php endif; ?>
                         <div>
                             <span class="text-xs font-semibold text-blue-600 dark:text-blue-400"><?= e($rel['category'] ?? 'General') ?></span>
