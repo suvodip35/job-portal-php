@@ -31,6 +31,15 @@ $schema = [
 ];
 
 
+// Fetch first job thumbnail for LCP Preload
+try {
+    $firstJobStmt = $pdo->query("SELECT thumbnail FROM jobs WHERE status='published' AND thumbnail IS NOT NULL AND thumbnail != '' ORDER BY posted_date DESC LIMIT 1");
+    $firstJobRow = $firstJobStmt->fetch();
+    if (!empty($firstJobRow['thumbnail'])) {
+        $lcpImage = $firstJobRow['thumbnail'];
+    }
+} catch (\Throwable $e) {}
+
 require_once('_header.php');
 
 require __DIR__ . '/../lib/parsedown-master/Parsedown.php';

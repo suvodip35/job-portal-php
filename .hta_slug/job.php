@@ -26,6 +26,7 @@ $keywords = "Government JOBS, ITI JOBS, Railway Jobs, Engineer, " . $job['job_ti
 $ogImage = BASE_URL . $job['thumbnail'] ? $job['thumbnail'] : "assets/logo/FromCampus_Color_text.png";
 $canonicalUrl = "https://fromcampus.com/job/" . $slug;
 $ampHtmlCanonical = "https://fromcampus.com/amp/job/".$slug;
+$lcpImage = !empty($job['thumbnail']) ? $job['thumbnail'] : null;
 
 // Get related jobs (same category, excluding current job)
 $relatedJobs = [];

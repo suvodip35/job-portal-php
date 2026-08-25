@@ -149,9 +149,12 @@
 
   <link rel="dns-prefetch" href="//www.googletagmanager.com">
   <link rel="dns-prefetch" href="//pagead2.googlesyndication.com">
-  <link rel="preload" href="/assets/logo/fc_logo_crop.webp" as="image" fetchpriority="high">
-  <link rel="preload" href="/assets/css/tailwind.css?v=1.0.4" as="style">
-  <link rel="stylesheet" href="/assets/css/tailwind.css?v=1.0.4">
+  <link rel="preload" href="/assets/logo/fc_logo_crop.webp" as="image" type="image/webp" fetchpriority="high">
+  <?php if (!empty($lcpImage)): ?>
+    <link rel="preload" href="<?= e($lcpImage) ?>" as="image" fetchpriority="high">
+  <?php endif; ?>
+  <link rel="preload" href="/assets/css/tailwind.css?v=1.0.4" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="/assets/css/tailwind.css?v=1.0.4"></noscript>
   
   <!-- Canonical URL -->
   <link rel="canonical" href="<?php echo htmlspecialchars($canonicalUrl); ?>">
