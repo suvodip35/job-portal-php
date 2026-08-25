@@ -42,7 +42,8 @@ async function requestNotificationPermission() {
             
             // Now get FCM token with VAPID key for web push
             const token = await messaging.getToken({
-                vapidKey: 'BFTxQwylyJKkYJ8sA3eR9x1Q4Z8-x4z8n8v4k7Q2Xl4N8oP5sT7uW9yZ0a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0u1v2w3x4y5z6' // Replace with your actual VAPID key from Firebase Console
+                serviceWorkerRegistration: registration,
+                vapidKey: 'BOt9XnxPzEX2b8pn0-kGRNqpS1rfby1CEbV-Dc_G87H9Wp5qnd6E_nyDBTHiD_NLoXGyx4Y0RhwbxTNSI9O9dtA'
             });
             
             console.log('FCM Token:', token);
@@ -120,12 +121,5 @@ messaging.onTokenRefresh(async () => {
         await sendTokenToServer(refreshedToken);
     } catch (error) {
         console.error('Unable to retrieve refreshed token ', error);
-    }
-});
-
-// Auto-request permission when page loads
-document.addEventListener('DOMContentLoaded', () => {
-    if ('Notification' in window) {
-        requestNotificationPermission();
     }
 });

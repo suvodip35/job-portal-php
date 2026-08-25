@@ -69,7 +69,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $filename = $base_slug . '_' . uniqid() . '.' . $file_extension;
             $upload_path = $uploadDir . $filename;
             
-            if (move_uploaded_file($_FILES['book_image']['tmp_name'], $upload_path)) {
+            if (compressImage($_FILES['book_image']['tmp_name'], $upload_path, 80, 600, 800) || move_uploaded_file($_FILES['book_image']['tmp_name'], $upload_path)) {
                 // Delete old image if it exists and is not the default
                 if ($book['book_image'] && !str_contains($book['book_image'], 'default-book-cover.jpg')) {
                     $old_image_path = __DIR__ . '/../../' . ltrim($book['book_image'], '/');

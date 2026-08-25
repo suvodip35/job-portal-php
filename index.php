@@ -11,6 +11,12 @@ if ($url[1] === 'job' && !empty($url[2])) {
     $_GET['slug'] = rtrim($url[2], '/');
     $page_to_load = '.hta_slug/job.php';
 }
+// Handle /current-affairs/{slug} pattern
+elseif ($url[1] === 'current-affairs' && !empty($url[2])) {
+    $cleanSlug = explode('?', $url[2])[0];
+    $_GET['slug'] = rtrim($cleanSlug, '/');
+    $page_to_load = '.hta_slug/current-affairs-detail.php';
+}
 // Handle existing query string format for backward compatibility
 elseif ($url[1] === 'job' && !empty($_GET['slug'])) {
     $page_to_load = '.hta_slug/job.php';

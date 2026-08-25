@@ -90,9 +90,9 @@
         <ul class="space-y-2">
           <li><a href="/" class="hover:text-blue-600 dark:hover:text-blue-400">Home</a></li>
           <li><a href="/jobs" class="hover:text-blue-600 dark:hover:text-blue-400">Jobs</a></li>
+          <li><a href="/current-affairs" class="hover:text-blue-600 dark:hover:text-blue-400">Current Affairs</a></li>
           <li><a href="/updates" class="hover:text-blue-600 dark:hover:text-blue-400">Updates</a></li>
           <li><a href="/saved-jobs" class="hover:text-blue-600 dark:hover:text-blue-400">Saved Jobs</a></li>
-          <li><a href="/mock-tests" class="hover:text-blue-600 dark:hover:text-blue-400">Mock Tests</a></li>
           <li><a href="/contact" class="hover:text-blue-600 dark:hover:text-blue-400">Contact Us</a></li>
         </ul>
       </div>

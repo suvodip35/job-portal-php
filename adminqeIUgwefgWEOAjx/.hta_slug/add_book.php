@@ -50,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $filename = $slug . '_' . uniqid() . '.' . $file_extension;
             $upload_path = $uploadDir . $filename;
             
-            if (move_uploaded_file($_FILES['book_image']['tmp_name'], $upload_path)) {
+            if (compressImage($_FILES['book_image']['tmp_name'], $upload_path, 80, 600, 800) || move_uploaded_file($_FILES['book_image']['tmp_name'], $upload_path)) {
                 $book_image = '/book-image/' . $filename;
             } else {
                 $errors[] = "Failed to upload image. Please try again.";

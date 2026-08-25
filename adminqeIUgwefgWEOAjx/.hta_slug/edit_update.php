@@ -137,6 +137,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             $success = "Update edited successfully!";
 
+            // Send FCM push notification for modified update
+            try {
+                require_once __DIR__ . '/../../lib/FCMNotificationService.php';
+                $fcmService = new FCMNotificationService($pdo);
+                $notificationResult = $fcmService->sendToAll(
+                    "Update: " . $title,
+                    mb_substr(strip_tags($description), 0, 120),
+                    [
+                        'url' => BASE_URL . 'updates/' . $slug,
+                        'notification_type' => 'update_modified',
+                        'slug' => $slug
+                    ]
+                );
+                if ($notificationResult['success']) {
+                    $success .= ' Push notifications sent to ' . $notificationResult['sent_count'] . ' subscribers.';
+                }
+            } catch (\Throwable $e) {
+                error_log("Error sending FCM notification for update edit: " . $e->getMessage());
+            }
+
             // reload updated data
             $stmt = $pdo->prepare("SELECT * FROM updates WHERE id = ?");
             $stmt->execute([$id]);

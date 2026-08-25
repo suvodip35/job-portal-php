@@ -10,6 +10,29 @@ function e($str) {
 }
 
 /**
+ * Simple file-based cache helper for semi-static queries
+ */
+function cache_get_or_set(string $key, int $ttl, callable $callback) {
+    $cacheDir = sys_get_temp_dir() . '/fc_cache';
+    if (!is_dir($cacheDir)) {
+        @mkdir($cacheDir, 0755, true);
+    }
+    $file = $cacheDir . '/' . md5($key) . '.cache';
+    if (file_exists($file) && (time() - filemtime($file)) < $ttl) {
+        $content = @file_get_contents($file);
+        if ($content !== false) {
+            $data = json_decode($content, true);
+            if ($data !== null) {
+                return $data;
+            }
+        }
+    }
+    $data = $callback();
+    @file_put_contents($file, json_encode($data), LOCK_EX);
+    return $data;
+}
+
+/**
  * Generate slug from string
  */
 function slugify(string $text): string {

@@ -12,12 +12,12 @@
 
         // File read + increment
         if(!file_exists($file)) {
-            file_put_contents($file, 0);
+            @file_put_contents($file, 0, LOCK_EX);
         }
 
-        $count = (int) file_get_contents($file);
+        $count = (int) @file_get_contents($file);
         $count++;
-        file_put_contents($file, $count);
+        @file_put_contents($file, $count, LOCK_EX);
 
     } else {
         // Cookie থাকলে কাউন্ট বাড়বে না
@@ -158,8 +158,6 @@
   <meta property="og:locale" content="bn_IN">
   <meta property="og:locale" content="hi_IN">
 
-  <link rel="preload" as="image" href="FIRST_IMAGE_URL">
-
   <!-- <link rel="stylesheet" href="/assets/css/tailwind.css?v=1.0.4" /> -->
 
 <link rel="preload" href="/assets/css/tailwind.css?v=1.0.4" as="style">
@@ -174,11 +172,9 @@
 
   <!-- Google tag (gtag.js) -->
   <script id="opt1">
-    // run after DOM ready, not full load
-    document.addEventListener('DOMContentLoaded', function () {
-      
-      setTimeout(function () {
-
+    window.addEventListener('load', function () {
+      const runIdle = window.requestIdleCallback || function(cb){ setTimeout(cb, 2000); };
+      runIdle(function () {
         // Google Analytics
         var gtagScript = document.createElement('script');
         gtagScript.src = "https://www.googletagmanager.com/gtag/js?id=G-7JQW8FVNQ2";
@@ -196,18 +192,11 @@
         adsScript.async = true;
         adsScript.crossOrigin = "anonymous";
         document.head.appendChild(adsScript);
-
-      }, 3000); // increase delay একটু
+      });
     });
   </script>
   <meta name="google-adsense-account" content="ca-pub-4941413774457326">
-  <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4941413774457326" crossorigin="anonymous"></script> -->
   <meta property="fb:app_id" content="1469923257657008" />
-
-  <!-- Firebase SDK for Push Notifications -->
-  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-messaging-compat.js"></script>
-  <script src="/firebase-config.js"></script>
 
 </head>
 <body class="bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 antialiased">
@@ -220,7 +209,7 @@
       <div class="flex items-center">
         <!-- <a href="/" class="text-xl font-semibold">From Campus</a> -->
         <a href="/" class="text-xl font-semibold flex flex-col justify-center items-center" >
-          <img src="/assets/logo/fc_logo_crop.webp" alt="FromCampus Logo" class="w-[40px] h-auto" width="40" height="40" />
+          <img src="/assets/logo/fc_logo_crop.webp" alt="FromCampus Logo" style="width: 40px; height: auto;" width="40" height="40" />
           <p class="text-xs"><?= e(APP_NAME) ?></p>
         </a>
         <form action="<?= BASE_URL ?>search" method="get" class="ml-6 hidden md:block">
@@ -235,9 +224,9 @@
         <a href="/" class="hover:text-blue-600 dark:hover:text-blue-400">Home</a>
         <a href="/" class="hover:text-blue-600 dark:hover:text-blue-400">Jobs</a>
         <a href="/books" class="hover:text-blue-600 dark:hover:text-blue-400">Books</a>
+        <a href="/current-affairs" class="hover:text-blue-600 dark:hover:text-blue-400">Current Affairs</a>
         <a href="/updates" class="hover:text-blue-600 dark:hover:text-blue-400">Updates</a>
         <a href="/tools" class="hover:text-blue-600 dark:hover:text-blue-400">Tools</a>
-        <a href="/contact" class="hover:text-blue-600 dark:hover:text-blue-400">Contact</a>
         <a href="/saved-jobs" class="hover:text-blue-600 dark:hover:text-blue-400">Saved</a>
         
         <!-- <button id="themeToggle" title="Toggle theme" class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition">
@@ -302,72 +291,92 @@
     mobileMenu.classList.toggle('hidden');
   });
   
-  // Mobile push notification functionality
-  const mobileBtn = document.getElementById('mobilePushNotificationBtn');
-  if (mobileBtn) {
-    mobileBtn.addEventListener('click', async () => {
-      try {
-        // Request notification permission
-        const permission = await Notification.requestPermission();
+  // Helper to dynamically load external scripts on demand
+  function loadScriptAsync(src) {
+    return new Promise((resolve, reject) => {
+      if (document.querySelector(`script[src="${src}"]`)) return resolve();
+      const s = document.createElement('script');
+      s.src = src;
+      s.onload = resolve;
+      s.onerror = reject;
+      document.head.appendChild(s);
+    });
+  }
+
+  async function ensureFirebaseLoaded() {
+    if (typeof firebase === 'undefined' || !firebase.messaging) {
+      await loadScriptAsync('https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js');
+      await loadScriptAsync('https://www.gstatic.com/firebasejs/9.0.0/firebase-messaging-compat.js');
+      await loadScriptAsync('/firebase-config.js');
+    }
+  }
+
+  async function subscribeToPushNotifications(btnElement) {
+    try {
+      await ensureFirebaseLoaded();
+      const permission = await Notification.requestPermission();
+      
+      if (permission === 'granted') {
+        let reg;
+        try {
+          reg = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
+          await navigator.serviceWorker.ready;
+        } catch (error) {
+          alert('Failed to set up notifications. Please try again.');
+          return;
+        }
         
-        if (permission === 'granted') {
-          // Simplified approach - use only firebase-messaging-sw.js
-          try {
-            // Register only the Firebase service worker
-            await navigator.serviceWorker.register('/firebase-messaging-sw.js');
-            
-            // Don't wait for it to become active
-            // This reduces the delay significantly
-            
-          } catch (error) {
-            alert('Failed to set up notifications. Please try again.');
-            return; // Exit early if service worker fails
-          }
+        if (typeof firebase !== 'undefined' && firebase.messaging) {
+          const messaging = firebase.messaging();
+          const token = await messaging.getToken({
+            serviceWorkerRegistration: reg,
+            vapidKey: 'BOt9XnxPzEX2b8pn0-kGRNqpS1rfby1CEbV-Dc_G87H9Wp5qnd6E_nyDBTHiD_NLoXGyx4Y0RhwbxTNSI9O9dtA'
+          });
           
-          // Get Firebase token
-          if (typeof firebase !== 'undefined' && firebase.messaging) {
-            const messaging = firebase.messaging();
-            const token = await messaging.getToken({
-              vapidKey: 'BOt9XnxPzEX2b8pn0-kGRNqpS1rfby1CEbV-Dc_G87H9Wp5qnd6E_nyDBTHiD_NLoXGyx4Y0RhwbxTNSI9O9dtA'
+          if (token) {
+            const data = {
+              token: token,
+              user_agent: navigator.userAgent,
+              timestamp: Date.now()
+            };
+            
+            const response = await fetch('/api/save-fcm-token.php', {
+              method: 'POST',
+              headers: {'Content-Type': 'application/json'},
+              body: JSON.stringify(data)
             });
             
-            if (token) {
-              // Prepare data
-              const data = {
-                token: token,
-                user_agent: navigator.userAgent,
-                timestamp: Date.now()
-              };
-              
-              // Send to server
-              const response = await fetch('/api/save-fcm-token.php', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify(data)
-              });
-              
-              if (response.ok) {
-                alert('Successfully subscribed to job alerts!');
-                // Update button
-                mobileBtn.innerHTML = '<svg class="w-4 h-4 inline mr-2" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Subscribed';
-                mobileBtn.classList.remove('bg-blue-600');
-                mobileBtn.classList.add('bg-green-600');
-              } else {
-                alert('Failed to save subscription. Please try again.');
+            if (response.ok) {
+              alert('Successfully subscribed to job alerts!');
+              if (btnElement) {
+                btnElement.innerHTML = '<svg class="w-4 h-4 inline mr-2" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Subscribed';
+                btnElement.classList.remove('bg-blue-600');
+                btnElement.classList.add('bg-green-600');
               }
             } else {
-              alert('Failed to get notification token. Please try again.');
+              alert('Failed to save subscription. Please try again.');
             }
           } else {
-            alert('Notification system not available. Please refresh and try again.');
+            alert('Failed to get notification token. Please try again.');
           }
         } else {
-          alert('Permission denied for notifications');
+          alert('Notification system not available. Please refresh and try again.');
         }
-      } catch (error) {
-        alert('An error occurred. Please try again.');
+      } else {
+        alert('Permission denied for notifications');
       }
-    });
+    } catch (error) {
+      alert('An error occurred. Please try again.');
+    }
+  }
+
+  const mobileBtn = document.getElementById('mobilePushNotificationBtn');
+  if (mobileBtn) {
+    mobileBtn.addEventListener('click', () => subscribeToPushNotifications(mobileBtn));
+  }
+  const desktopBtn = document.getElementById('subscribePushBtn');
+  if (desktopBtn) {
+    desktopBtn.addEventListener('click', () => subscribeToPushNotifications(desktopBtn));
   }
   
 </script>

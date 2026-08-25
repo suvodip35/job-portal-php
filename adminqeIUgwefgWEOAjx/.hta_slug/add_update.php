@@ -94,6 +94,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->execute([ $title, $slug, $update_type, $description, $link, $meta_title, $meta_desc, $thumbnail ]);
 
         $success = "Update added successfully!";
+
+        // Send FCM push notification to all subscribers for new update
+        try {
+            require_once __DIR__ . '/../../lib/FCMNotificationService.php';
+            $fcmService = new FCMNotificationService($pdo);
+            $notificationResult = $fcmService->sendToAll(
+                "New Update: " . $title,
+                mb_substr(strip_tags($description), 0, 120),
+                [
+                    'url' => BASE_URL . 'updates/' . $slug,
+                    'notification_type' => 'new_update',
+                    'slug' => $slug
+                ]
+            );
+            if ($notificationResult['success']) {
+                $success .= ' Push notifications sent to ' . $notificationResult['sent_count'] . ' subscribers.';
+            }
+        } catch (\Throwable $e) {
+            error_log("Error sending FCM notification for new update: " . $e->getMessage());
+        }
     } else {
         $err = implode("<br>", $errors);
     }
