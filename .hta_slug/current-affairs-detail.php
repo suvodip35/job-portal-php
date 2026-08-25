@@ -82,8 +82,20 @@ if (!function_exists('get_category_style')) {
     }
 }
 
+// Case-insensitive valid thumbnail inspector
+if (!function_exists('is_valid_thumbnail')) {
+    function is_valid_thumbnail($thumb) {
+        if (empty($thumb)) return false;
+        $thumbLower = strtolower($thumb);
+        if (strpos($thumbLower, 'logo') !== false) return false;
+        if (strpos($thumbLower, 'fc_') !== false) return false;
+        if (strpos($thumbLower, 'fromcampus') !== false) return false;
+        return true;
+    }
+}
+
 $headerStyle = get_category_style($article['category'] ?? 'General');
-$hasCustomImage = !empty($article['thumbnail']) && strpos($article['thumbnail'], 'fc_logo') === false && strpos($article['thumbnail'], 'logo') === false;
+$hasCustomImage = is_valid_thumbnail($article['thumbnail']);
 
 require_once('_header.php');
 require_once __DIR__ . '/../lib/parsedown-master/Parsedown.php';
@@ -218,7 +230,7 @@ $Parsedown = new Parsedown();
             <div class="grid sm:grid-cols-2 gap-4">
                 <?php foreach ($relatedArticles as $rel): 
                     $relStyle = get_category_style($rel['category'] ?? 'General');
-                    $relHasImage = !empty($rel['thumbnail']) && strpos($rel['thumbnail'], 'fc_logo') === false && strpos($rel['thumbnail'], 'logo') === false;
+                    $relHasImage = is_valid_thumbnail($rel['thumbnail']);
                 ?>
                     <a href="/current-affairs/<?= e($rel['slug']) ?>" class="p-4 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-blue-500/50 hover:shadow-md transition flex items-center gap-4 group">
                         <?php if ($relHasImage): ?>

@@ -53,22 +53,36 @@ if (!function_exists('clean_markdown_snippet')) {
 }
 
 // Category Linear-Gradient Style Generator (Direct CSS for 100% Reliability)
-function get_category_style($cat) {
-    switch ($cat) {
-        case 'Science & Tech':
-            return 'background: linear-gradient(135deg, #2563eb 0%, #4f46e5 50%, #0891b2 100%); color: #ffffff;';
-        case 'Economy':
-            return 'background: linear-gradient(135deg, #059669 0%, #0d9488 50%, #0891b2 100%); color: #ffffff;';
-        case 'National':
-            return 'background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #2563eb 100%); color: #ffffff;';
-        case 'International':
-            return 'background: linear-gradient(135deg, #0284c7 0%, #1d4ed8 50%, #4338ca 100%); color: #ffffff;';
-        case 'Sports':
-            return 'background: linear-gradient(135deg, #d97706 0%, #ea580c 50%, #dc2626 100%); color: #ffffff;';
-        case 'Awards & Honours':
-            return 'background: linear-gradient(135deg, #9333ea 0%, #db2777 50%, #e11d48 100%); color: #ffffff;';
-        default:
-            return 'background: linear-gradient(135deg, #2563eb 0%, #4f46e5 50%, #7c3aed 100%); color: #ffffff;';
+if (!function_exists('get_category_style')) {
+    function get_category_style($cat) {
+        switch ($cat) {
+            case 'Science & Tech':
+                return 'background: linear-gradient(135deg, #2563eb 0%, #4f46e5 50%, #0891b2 100%); color: #ffffff;';
+            case 'Economy':
+                return 'background: linear-gradient(135deg, #059669 0%, #0d9488 50%, #0891b2 100%); color: #ffffff;';
+            case 'National':
+                return 'background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #2563eb 100%); color: #ffffff;';
+            case 'International':
+                return 'background: linear-gradient(135deg, #0284c7 0%, #1d4ed8 50%, #4338ca 100%); color: #ffffff;';
+            case 'Sports':
+                return 'background: linear-gradient(135deg, #d97706 0%, #ea580c 50%, #dc2626 100%); color: #ffffff;';
+            case 'Awards & Honours':
+                return 'background: linear-gradient(135deg, #9333ea 0%, #db2777 50%, #e11d48 100%); color: #ffffff;';
+            default:
+                return 'background: linear-gradient(135deg, #2563eb 0%, #4f46e5 50%, #7c3aed 100%); color: #ffffff;';
+        }
+    }
+}
+
+// Case-insensitive valid thumbnail inspector
+if (!function_exists('is_valid_thumbnail')) {
+    function is_valid_thumbnail($thumb) {
+        if (empty($thumb)) return false;
+        $thumbLower = strtolower($thumb);
+        if (strpos($thumbLower, 'logo') !== false) return false;
+        if (strpos($thumbLower, 'fc_') !== false) return false;
+        if (strpos($thumbLower, 'fromcampus') !== false) return false;
+        return true;
     }
 }
 
@@ -140,7 +154,7 @@ require_once('_header.php');
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             <?php foreach ($articles as $item): 
                 $headerStyle = get_category_style($item['category'] ?? 'General');
-                $hasCustomImage = !empty($item['thumbnail']) && strpos($item['thumbnail'], 'fc_logo') === false && strpos($item['thumbnail'], 'logo') === false;
+                $hasCustomImage = is_valid_thumbnail($item['thumbnail']);
             ?>
                 <article 
                     onclick="location.href='/current-affairs/<?= e($item['slug']) ?>'" 
