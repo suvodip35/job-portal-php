@@ -226,7 +226,7 @@
       <div class="flex items-center">
         <!-- <a href="/" class="text-xl font-semibold">From Campus</a> -->
         <a href="/" class="text-xl font-semibold flex flex-col justify-center items-center" >
-          <img src="/assets/logo/fc_logo_crop.webp" alt="FromCampus Logo" style="width: 40px; height: auto;" width="40" height="40" />
+          <img src="/assets/logo/fc_logo_crop.webp" alt="FromCampus Logo" style="width: 40px; height: auto;" width="40" height="40" fetchpriority="high" decoding="async" />
           <p class="text-xs"><?= e(APP_NAME) ?></p>
         </a>
         <form action="<?= BASE_URL ?>search" method="get" class="ml-6 hidden md:block">
@@ -616,34 +616,30 @@
 </style>
 
 <!-- PWA Install Script -->
-<script src="/assets/js/pwa-install.js?v=4.4"></script>
+<script src="/assets/js/pwa-install.js?v=4.4" defer></script>
 
 <!-- Service Worker Registration -->
 <script>
 if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
+  const registerSW = function() {
     navigator.serviceWorker.register('/sw.js')
       .then((registration) => {
-        // Force service worker to take control immediately
         if (registration.active) {
           registration.active.postMessage({ type: 'CLAIM_CLIENTS' });
         }
-        
-        // Check for updates - auto-update without confirmation
         registration.addEventListener('updatefound', () => {
           const newWorker = registration.installing;
           newWorker.addEventListener('statechange', () => {
             if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-              // New version available - auto-update
               newWorker.postMessage({ type: 'SKIP_WAITING' });
             }
           });
         });
       })
-      .catch((error) => {
-        // Service Worker registration failed
-      });
-  });
+      .catch(() => {});
+  };
+  const runIdleSW = window.requestIdleCallback || function(cb){ setTimeout(cb, 5000); };
+  window.addEventListener('load', () => { runIdleSW(registerSW); });
 }
 </script>
 

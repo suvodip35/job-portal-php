@@ -47,27 +47,15 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
     
-    // For Chrome mobile, show banner immediately without waiting for beforeinstallprompt
-    if (window.innerWidth <= 768 && isChrome) {
-        setTimeout(() => {
+    // For Chrome mobile, show banner in idle time without blocking page render
+    const runIdleBanner = window.requestIdleCallback || function(cb){ setTimeout(cb, 8000); };
+    runIdleBanner(() => {
+        if (window.innerWidth <= 768 && !sessionStorage.getItem('pwa-banner-shown-session')) {
             showInstallBanner();
-        }, 3000);
-    }
-    
-    if (window.innerWidth <= 768) {
-        setTimeout(() => {
-            showInstallBanner();
-        }, 2000);
-    }
+            sessionStorage.setItem('pwa-banner-shown-session', 'true');
+        }
+    });
 });
-
-// Simple fallback - show banner after 5 seconds if no event
-setTimeout(() => {
-    if (window.innerWidth <= 768 && !sessionStorage.getItem('pwa-banner-shown-session')) {
-        showInstallBanner();
-        sessionStorage.setItem('pwa-banner-shown-session', 'true');
-    }
-}, 5000);
 
 // Create install banner for mobile
 function showInstallBanner() {

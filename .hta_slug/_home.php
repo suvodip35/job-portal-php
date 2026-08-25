@@ -239,23 +239,57 @@ $currentUpdates = cache_get_or_set('home_current_updates', 300, function() use (
 </div>
 
 
-<!-- ===== Marquee (Native tag as requested) ===== -->
+<!-- ===== Marquee ===== -->
 <?php if ($marqueeJobs): ?>
+<style>
+  .marquee-wrap {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    white-space: nowrap !important;
+    height: 26px;
+    display: flex;
+    align-items: center;
+  }
+  .marquee-content {
+    display: inline-flex;
+    white-space: nowrap !important;
+    animation: marquee-scroll 35s linear infinite;
+    will-change: transform;
+  }
+  .marquee-content:hover {
+    animation-play-state: paused;
+  }
+  .marquee-link {
+    display: inline-block;
+    white-space: nowrap !important;
+    font-size: 0.875rem;
+    color: inherit;
+    padding: 0 4px;
+  }
+  .marquee-link:hover {
+    color: #2563eb;
+  }
+  @keyframes marquee-scroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+</style>
 <div class="border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-2 flex items-center gap-3 overflow-hidden">
-    <span class="px-2 py-0.5 text-xs font-semibold rounded bg-yellow-300 text-black">Breaking</span>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-2 flex items-center gap-3 overflow-hidden" style="min-height: 42px;">
+    <span class="px-2 py-0.5 text-xs font-semibold rounded bg-yellow-300 text-black shrink-0">Breaking</span>
     <div class="marquee-wrap">
       <div class="marquee-content">
         <?php foreach ($marqueeJobs as $i=>$mj): ?>
           <a class="marquee-link" href="<?= BASE_URL ?>job/<?= e($mj['job_title_slug']) ?>" aria-label="<?= e($mj['job_title']) ?>" title="<?= e($mj['job_title']) ?>">
             <?= e($mj['job_title']) ?>
-          </a><?= $i<count($marqueeJobs)-1 ? ' • ' : '' ?>
+          </a><span class="text-gray-400 dark:text-gray-500 mx-1">•</span>
         <?php endforeach; ?>
         <!-- Duplicate for seamless loop -->
         <?php foreach ($marqueeJobs as $i=>$mj): ?>
           <a class="marquee-link" href="<?= BASE_URL ?>job/<?= e($mj['job_title_slug']) ?>" aria-label="<?= e($mj['job_title']) ?>" title="<?= e($mj['job_title']) ?>">
             <?= e($mj['job_title']) ?>
-          </a><?= $i<count($marqueeJobs)-1 ? ' • ' : '' ?>
+          </a><span class="text-gray-400 dark:text-gray-500 mx-1">•</span>
         <?php endforeach; ?>
       </div>
     </div>
