@@ -4501,20 +4501,23 @@ video {
 }
 
 .ca-btn-share {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    padding: 0.625rem 1.25rem !important;
-    border-radius: 0.75rem !important;
-    font-size: 0.8125rem !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 6px !important;
+    padding: 10px 20px !important;
+    min-height: 42px !important;
+    border-radius: 12px !important;
+    font-size: 13px !important;
     font-weight: 700 !important;
     color: #ffffff !important;
     text-decoration: none !important;
-    border: none;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+    border: none !important;
+    cursor: pointer !important;
+    line-height: 1 !important;
+    transition: all 0.2s ease !important;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15) !important;
+    margin: 3px !important;
 }
 .ca-btn-share:hover {
     transform: translateY(-1px);
