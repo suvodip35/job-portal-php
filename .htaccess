@@ -41,7 +41,7 @@ RewriteRule ^ /updates/%1? [R=301,L]
 # =========================
 # Don't rewrite static assets, API, and service workers
 # =========================
-RewriteRule ^(assets|thumbnails|book-image|s-assets|logo|tools-image|api|.*\.js|.*\.json|.*\.xml|.*\.webmanifest)/ - [L]
+RewriteRule ^(assets|thumbnails|book-image|s-assets|logo|tools-image|api|.*\.js|.*\.json|.*\.xml|.*\.txt|.*\.webmanifest)/ - [L]
 
 # =========================
 # Routing
