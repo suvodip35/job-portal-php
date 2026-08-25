@@ -124,17 +124,20 @@ require_once('_header.php');
             <?php foreach ($articles as $item): ?>
                 <article class="group bg-white dark:bg-gray-800 rounded-2xl shadow-sm hover:shadow-xl border border-gray-200 dark:border-gray-700/80 overflow-hidden flex flex-col transition-all duration-300 hover:-translate-y-1">
                     <!-- Thumbnail Container with Overlay Badge -->
-                    <div class="relative aspect-[16/9] overflow-hidden bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
-                        <?php if (!empty($item['thumbnail'])): ?>
+                    <div class="relative aspect-[16/9] overflow-hidden bg-gradient-to-br from-blue-600 via-indigo-600 to-blue-700">
+                        <?php if (!empty($item['thumbnail']) && strpos($item['thumbnail'], 'logo') === false): ?>
                             <img src="<?= e($item['thumbnail']) ?>" alt="<?= e($item['title']) ?>" width="640" height="360" loading="lazy" decoding="async" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" style="aspect-ratio: 16/9;">
                         <?php else: ?>
-                            <div class="w-full h-full flex items-center justify-center p-4">
-                                <img src="/assets/logo/fc_logo_crop.webp" alt="FromCampus" width="64" height="64" class="opacity-60 object-contain">
+                            <div class="w-full h-full flex items-center justify-center p-4 bg-gradient-to-br from-blue-600 to-indigo-700">
+                                <div class="flex flex-col items-center gap-1.5 opacity-90">
+                                    <img src="/assets/logo/fc_logo_crop.webp" alt="FromCampus" width="48" height="48" class="w-12 h-12 object-contain filter brightness-0 invert drop-shadow">
+                                    <span class="text-[10px] font-bold tracking-widest uppercase text-white/80">FromCampus News</span>
+                                </div>
                             </div>
                         <?php endif; ?>
                         
                         <!-- Category Badge -->
-                        <span class="absolute top-3 left-3 px-2.5 py-1 rounded-lg text-[11px] font-bold tracking-wide uppercase bg-blue-600/90 text-white backdrop-blur shadow-sm">
+                        <span class="absolute top-3 left-3 px-2.5 py-1 rounded-lg text-[11px] font-bold tracking-wide uppercase bg-black/40 text-white backdrop-blur border border-white/20 shadow-sm">
                             <?= e($item['category'] ?? 'General') ?>
                         </span>
                     </div>
