@@ -153,8 +153,7 @@
   <?php if (!empty($lcpImage)): ?>
     <link rel="preload" href="<?= e($lcpImage) ?>" as="image" fetchpriority="high">
   <?php endif; ?>
-  <link rel="preload" href="/assets/css/tailwind.css?v=1.0.4" as="style" onload="this.onload=null;this.rel='stylesheet'">
-  <noscript><link rel="stylesheet" href="/assets/css/tailwind.css?v=1.0.4"></noscript>
+  <link rel="stylesheet" href="/assets/css/tailwind.css?v=1.0.4" />
   
   <!-- Canonical URL -->
   <link rel="canonical" href="<?php echo htmlspecialchars($canonicalUrl); ?>">
@@ -163,7 +162,7 @@
   <meta name="robots" content="index, follow">
   <meta name="googlebot" content="index, follow">
 
-  <!-- Google tag (gtag.js) & AdSense (Deferred on User Interaction) -->
+  <!-- Google tag (gtag.js) & AdSense (Deferred on Browser Idle) -->
   <script id="opt1">
     (function () {
       let loaded = false;
@@ -175,31 +174,34 @@
           window.removeEventListener(evt, loadThirdParty, { passive: true });
         });
 
-        // Google Analytics
-        var gtagScript = document.createElement('script');
-        gtagScript.src = "https://www.googletagmanager.com/gtag/js?id=G-7JQW8FVNQ2";
-        gtagScript.async = true;
-        document.head.appendChild(gtagScript);
+        const runIdle = window.requestIdleCallback || function(cb){ setTimeout(cb, 200); };
+        runIdle(function() {
+          // Google Analytics
+          var gtagScript = document.createElement('script');
+          gtagScript.src = "https://www.googletagmanager.com/gtag/js?id=G-7JQW8FVNQ2";
+          gtagScript.async = true;
+          document.head.appendChild(gtagScript);
 
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'G-7JQW8FVNQ2');
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-7JQW8FVNQ2');
 
-        // Google Ads
-        var adsScript = document.createElement('script');
-        adsScript.src = "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4941413774457326";
-        adsScript.async = true;
-        adsScript.crossOrigin = "anonymous";
-        document.head.appendChild(adsScript);
+          // Google Ads
+          var adsScript = document.createElement('script');
+          adsScript.src = "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4941413774457326";
+          adsScript.async = true;
+          adsScript.crossOrigin = "anonymous";
+          document.head.appendChild(adsScript);
+        });
       }
 
       ['scroll', 'mousemove', 'touchstart', 'click', 'keydown'].forEach(function(evt) {
         window.addEventListener(evt, loadThirdParty, { passive: true });
       });
 
-      // 7s fallback for non-interactive visitors / bots
-      setTimeout(loadThirdParty, 7000);
+      // Fallback for non-interactive visitors / bots
+      setTimeout(loadThirdParty, 6000);
     })();
   </script>
   <meta name="google-adsense-account" content="ca-pub-4941413774457326">

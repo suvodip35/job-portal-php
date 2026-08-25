@@ -224,7 +224,7 @@ $currentUpdates = cache_get_or_set('home_current_updates', 300, function() use (
 <div id="actual-content">
 
 <!-- ===== Category Sub-Nav (sticky under main nav) ===== -->
-<div id="subnav" class="sticky top-0 z-30 bg-white/90 dark:bg-gray-900/90 backdrop-blur border-b border-gray-200 dark:border-gray-700">
+<div id="subnav" class="sticky top-0 z-30 bg-white/90 dark:bg-gray-900/90 backdrop-blur border-b border-gray-200 dark:border-gray-700" style="min-height: 48px;">
   <div class="max-w-7xl mx-auto px-4 sm:px-6">
     <div class="flex items-center gap-2 overflow-x-auto no-scrollbar py-2">
       <?php foreach ($CATEGORY_TABS as $t): 
@@ -486,7 +486,7 @@ $currentUpdates = cache_get_or_set('home_current_updates', 300, function() use (
             class="group border cursor-pointer rounded-2xl bg-white dark:bg-gray-800 shadow hover:shadow-2xl transition overflow-hidden w-full">
 
             <?php if (!empty($job['thumbnail'])): ?>
-              <div class="w-full aspect-[16/9] overflow-hidden rounded">
+              <div class="w-full aspect-[16/9] overflow-hidden rounded" style="aspect-ratio: 16/9; min-height: 180px;">
                 <img 
                   src="<?= e($job['thumbnail']) ?>"
                   
@@ -498,10 +498,11 @@ $currentUpdates = cache_get_or_set('home_current_updates', 300, function() use (
                     decoding="async"
                   <?php endif; ?>
 
-                  width="300"
-                  height="200"
+                  width="640"
+                  height="360"
                   alt="<?= e($job['job_title']) ?>"
                   class="w-full h-full object-cover"
+                  style="aspect-ratio: 16/9;"
                 />
               </div>
             <?php endif; ?>
@@ -528,7 +529,7 @@ $currentUpdates = cache_get_or_set('home_current_updates', 300, function() use (
             <?php  endif;  ?>
 
               <?php 
-                $plainDesc = trim(strip_tags($Parsedown->text($job['description'] ?? '')));
+                $plainDesc = trim(strip_tags($job['description'] ?? ''));
                 $cardSummary = mb_substr($plainDesc, 0, 160);
                 if (mb_strlen($plainDesc) > 160) {
                     $cardSummary .= '...';

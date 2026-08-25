@@ -125,8 +125,8 @@
       </div>
       <div>
         <h2 class="">Total Visits:</h2>
-        <div class="text-white fw-normal roller-counter" data-count="<?php echo $count ?? 0; ?>">
-                <span id="rollerCounter"></span>
+        <div class="text-white fw-normal roller-counter" data-count="<?php echo $count ?? 0; ?>" style="min-height: 28px; min-width: 100px; display: inline-flex; align-items: center;">
+                <span id="rollerCounter" style="display: inline-flex; min-height: 28px;"></span>
             </div>
       </div>
     </div>

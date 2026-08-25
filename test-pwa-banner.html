@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PWA Install Banner Test</title>
+    <link rel="manifest" href="/manifest.json">
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 0;
+            padding: 20px;
+            padding-bottom: 90px;
+            background: #f8fafc;
+        }
+        .demo-content {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        /* Simulated Mobile Bottom Navigation Bar (matches _footer.php line 40) */
+        .mobile-bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 56px;
+            background: #f1f5f9;
+            border-top: 1px solid #cbd5e1;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            z-index: 50;
+        }
+        .nav-item {
+            font-size: 11px;
+            color: #475569;
+            text-align: center;
+        }
+    </style>
+    <!-- Early PWA Prompt Capture -->
+    <script>
+      window.addEventListener('beforeinstallprompt', function(e) {
+        e.preventDefault();
+        window.deferredPwaPrompt = e;
+      });
+    </script>
+    <script src="/assets/js/pwa-install.js?v=4.5" defer></script>
+</head>
+<body>
+    <div class="demo-content">
+        <h1>📱 PWA Install Banner Demo</h1>
+        <p>This page tests the PWA install banner, positioning, dismissal, and instructions modal.</p>
+        
+        <button onclick="localStorage.removeItem('pwa-banner-dismissed-until'); sessionStorage.removeItem('pwa-banner-dismissed-session'); localStorage.removeItem('pwa-installed'); location.reload();" style="padding: 10px 16px; background: #2563eb; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;">
+            Reset Dismissal & Show Banner
+        </button>
+        <button onclick="showInstructionModal()" style="padding: 10px 16px; background: #475569; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-left: 8px;">
+            Test Instructions Modal
+        </button>
+    </div>
+
+    <!-- Mobile Bottom Nav Bar (Simulated) -->
+    <div class="mobile-bottom-nav">
+        <div class="nav-item">🏠 Home</div>
+        <div class="nav-item">📚 Books</div>
+        <div class="nav-item">🔔 Updates</div>
+        <div class="nav-item">🛠️ Tools</div>
+        <div class="nav-item">🔖 Saved</div>
+    </div>
+</body>
+</html>
