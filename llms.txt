@@ -1,0 +1,16 @@
+# FromCampus - Jobs, Current Affairs & Exam Preparation Portal
+
+> FromCampus is India's leading job notification and current affairs portal providing daily updates on recruitment, government exams, books, and study resources.
+
+## Core Sections & API Links
+
+- [Latest Jobs](https://fromcampus.com/) - Daily recruitment updates for ITI, Diploma, Graduate, and Engineering jobs.
+- [Daily Current Affairs](https://fromcampus.com/current-affairs) - Daily national, international, sports, economy, and science news for competitive exams.
+- [Exam Updates](https://fromcampus.com/updates) - Admit cards, exam dates, answer keys, and results.
+- [Books & Study Notes](https://fromcampus.com/books) - PDF notes, study guides, and exam preparation books.
+- [Tools](https://fromcampus.com/tools) - Free online utilities (Image Compressor, Typing Test, QR Code Generator).
+
+## Technical Feeds
+
+- [XML Sitemap](https://fromcampus.com/sitemap.xml) - Complete URL index.
+- [Robots Configuration](https://fromcampus.com/robots.txt) - Crawler permissions.
