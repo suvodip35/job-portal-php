@@ -4561,6 +4561,9 @@ video {
     .md\:w-1\/4 { width: 25% !important; }
     .md\:w-full { width: 100% !important; }
 }
+.p-5 { padding: 1.25rem !important; }
+.p-3\.5 { padding: 0.875rem !important; }
+.p-7 { padding: 1.75rem !important; }
 @media (min-width: 1024px) {
     .lg\:grid-cols-12 { grid-template-columns: repeat(12, minmax(0, 1fr)) !important; }
     .lg\:col-span-8 { grid-column: span 8 / span 8 !important; }
