@@ -34,6 +34,13 @@ echo '<?xml version="1.0" encoding="UTF-8"?>';
     <priority>0.9</priority>
   </url>
 
+  <!-- Current Affairs Main Page -->
+  <url>
+    <loc><?= e($base . '/current-affairs') ?></loc>
+    <changefreq>daily</changefreq>
+    <priority>0.95</priority>
+  </url>
+
 <?php
 // ============================
 // JOBS + AMP JOB URLs
@@ -124,6 +131,24 @@ while ($r = $stmt->fetch()) {
     echo "</url>\n";
     */
 }
+// ============================
+// CURRENT AFFAIRS URLs
+// ============================
+try {
+    $caStmt = $pdo->query("SELECT slug, created_at, updated_at FROM current_affairs WHERE status='published' ORDER BY created_at DESC LIMIT 2000");
+    while ($r = $caStmt->fetch()) {
+        $slug = urlencode($r['slug']);
+        $lastmod = date('Y-m-d', strtotime($r['updated_at'] ?? $r['created_at']));
+        $loc = $base . '/current-affairs/' . $slug;
+
+        echo "<url>\n";
+        echo "  <loc>" . e($loc) . "</loc>\n";
+        echo "  <lastmod>$lastmod</lastmod>\n";
+        echo "  <changefreq>daily</changefreq>\n";
+        echo "  <priority>0.85</priority>\n";
+        echo "</url>\n";
+    }
+} catch (\Throwable $e) {}
 ?>
 
 <!-- Tools Page -->

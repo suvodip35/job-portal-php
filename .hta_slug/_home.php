@@ -518,9 +518,16 @@ $currentUpdates = cache_get_or_set('home_current_updates', 300, function() use (
               <span class="inline-block mt-2 px-2 py-0.5 text-[11px] bg-blue-100 text-blue-800 rounded-full"><?= e($job['category_name']) ?></span>
             <?php  endif;  ?>
 
-              <div class="mt-3 text-sm text-gray-700 dark:text-gray-200 clamp-3">
-                <h2><?= $Parsedown->text($job['description']) ?></h2>
-              </div>
+              <?php 
+                $plainDesc = trim(strip_tags($Parsedown->text($job['description'] ?? '')));
+                $cardSummary = mb_substr($plainDesc, 0, 160);
+                if (mb_strlen($plainDesc) > 160) {
+                    $cardSummary .= '...';
+                }
+              ?>
+              <p class="mt-3 text-sm text-gray-700 dark:text-gray-200 line-clamp-3 overflow-hidden" style="display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; max-height: 4.5em; overflow: hidden;">
+                <?= e($cardSummary) ?>
+              </p>
 
             <div class="mt-4 flex justify-between items-center">
               <a class="px-3 py-1.5 bg-blue-600 text-white rounded hover:bg-blue-700" href="<?= BASE_URL ?>job/<?= e($job['job_title_slug']) ?>">Details</a>
