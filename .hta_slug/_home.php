@@ -100,24 +100,29 @@ $where = ["j.status='published'"];
 $params = [];
 $excludeSlugs = [];
 
-// Get all category slugs from database to exclude for 'others'
-try {
-    $catRows = $pdo->query("SELECT category_slug FROM job_categories")->fetchAll();
-    $dbCategorySlugs = array_map(function($cat) { return $cat['category_slug']; }, $catRows);
-    
-    foreach ($CATEGORY_TABS as $t) {
-        if (!in_array($t['slug'], ['all','others'], true) && in_array($t['slug'], $dbCategorySlugs)) {
-            $excludeSlugs[] = $t['slug'];
+// Get all category slugs from database to exclude for 'others' (Cached for 10 minutes)
+$excludeSlugs = cache_get_or_set('home_exclude_category_slugs', 600, function() use ($pdo, $CATEGORY_TABS) {
+    try {
+        $catRows = $pdo->query("SELECT category_slug FROM job_categories")->fetchAll();
+        $dbCategorySlugs = array_map(function($cat) { return $cat['category_slug']; }, $catRows);
+        
+        $slugs = [];
+        foreach ($CATEGORY_TABS as $t) {
+            if (!in_array($t['slug'], ['all','others'], true) && in_array($t['slug'], $dbCategorySlugs)) {
+                $slugs[] = $t['slug'];
+            }
         }
-    }
-} catch(\Throwable $e){ 
-    // If there's an error, use the predefined slugs
-    foreach ($CATEGORY_TABS as $t) {
-        if (!in_array($t['slug'], ['all','others'], true)) {
-            $excludeSlugs[] = $t['slug'];
+        return $slugs;
+    } catch(\Throwable $e){ 
+        $slugs = [];
+        foreach ($CATEGORY_TABS as $t) {
+            if (!in_array($t['slug'], ['all','others'], true)) {
+                $slugs[] = $t['slug'];
+            }
         }
+        return $slugs;
     }
-}
+});
 
 if ($activeTab !== 'all' && $activeTab !== 'others') {
     $where[] = "j.category_slug = :catslug"; 
@@ -570,7 +575,7 @@ $currentUpdates = cache_get_or_set('home_current_updates', 300, function() use (
 
     <!-- Current Updates Section -->
     <?php if (!empty($currentUpdates)): ?>
-      <div class="mt-4 mb-8">
+      <div class="mt-4 mb-8" style="content-visibility: auto; contain-intrinsic-size: 1px 350px;">
           <div class="flex items-center justify-between mb-6">
               <h2 class="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
                   <svg class="w-6 h-6 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
@@ -634,7 +639,7 @@ $currentUpdates = cache_get_or_set('home_current_updates', 300, function() use (
           </div>
       </div>
     <?php endif; ?>
-    <section class="max-w-7xl mx-auto px-4 py-12 mt-10 border-t border-gray-200 dark:border-gray-800">
+    <section class="max-w-7xl mx-auto px-4 py-12 mt-10 border-t border-gray-200 dark:border-gray-800" style="content-visibility: auto; contain-intrinsic-size: 1px 500px;">
       <div class="prose prose-indigo max-w-none text-gray-700 dark:text-gray-300">
           <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">
               FromCampus: Your Trusted Gateway to Latest Govt Jobs & Career Updates 2026

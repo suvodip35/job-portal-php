@@ -71,7 +71,7 @@
     </a>
   </div>
 </div>
-<footer class="bg-gray-100 dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 mt-12">
+<footer class="bg-gray-100 dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 mt-12" style="content-visibility: auto; contain-intrinsic-size: 1px 300px;">
   <div class="max-w-6xl mx-auto px-4 py-10">
     <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-8 text-sm">
 
