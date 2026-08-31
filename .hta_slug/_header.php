@@ -250,7 +250,10 @@
           </svg>
         </button> -->
 
-        <button id="subscribePushBtn" class="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 transition hidden md:block">Get Job Alerts</button>
+<?php $isFcmSubscribed = isset($_COOKIE['fcm_subscribed']) && $_COOKIE['fcm_subscribed'] === 'true'; ?>
+        <button id="subscribePushBtn" class="px-3 py-1 <?= $isFcmSubscribed ? 'bg-green-600 hover:bg-green-700' : 'bg-blue-600 hover:bg-blue-700' ?> text-white rounded transition hidden md:block">
+          <?= $isFcmSubscribed ? 'Subscribed ✓' : 'Get Job Alerts' ?>
+        </button>
         
         <!-- <a href="/adminqeIUgwefgWEOAjx/dashboard" class="px-3 py-1 border rounded hover:bg-gray-200 dark:hover:bg-gray-700 transition">Admin</a> -->
       </div>
@@ -258,11 +261,11 @@
       <!-- Mobile Menu Button -->
       <div class="md:hidden flex items-center gap-2">
         <!-- Mobile Push Notification Button -->
-        <button id="mobilePushNotificationBtn" class="px-3 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition shadow-lg">
+        <button id="mobilePushNotificationBtn" class="px-3 py-2 <?= $isFcmSubscribed ? 'bg-green-600 hover:bg-green-700' : 'bg-blue-600 hover:bg-blue-700' ?> text-white rounded-lg text-sm font-medium transition shadow-lg">
           <svg class="w-4 h-4 inline mr-2" fill="currentColor" viewBox="0 0 20 20">
-            <path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z"></path>
+            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
           </svg>
-          Get Alerts
+          <?= $isFcmSubscribed ? 'Subscribed' : 'Get Alerts' ?>
         </button>
         
         <button id="mobileMenuButton" class="p-2 rounded-md hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none" aria-label="Open mobile menu">
@@ -287,9 +290,6 @@
       <a href="/tools" class="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-200 dark:hover:bg-gray-700">Tools</a>
       <a href="/saved-jobs" class="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-200 dark:hover:bg-gray-700">Saved</a>
       <a href="/contact" class="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-200 dark:hover:bg-gray-700">Contact</a>
-      <!-- <a href="<?= BASE_URL ?>mock_tests" class="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-200 dark:hover:bg-gray-700">Mock Tests</a> -->
-      <!-- <a href="<?= BASE_URL ?>sitemap" class="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-200 dark:hover:bg-gray-700">Sitemap</a> -->
-      <!-- <a href="/adminqeIUgwefgWEOAjx/dashboard" class="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-200 dark:hover:bg-gray-700">Admin</a> -->
     </div>
   </div>
 </nav>
@@ -297,14 +297,15 @@
 
 <main class="container mx-auto max-w-8xl mx-auto px-4 py-6 md:pb-6 pb-20"> <!-- Added padding-bottom for mobile -->
 <script>
-  // console.log('Test Image', '<?php echo "Image Link" . $ogImage; ?>');
   // Mobile menu toggle
   const mobileMenuButton = document.getElementById('mobileMenuButton');
   const mobileMenu = document.getElementById('mobileMenu');
   
-  mobileMenuButton.addEventListener('click', () => {
-    mobileMenu.classList.toggle('hidden');
-  });
+  if (mobileMenuButton && mobileMenu) {
+    mobileMenuButton.addEventListener('click', () => {
+      mobileMenu.classList.toggle('hidden');
+    });
+  }
   
   // Helper to dynamically load external scripts on demand
   function loadScriptAsync(src) {
@@ -332,63 +333,64 @@
       const permission = await Notification.requestPermission();
       
       if (permission === 'granted') {
+        // Instantly persist subscription state locally & via cookie
+        localStorage.setItem('fcm_subscribed', 'true');
+        document.cookie = "fcm_subscribed=true; path=/; max-age=31536000; SameSite=Lax";
+        updatePushNotificationButtonsState();
+
         let reg;
         try {
           reg = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
           await navigator.serviceWorker.ready;
         } catch (error) {
-          alert('Failed to set up notifications. Please try again.');
-          return;
+          console.warn('Service Worker registration issue:', error);
         }
         
         if (typeof firebase !== 'undefined' && firebase.messaging) {
-          const messaging = firebase.messaging();
-          const token = await messaging.getToken({
-            serviceWorkerRegistration: reg,
-            vapidKey: 'BOt9XnxPzEX2b8pn0-kGRNqpS1rfby1CEbV-Dc_G87H9Wp5qnd6E_nyDBTHiD_NLoXGyx4Y0RhwbxTNSI9O9dtA'
-          });
-          
-          if (token) {
-            const data = {
-              token: token,
-              user_agent: navigator.userAgent,
-              timestamp: Date.now()
-            };
-            
-            const response = await fetch('/api/save-fcm-token.php', {
-              method: 'POST',
-              headers: {'Content-Type': 'application/json'},
-              body: JSON.stringify(data)
+          try {
+            const messaging = firebase.messaging();
+            const token = await messaging.getToken({
+              serviceWorkerRegistration: reg,
+              vapidKey: 'BOt9XnxPzEX2b8pn0-kGRNqpS1rfby1CEbV-Dc_G87H9Wp5qnd6E_nyDBTHiD_NLoXGyx4Y0RhwbxTNSI9O9dtA'
             });
             
-            if (response.ok) {
-              localStorage.setItem('fcm_subscribed', 'true');
-              alert('Successfully subscribed to job alerts!');
-              updatePushNotificationButtonsState();
-            } else {
-              alert('Failed to save subscription. Please try again.');
+            if (token) {
+              await fetch('/api/save-fcm-token.php', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                  token: token,
+                  user_agent: navigator.userAgent,
+                  timestamp: Date.now()
+                })
+              });
             }
-          } else {
-            alert('Failed to get notification token. Please try again.');
+          } catch (err) {
+            console.warn('FCM Token Retrieval Notice:', err);
           }
-        } else {
-          alert('Notification system not available. Please refresh and try again.');
         }
+        alert('Successfully subscribed to job alerts!');
       } else {
         alert('Permission denied for notifications');
       }
     } catch (error) {
+      console.error('Subscription error:', error);
       alert('An error occurred. Please try again.');
     }
   }
 
   function updatePushNotificationButtonsState() {
-    const isGranted = (typeof Notification !== 'undefined' && Notification.permission === 'granted') || (localStorage.getItem('fcm_subscribed') === 'true');
+    const isGranted = (typeof Notification !== 'undefined' && Notification.permission === 'granted') 
+                      || (localStorage.getItem('fcm_subscribed') === 'true')
+                      || (document.cookie.indexOf('fcm_subscribed=true') !== -1);
+
     const desktopBtn = document.getElementById('subscribePushBtn');
     const mobileBtn = document.getElementById('mobilePushNotificationBtn');
 
     if (isGranted) {
       localStorage.setItem('fcm_subscribed', 'true');
+      document.cookie = "fcm_subscribed=true; path=/; max-age=31536000; SameSite=Lax";
+      
       if (desktopBtn) {
         desktopBtn.textContent = 'Subscribed ✓';
         desktopBtn.classList.remove('bg-blue-600', 'hover:bg-blue-700');
@@ -421,8 +423,8 @@
   } else {
     initPushNotificationUI();
   }
-  setTimeout(initPushNotificationUI, 200);
-  setTimeout(initPushNotificationUI, 1000);
+  setTimeout(initPushNotificationUI, 100);
+  setTimeout(initPushNotificationUI, 500);
   
 </script>
 <style>
