@@ -13,6 +13,7 @@ class FCMNotificationService {
     private $accessToken = null;
     private $tokenExpiry = 0;
     private $lastOAuthError = '';
+    private $isServiceAccountFileLoaded = false;
     
     public function __construct($pdo) {
         $this->pdo = $pdo;
@@ -20,12 +21,18 @@ class FCMNotificationService {
         // Load service account from JSON file for proper key formatting
         $serviceAccountPath = __DIR__ . '/../service-account.json';
         if (file_exists($serviceAccountPath)) {
-            $serviceAccount = json_decode(file_get_contents($serviceAccountPath), true);
-            $this->projectId = $serviceAccount['project_id'] ?? (defined('FIREBASE_PROJECT_ID') ? FIREBASE_PROJECT_ID : '');
-            $this->clientEmail = $serviceAccount['client_email'] ?? (defined('FIREBASE_CLIENT_EMAIL') ? FIREBASE_CLIENT_EMAIL : '');
-            // The JSON file has the key in proper format with \n characters
-            $this->privateKey = $serviceAccount['private_key'] ?? (defined('FIREBASE_PRIVATE_KEY') ? FIREBASE_PRIVATE_KEY : '');
-        } else {
+            $serviceAccount = @json_decode(file_get_contents($serviceAccountPath), true);
+            if (is_array($serviceAccount)) {
+                $this->projectId = $serviceAccount['project_id'] ?? '';
+                $this->clientEmail = $serviceAccount['client_email'] ?? '';
+                $this->privateKey = $serviceAccount['private_key'] ?? '';
+                if (!empty($this->projectId) && !empty($this->clientEmail) && !empty($this->privateKey)) {
+                    $this->isServiceAccountFileLoaded = true;
+                }
+            }
+        }
+        
+        if (!$this->isServiceAccountFileLoaded) {
             // Fallback to config constants
             $this->projectId = defined('FIREBASE_PROJECT_ID') ? FIREBASE_PROJECT_ID : '';
             $this->clientEmail = defined('FIREBASE_CLIENT_EMAIL') ? FIREBASE_CLIENT_EMAIL : '';
@@ -87,9 +94,9 @@ class FCMNotificationService {
                 return null;
             }
             
-            // Detect placeholder project ID or email
-            if ($this->projectId === 'my-jnp-project' || strpos($this->clientEmail, 'my-jnp-project') !== false) {
-                $this->lastOAuthError = "Placeholder credentials detected ('my-jnp-project'). Upload your Firebase service-account.json to server root.";
+            // Detect placeholder project ID or email ONLY if service-account.json is NOT loaded
+            if (!$this->isServiceAccountFileLoaded && ($this->projectId === 'my-jnp-project' || strpos($this->clientEmail, 'my-jnp-project') !== false)) {
+                $this->lastOAuthError = "Placeholder credentials in config.php. Upload your Firebase service-account.json to server root.";
                 error_log("FCM OAuth2 error: " . $this->lastOAuthError);
                 return null;
             }
