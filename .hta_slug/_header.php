@@ -402,17 +402,27 @@
     }
   }
 
-  document.addEventListener('DOMContentLoaded', () => {
+  function initPushNotificationUI() {
     updatePushNotificationButtonsState();
     const mobileBtn = document.getElementById('mobilePushNotificationBtn');
-    if (mobileBtn) {
+    if (mobileBtn && !mobileBtn.dataset.pushBound) {
+      mobileBtn.dataset.pushBound = 'true';
       mobileBtn.addEventListener('click', () => subscribeToPushNotifications(mobileBtn));
     }
     const desktopBtn = document.getElementById('subscribePushBtn');
-    if (desktopBtn) {
+    if (desktopBtn && !desktopBtn.dataset.pushBound) {
+      desktopBtn.dataset.pushBound = 'true';
       desktopBtn.addEventListener('click', () => subscribeToPushNotifications(desktopBtn));
     }
-  });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initPushNotificationUI);
+  } else {
+    initPushNotificationUI();
+  }
+  setTimeout(initPushNotificationUI, 200);
+  setTimeout(initPushNotificationUI, 1000);
   
 </script>
 <style>
