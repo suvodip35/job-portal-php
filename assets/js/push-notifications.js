@@ -15,11 +15,17 @@ class PushNotificationManager {
             return;
         }
 
-        // Check current permission status
-        const permission = Notification.permission;
-        this.isSubscribed = (permission === 'granted') || (localStorage.getItem('fcm_subscribed') === 'true');
+        // Check current permission status across cookie and localStorage
+        const permission = (typeof Notification !== 'undefined') ? Notification.permission : 'default';
+        this.isSubscribed = (permission === 'granted') 
+                            || (localStorage.getItem('fcm_subscribed') === 'true')
+                            || (document.cookie.indexOf('fcm_subscribed=true') !== -1);
+
         if (this.isSubscribed) {
-            localStorage.setItem('fcm_subscribed', 'true');
+            try {
+                localStorage.setItem('fcm_subscribed', 'true');
+                document.cookie = "fcm_subscribed=true; path=/; max-age=31536000; SameSite=Lax";
+            } catch(e) {}
         }
         this.updateUI(this.isSubscribed);
 

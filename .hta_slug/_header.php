@@ -709,13 +709,4 @@ if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => { runIdleSW(registerSW); });
 }
 </script>
-
-<!-- Push Notification Script -->
-<script>
-// Load push notification script with delay for mobile compatibility
-setTimeout(() => {
-  const script = document.createElement('script');
-  script.src = '/assets/js/push-notifications.js';
-  document.head.appendChild(script);
-}, 1000); // 1 second delay
-</script>
+
