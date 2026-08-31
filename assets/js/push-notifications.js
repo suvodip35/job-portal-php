@@ -17,7 +17,10 @@ class PushNotificationManager {
 
         // Check current permission status
         const permission = Notification.permission;
-        this.isSubscribed = permission === 'granted';
+        this.isSubscribed = (permission === 'granted') || (localStorage.getItem('fcm_subscribed') === 'true');
+        if (this.isSubscribed) {
+            localStorage.setItem('fcm_subscribed', 'true');
+        }
         this.updateUI(this.isSubscribed);
 
         // Setup button listeners
