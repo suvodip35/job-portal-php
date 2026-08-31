@@ -12,6 +12,7 @@ class FCMNotificationService {
     private $privateKey;
     private $accessToken = null;
     private $tokenExpiry = 0;
+    private $lastOAuthError = '';
     
     public function __construct($pdo) {
         $this->pdo = $pdo;
@@ -37,6 +38,11 @@ class FCMNotificationService {
      * Format private key for OpenSSL
      */
     private function formatPrivateKey($key) {
+        if (empty($key)) return '';
+
+        // Handle literal '\n' characters if stored in string (e.g. from config or env)
+        $key = str_replace('\n', "\n", $key);
+
         // If already has headers with newlines (proper PEM format), return as-is
         if (strpos($key, "-----BEGIN PRIVATE KEY-----\n") !== false) {
             return $key;
@@ -76,7 +82,15 @@ class FCMNotificationService {
         try {
             // Verify credentials are loaded
             if (empty($this->clientEmail) || empty($this->privateKey) || empty($this->projectId)) {
-                error_log("FCM OAuth2 error: Firebase credentials missing (service-account.json or config constants)");
+                $this->lastOAuthError = "Firebase credentials missing. Upload service-account.json to project root.";
+                error_log("FCM OAuth2 error: " . $this->lastOAuthError);
+                return null;
+            }
+            
+            // Detect placeholder project ID or email
+            if ($this->projectId === 'my-jnp-project' || strpos($this->clientEmail, 'my-jnp-project') !== false) {
+                $this->lastOAuthError = "Placeholder credentials detected ('my-jnp-project'). Upload your Firebase service-account.json to server root.";
+                error_log("FCM OAuth2 error: " . $this->lastOAuthError);
                 return null;
             }
             
@@ -106,7 +120,7 @@ class FCMNotificationService {
             
             // Sign the JWT
             $signature = '';
-            $signSuccess = openssl_sign(
+            $signSuccess = @openssl_sign(
                 $signatureInput, 
                 $signature, 
                 $privateKey, 
@@ -114,14 +128,8 @@ class FCMNotificationService {
             );
             
             if (!$signSuccess) {
-                $errors = [];
-                while ($error = openssl_error_string()) {
-                    $errors[] = $error;
-                }
-                $errorStr = implode(', ', $errors);
-                error_log("FCM OAuth2 signing failed: $errorStr");
-                error_log("Key format check - has headers: " . (strpos($privateKey, '-----BEGIN PRIVATE KEY-----') !== false ? 'yes' : 'no'));
-                error_log("Key length: " . strlen($privateKey));
+                $this->lastOAuthError = "OpenSSL failed to sign JWT key. Check private key in service-account.json.";
+                error_log("FCM OAuth2 signing failed for email: " . $this->clientEmail);
                 return null;
             }
             
@@ -140,7 +148,7 @@ class FCMNotificationService {
                 'assertion' => $jwt
             ]));
             curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/x-www-form-urlencoded']);
-            curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 15);
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
             
             $response = curl_exec($ch);
@@ -149,6 +157,7 @@ class FCMNotificationService {
             curl_close($ch);
             
             if ($curlError) {
+                $this->lastOAuthError = "cURL connection error: " . $curlError;
                 error_log("FCM OAuth2 cURL error: $curlError");
                 return null;
             }
@@ -161,15 +170,17 @@ class FCMNotificationService {
                     error_log("FCM OAuth2: Successfully obtained access token");
                     return $this->accessToken;
                 }
-                error_log("FCM OAuth2: No access_token in response: " . $response);
+                $this->lastOAuthError = "No access_token returned by Google";
                 return null;
             } else {
                 $errorData = json_decode($response, true);
-                $errorMsg = $errorData['error_description'] ?? $errorData['error'] ?? $response;
+                $errorMsg = $errorData['error_description'] ?? $errorData['error'] ?? ('HTTP ' . $httpCode);
+                $this->lastOAuthError = "Google OAuth failed: " . $errorMsg;
                 error_log("FCM OAuth2 token request failed: HTTP $httpCode - $errorMsg");
                 return null;
             }
-        } catch (Exception $e) {
+        } catch (\Throwable $e) {
+            $this->lastOAuthError = $e->getMessage();
             error_log("FCM OAuth2 error: " . $e->getMessage());
             return null;
         }
@@ -188,7 +199,7 @@ class FCMNotificationService {
             if (empty($tokens)) {
                 return [
                     'success' => false,
-                    'message' => 'No active FCM tokens found',
+                    'message' => 'No active FCM subscribers found',
                     'sent_count' => 0,
                     'failed_count' => 0
                 ];
@@ -196,7 +207,7 @@ class FCMNotificationService {
             
             return $this->sendNotification($tokens, $title, $body, $data);
             
-        } catch (Exception $e) {
+        } catch (\Throwable $e) {
             error_log("Error sending to all FCM tokens: " . $e->getMessage());
             return [
                 'success' => false,
@@ -218,9 +229,10 @@ class FCMNotificationService {
         // Get OAuth2 access token
         $accessToken = $this->getAccessToken();
         if (!$accessToken) {
+            $reason = !empty($this->lastOAuthError) ? $this->lastOAuthError : 'Check service-account.json or Firebase credentials';
             return [
                 'success' => false,
-                'message' => 'Failed to obtain OAuth2 access token',
+                'message' => $reason,
                 'sent_count' => 0,
                 'failed_count' => count($tokens)
             ];
