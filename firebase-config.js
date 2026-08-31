@@ -18,40 +18,36 @@ const messaging = firebase.messaging();
 // Request notification permission and get token
 async function requestNotificationPermission() {
     try {
-        // First, ensure service worker is registered
-        let registration;
+        let registration = null;
         if ('serviceWorker' in navigator) {
             try {
-                // Register the Firebase messaging service worker
-                registration = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
-                console.log('Firebase Service Worker registered with scope:', registration.scope);
-
-                // Wait for service worker to be ready
-                await navigator.serviceWorker.ready;
-                console.log('Service Worker is ready');
+                registration = await navigator.serviceWorker.getRegistration('/firebase-messaging-sw.js');
+                if (!registration) {
+                    registration = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
+                    await navigator.serviceWorker.ready;
+                }
             } catch (error) {
-                console.log('Service Worker registration failed:', error);
-                return null;
+                console.log('Service Worker registration notice:', error);
             }
         }
         
-        // Then request notification permission
         const permission = await Notification.requestPermission();
         if (permission === 'granted') {
-            console.log('Notification permission granted.');
-            
-            // Now get FCM token with VAPID key for web push
-            const token = await messaging.getToken({
-                serviceWorkerRegistration: registration,
+            const tokenOptions = {
                 vapidKey: 'BOt9XnxPzEX2b8pn0-kGRNqpS1rfby1CEbV-Dc_G87H9Wp5qnd6E_nyDBTHiD_NLoXGyx4Y0RhwbxTNSI9O9dtA'
-            });
+            };
+
+            if (registration && registration.pushManager) {
+                tokenOptions.serviceWorkerRegistration = registration;
+            }
+
+            const token = await messaging.getToken(tokenOptions);
             
-            console.log('FCM Token:', token);
-            
-            // Send token to server
-            await sendTokenToServer(token);
-            
-            return token;
+            if (token) {
+                await sendTokenToServer(token);
+                return token;
+            }
+            return null;
         } else {
             console.log('Unable to get permission to notify.');
             return null;
@@ -113,13 +109,15 @@ messaging.onMessage((payload) => {
     }
 });
 
-// Handle token refresh
-messaging.onTokenRefresh(async () => {
-    try {
-        const refreshedToken = await messaging.getToken();
-        console.log('Token refreshed:', refreshedToken);
-        await sendTokenToServer(refreshedToken);
-    } catch (error) {
-        console.error('Unable to retrieve refreshed token ', error);
-    }
-});
+// Handle token refresh if supported
+if (typeof messaging.onTokenRefresh === 'function') {
+    messaging.onTokenRefresh(async () => {
+        try {
+            const refreshedToken = await messaging.getToken();
+            console.log('Token refreshed:', refreshedToken);
+            await sendTokenToServer(refreshedToken);
+        } catch (error) {
+            console.error('Unable to retrieve refreshed token ', error);
+        }
+    });
+}

@@ -276,6 +276,27 @@
       </div>
     </div>
   </div>
+  <script>
+    (function() {
+      try {
+        var isGranted = (typeof Notification !== 'undefined' && Notification.permission === 'granted') || (localStorage.getItem('fcm_subscribed') === 'true') || (document.cookie.indexOf('fcm_subscribed=true') !== -1);
+        if (isGranted) {
+          localStorage.setItem('fcm_subscribed', 'true');
+          document.cookie = "fcm_subscribed=true; path=/; max-age=31536000; SameSite=Lax";
+          var dBtn = document.getElementById('subscribePushBtn');
+          if (dBtn) {
+            dBtn.textContent = 'Subscribed ✓';
+            dBtn.className = 'px-3 py-1 bg-green-600 hover:bg-green-700 text-white rounded transition hidden md:block';
+          }
+          var mBtn = document.getElementById('mobilePushNotificationBtn');
+          if (mBtn) {
+            mBtn.innerHTML = '<svg class="w-4 h-4 inline mr-2" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Subscribed';
+            mBtn.className = 'px-3 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg text-sm font-medium transition shadow-lg';
+          }
+        }
+      } catch(e) {}
+    })();
+  </script>
   
   <!-- Mobile Menu (hidden by default) -->
   <div id="mobileMenu" class="md:hidden hidden bg-gray-100 dark:bg-gray-800">
