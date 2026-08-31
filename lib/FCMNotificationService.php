@@ -20,15 +20,15 @@ class FCMNotificationService {
         $serviceAccountPath = __DIR__ . '/../service-account.json';
         if (file_exists($serviceAccountPath)) {
             $serviceAccount = json_decode(file_get_contents($serviceAccountPath), true);
-            $this->projectId = $serviceAccount['project_id'] ?? FIREBASE_PROJECT_ID;
-            $this->clientEmail = $serviceAccount['client_email'] ?? FIREBASE_CLIENT_EMAIL;
+            $this->projectId = $serviceAccount['project_id'] ?? (defined('FIREBASE_PROJECT_ID') ? FIREBASE_PROJECT_ID : '');
+            $this->clientEmail = $serviceAccount['client_email'] ?? (defined('FIREBASE_CLIENT_EMAIL') ? FIREBASE_CLIENT_EMAIL : '');
             // The JSON file has the key in proper format with \n characters
-            $this->privateKey = $serviceAccount['private_key'] ?? FIREBASE_PRIVATE_KEY;
+            $this->privateKey = $serviceAccount['private_key'] ?? (defined('FIREBASE_PRIVATE_KEY') ? FIREBASE_PRIVATE_KEY : '');
         } else {
             // Fallback to config constants
-            $this->projectId = FIREBASE_PROJECT_ID;
-            $this->clientEmail = FIREBASE_CLIENT_EMAIL;
-            $this->privateKey = FIREBASE_PRIVATE_KEY;
+            $this->projectId = defined('FIREBASE_PROJECT_ID') ? FIREBASE_PROJECT_ID : '';
+            $this->clientEmail = defined('FIREBASE_CLIENT_EMAIL') ? FIREBASE_CLIENT_EMAIL : '';
+            $this->privateKey = defined('FIREBASE_PRIVATE_KEY') ? FIREBASE_PRIVATE_KEY : '';
             error_log("FCM: service-account.json not found, using config.php constants");
         }
     }
@@ -74,9 +74,9 @@ class FCMNotificationService {
         }
         
         try {
-            // Verify constants are defined
-            if (!defined('FIREBASE_CLIENT_EMAIL') || !defined('FIREBASE_PRIVATE_KEY')) {
-                error_log("FCM OAuth2 error: Firebase constants not defined");
+            // Verify credentials are loaded
+            if (empty($this->clientEmail) || empty($this->privateKey) || empty($this->projectId)) {
+                error_log("FCM OAuth2 error: Firebase credentials missing (service-account.json or config constants)");
                 return null;
             }
             
@@ -86,8 +86,8 @@ class FCMNotificationService {
             // Create JWT claim set (JWT assertion)
             $now = time();
             $claimSet = json_encode([
-                'iss' => FIREBASE_CLIENT_EMAIL,
-                'sub' => FIREBASE_CLIENT_EMAIL,
+                'iss' => $this->clientEmail,
+                'sub' => $this->clientEmail,
                 'scope' => 'https://www.googleapis.com/auth/firebase.messaging',
                 'aud' => 'https://oauth2.googleapis.com/token',
                 'iat' => $now,
