@@ -132,84 +132,247 @@ $categories = ['National', 'International', 'Sports', 'Economy', 'Science & Tech
 <link rel="stylesheet" href="/assets/easymde.min.css">
 <script src="/assets/easymde.min.js"></script>
 
-<div class="container mx-auto px-4 py-6">
-    <h1 class="text-2xl font-bold mb-4 dark:text-white">Add New Current Affairs Article</h1>
+<style>
+.ca-wrapper {
+  color: #f8fafc;
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.ca-container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 1.5rem 1rem;
+}
+
+.ca-header-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.ca-title {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: #ffffff !important;
+  margin: 0;
+}
+
+.ca-card {
+  background-color: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 0.875rem;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+}
+
+.ca-form-group {
+  margin-bottom: 1.25rem;
+}
+
+.ca-label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #cbd5e1 !important;
+  margin-bottom: 0.375rem;
+}
+
+.ca-input, .ca-select, .ca-textarea {
+  width: 100%;
+  padding: 0.65rem 0.875rem;
+  background-color: #0f172a;
+  border: 1px solid #334155;
+  border-radius: 0.5rem;
+  color: #ffffff !important;
+  font-size: 0.875rem;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.ca-input:focus, .ca-select:focus, .ca-textarea:focus {
+  border-color: #0d9488;
+}
+
+.ca-grid-3 {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+@media (min-width: 768px) {
+  .ca-grid-3 { grid-template-columns: repeat(3, 1fr); }
+}
+
+.ca-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+@media (min-width: 768px) {
+  .ca-grid-2 { grid-template-columns: repeat(2, 1fr); }
+}
+
+.ca-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.65rem 1.25rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  border-radius: 0.5rem;
+  text-decoration: none !important;
+  transition: all 0.2s ease;
+  border: none;
+  cursor: pointer;
+}
+
+.ca-btn-teal { background-color: #0d9488; color: #ffffff !important; }
+.ca-btn-teal:hover { background-color: #0f766e; }
+
+.ca-btn-outline {
+  background-color: transparent;
+  color: #cbd5e1 !important;
+  border: 1px solid #334155;
+}
+.ca-btn-outline:hover { background-color: #334155; color: #ffffff !important; }
+
+.ca-alert-error {
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  background-color: rgba(239, 68, 68, 0.15);
+  border-left: 4px solid #ef4444;
+  color: #fca5a5;
+  border-radius: 0.375rem;
+}
+
+.ca-alert-success {
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  background-color: rgba(16, 185, 129, 0.15);
+  border-left: 4px solid #10b981;
+  color: #6ee7b7;
+  border-radius: 0.375rem;
+}
+
+.EasyMDEContainer {
+  background-color: #0f172a;
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.EasyMDEContainer .CodeMirror {
+  background-color: #0f172a;
+  color: #ffffff;
+  border-color: #334155;
+}
+
+.EasyMDEContainer .editor-toolbar {
+  background-color: #1e293b;
+  border-color: #334155;
+}
+
+.EasyMDEContainer .editor-toolbar button {
+  color: #cbd5e1 !important;
+}
+
+.EasyMDEContainer .editor-toolbar button.active,
+.EasyMDEContainer .editor-toolbar button:hover {
+  background-color: #334155 !important;
+  color: #ffffff !important;
+}
+</style>
+
+<div class="ca-wrapper">
+  <div class="ca-container">
+    
+    <div class="ca-header-bar">
+      <h1 class="ca-title">Add New Current Affairs Article</h1>
+      <a href="/adminqeIUgwefgWEOAjx/current_affairs" class="ca-btn ca-btn-outline">&larr; Back to List</a>
+    </div>
 
     <?php if ($err): ?>
-        <div class="p-4 mb-6 bg-red-50 border-l-4 border-red-500 text-red-700 dark:bg-red-900/30 dark:border-red-400 dark:text-red-200">
+        <div class="ca-alert-error">
             <?= $err ?>
         </div>
     <?php endif; ?>
 
     <?php if ($success): ?>
-        <div class="p-4 mb-6 bg-green-50 border-l-4 border-green-500 text-green-700 dark:bg-green-900/30 dark:border-green-400 dark:text-green-200">
+        <div class="ca-alert-success">
             <?= $success ?>
+            <div style="margin-top: 0.75rem; display: flex; gap: 0.75rem;">
+              <a href="/adminqeIUgwefgWEOAjx/current_affairs" class="ca-btn ca-btn-teal" style="font-size:0.75rem; padding:0.35rem 0.75rem;">Manage All Articles</a>
+              <a href="/adminqeIUgwefgWEOAjx/add_current_affairs" class="ca-btn ca-btn-outline" style="font-size:0.75rem; padding:0.35rem 0.75rem;">Add Another Article</a>
+            </div>
         </div>
     <?php endif; ?>
 
-    <form method="post" enctype="multipart/form-data" class="space-y-6">
-        <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 space-y-4">
-            <div>
-                <label class="block text-sm font-medium mb-1 dark:text-gray-300">Article Title *</label>
-                <input required name="title" class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white" value="<?= e($_POST['title'] ?? '') ?>" placeholder="e.g., India successfully launches new satellite">
+    <form method="post" enctype="multipart/form-data">
+        <div class="ca-card">
+            <div class="ca-form-group">
+                <label class="ca-label">Article Title *</label>
+                <input required name="title" class="ca-input" value="<?= e($_POST['title'] ?? '') ?>" placeholder="e.g., India successfully launches new satellite">
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="ca-form-group ca-grid-3">
                 <div>
-                    <label class="block text-sm font-medium mb-1 dark:text-gray-300">Category *</label>
-                    <select name="category" class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                    <label class="ca-label">Category *</label>
+                    <select name="category" class="ca-select">
                         <?php foreach ($categories as $cat): ?>
                             <option value="<?= $cat ?>" <?= ($_POST['category'] ?? '') === $cat ? 'selected' : '' ?>><?= $cat ?></option>
                         <?php endforeach; ?>
                     </select>
                 </div>
                 <div>
-                    <label class="block text-sm font-medium mb-1 dark:text-gray-300">Event Date *</label>
-                    <input type="date" name="event_date" class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white" value="<?= e($_POST['event_date'] ?? date('Y-m-d')) ?>">
+                    <label class="ca-label">Event Date *</label>
+                    <input type="date" name="event_date" class="ca-input" value="<?= e($_POST['event_date'] ?? date('Y-m-d')) ?>">
                 </div>
                 <div>
-                    <label class="block text-sm font-medium mb-1 dark:text-gray-300">Status</label>
-                    <select name="status" class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                    <label class="ca-label">Status</label>
+                    <select name="status" class="ca-select">
                         <option value="published" <?= ($_POST['status'] ?? '') === 'published' ? 'selected' : '' ?>>Published</option>
                         <option value="draft" <?= ($_POST['status'] ?? '') === 'draft' ? 'selected' : '' ?>>Draft</option>
                     </select>
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="ca-form-group ca-grid-2">
                 <div>
-                    <label class="block text-sm font-medium mb-1 dark:text-gray-300">Thumbnail Image (Optional)</label>
-                    <input type="file" name="thumbnail" accept="image/*" class="block w-full text-sm text-gray-500 dark:text-gray-400">
-                    <p class="text-xs text-gray-500 mt-1">Recommended size: 600x400px (Max 5MB)</p>
+                    <label class="ca-label">Thumbnail Image (Optional)</label>
+                    <input type="file" name="thumbnail" accept="image/*" class="ca-input">
+                    <p style="font-size: 0.75rem; color: #94a3b8; margin-top: 0.25rem;">Recommended size: 600x400px (Max 5MB)</p>
                 </div>
                 <div>
-                    <label class="block text-sm font-medium mb-1 dark:text-gray-300">PDF Document (Optional)</label>
-                    <input type="file" name="pdf_file" accept=".pdf" class="block w-full text-sm text-gray-500 dark:text-gray-400">
-                    <p class="text-xs text-gray-500 mt-1">PDF compilation / notes download (Max 20MB)</p>
+                    <label class="ca-label">PDF Document (Optional)</label>
+                    <input type="file" name="pdf_file" accept=".pdf" class="ca-input">
+                    <p style="font-size: 0.75rem; color: #94a3b8; margin-top: 0.25rem;">PDF compilation / notes download (Max 20MB)</p>
                 </div>
             </div>
 
-            <div>
-                <label class="block text-sm font-medium mb-1 dark:text-gray-300">Content (Markdown) *</label>
-                <textarea id="markdown-editor" name="description" rows="8" class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white"><?= e($_POST['description'] ?? '') ?></textarea>
+            <div class="ca-form-group">
+                <label class="ca-label">Content (Markdown) *</label>
+                <textarea id="markdown-editor" name="description" rows="8"><?= e($_POST['description'] ?? '') ?></textarea>
             </div>
 
-            <div>
-                <label class="block text-sm font-medium mb-1 dark:text-gray-300">Meta Title</label>
-                <input name="meta_title" class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white" value="<?= e($_POST['meta_title'] ?? '') ?>">
+            <div class="ca-form-group">
+                <label class="ca-label">Meta Title (SEO)</label>
+                <input name="meta_title" class="ca-input" value="<?= e($_POST['meta_title'] ?? '') ?>" placeholder="SEO title tag">
             </div>
 
-            <div>
-                <label class="block text-sm font-medium mb-1 dark:text-gray-300">Meta Description</label>
-                <textarea name="meta_description" rows="3" class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white"><?= e($_POST['meta_description'] ?? '') ?></textarea>
+            <div class="ca-form-group">
+                <label class="ca-label">Meta Description (SEO)</label>
+                <textarea name="meta_description" rows="3" class="ca-textarea" placeholder="SEO meta description summary"><?= e($_POST['meta_description'] ?? '') ?></textarea>
             </div>
         </div>
 
-        <div class="flex justify-end gap-3">
-            <a href="/adminqeIUgwefgWEOAjx/current_affairs.php" class="px-4 py-2 bg-gray-300 rounded dark:bg-gray-600 dark:text-white">Cancel</a>
-            <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Save Article</button>
+        <div style="display: flex; justify-content: flex-end; gap: 0.75rem;">
+            <a href="/adminqeIUgwefgWEOAjx/current_affairs" class="ca-btn ca-btn-outline">Cancel</a>
+            <button type="submit" class="ca-btn ca-btn-teal">Save Article</button>
         </div>
     </form>
+  </div>
 </div>
 
 <script>
@@ -217,7 +380,7 @@ $categories = ['National', 'International', 'Sports', 'Economy', 'Science & Tech
     element: document.getElementById('markdown-editor'),
     spellChecker: false,
     autosave: { enabled: false },
-    placeholder: "Write current affairs details...",
+    placeholder: "Write current affairs details in Markdown...",
     forceSync: true
   });
 </script>

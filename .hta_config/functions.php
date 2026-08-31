@@ -324,3 +324,158 @@ function compressImage($source, $destination, $quality = 80, $maxWidth = 600, $m
 
     return true;
 }
+
+/**
+ * System Health & Diagnostic Suite for Admin Modules
+ * Checks routing, files, syntax, DB tables, columns, and directory write permissions.
+ */
+function check_admin_modules(PDO $pdo): array {
+    $results = [];
+    $rootDir = dirname(__DIR__);
+
+    $modules = [
+        'Add Job' => [
+            'slug' => 'add_job',
+            'file' => $rootDir . '/adminqeIUgwefgWEOAjx/.hta_slug/add_job.php',
+            'table' => 'jobs',
+            'required_columns' => ['job_id', 'job_title', 'company_name', 'status', 'posted_date', 'job_title_slug'],
+            'upload_dirs' => [$rootDir . '/uploads']
+        ],
+        'Add Update' => [
+            'slug' => 'add_update',
+            'file' => $rootDir . '/adminqeIUgwefgWEOAjx/.hta_slug/add_update.php',
+            'table' => 'updates',
+            'required_columns' => ['id', 'title', 'update_type', 'created_at'],
+            'upload_dirs' => []
+        ],
+        'Add Book' => [
+            'slug' => 'add_book',
+            'file' => $rootDir . '/adminqeIUgwefgWEOAjx/.hta_slug/add_book.php',
+            'table' => 'books',
+            'required_columns' => ['id', 'title', 'author', 'book_type', 'status'],
+            'upload_dirs' => []
+        ],
+        'Add Current Affairs' => [
+            'slug' => 'add_current_affairs',
+            'file' => $rootDir . '/adminqeIUgwefgWEOAjx/.hta_slug/add_current_affairs.php',
+            'table' => 'current_affairs',
+            'required_columns' => ['id', 'title', 'slug', 'category', 'description', 'event_date', 'status'],
+            'upload_dirs' => [$rootDir . '/thumbnails', $rootDir . '/pdf']
+        ],
+        'Manage Current Affairs' => [
+            'slug' => 'current_affairs',
+            'file' => $rootDir . '/adminqeIUgwefgWEOAjx/.hta_slug/current_affairs.php',
+            'table' => 'current_affairs',
+            'required_columns' => ['id', 'title', 'slug', 'category', 'status', 'views'],
+            'upload_dirs' => []
+        ],
+        'Manage Mock Tests' => [
+            'slug' => 'mock_tests',
+            'file' => $rootDir . '/adminqeIUgwefgWEOAjx/.hta_slug/mock_tests.php',
+            'table' => 'mock_tests',
+            'required_columns' => ['id', 'title'],
+            'upload_dirs' => []
+        ]
+    ];
+
+    foreach ($modules as $name => $cfg) {
+        $moduleResult = [
+            'name' => $name,
+            'slug' => $cfg['slug'],
+            'status' => 'OK',
+            'file_exists' => false,
+            'syntax_check' => 'UNKNOWN',
+            'table_exists' => false,
+            'columns_ok' => false,
+            'record_count' => 0,
+            'dirs_ok' => true,
+            'messages' => []
+        ];
+
+        // 1. Check file existence
+        if (file_exists($cfg['file'])) {
+            $moduleResult['file_exists'] = true;
+            
+            // Check PHP syntax using php -l linting if shell_exec available
+            if (function_exists('shell_exec')) {
+                $cmd = "php -l " . escapeshellarg($cfg['file']) . " 2>&1";
+                $lintOutput = @shell_exec($cmd);
+                if ($lintOutput && strpos($lintOutput, 'No syntax errors detected') !== false) {
+                    $moduleResult['syntax_check'] = 'PASS';
+                } else {
+                    $moduleResult['syntax_check'] = 'FAIL';
+                    $moduleResult['status'] = 'ERROR';
+                    $moduleResult['messages'][] = "PHP Syntax Error in file: " . trim($lintOutput ?? 'Failed lint check');
+                }
+            } else {
+                $moduleResult['syntax_check'] = 'SKIPPED (shell_exec disabled)';
+            }
+        } else {
+            $moduleResult['status'] = 'ERROR';
+            $moduleResult['messages'][] = "File missing: .hta_slug/" . basename($cfg['file']);
+        }
+
+        // 2. Check Database Table
+        if ($pdo) {
+            try {
+                // Standard ANSI SQL information_schema check compatible across all MariaDB/MySQL versions
+                $tableCheck = $pdo->prepare("SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = DATABASE() AND table_name = ?");
+                $tableCheck->execute([$cfg['table']]);
+                $tableExists = ((int)$tableCheck->fetchColumn() > 0);
+
+                if ($tableExists) {
+                    $moduleResult['table_exists'] = true;
+
+                    // Count total records
+                    $countStmt = $pdo->query("SELECT COUNT(*) FROM `{$cfg['table']}`");
+                    $moduleResult['record_count'] = (int)$countStmt->fetchColumn();
+
+                    // Check Columns
+                    $colStmt = $pdo->query("SHOW COLUMNS FROM `{$cfg['table']}`");
+                    $existingCols = $colStmt->fetchAll(PDO::FETCH_COLUMN);
+
+                    $missingCols = array_diff($cfg['required_columns'], $existingCols);
+                    if (empty($missingCols)) {
+                        $moduleResult['columns_ok'] = true;
+                    } else {
+                        $moduleResult['columns_ok'] = false;
+                        $moduleResult['status'] = 'ERROR';
+                        $moduleResult['messages'][] = "Table `{$cfg['table']}` missing columns: " . implode(', ', $missingCols);
+                    }
+                } else {
+                    $moduleResult['status'] = 'ERROR';
+                    $moduleResult['messages'][] = "Database table `{$cfg['table']}` does NOT exist in current database.";
+                }
+            } catch (\Throwable $e) {
+                $moduleResult['status'] = 'ERROR';
+                $moduleResult['messages'][] = "Database Error: " . $e->getMessage();
+            }
+        } else {
+            $moduleResult['status'] = 'ERROR';
+            $moduleResult['messages'][] = "No active database connection.";
+        }
+
+        // 3. Check Directory Permissions if applicable
+        if (!empty($cfg['upload_dirs'])) {
+            foreach ($cfg['upload_dirs'] as $dir) {
+                if (!is_dir($dir)) {
+                    @mkdir($dir, 0777, true);
+                }
+                if (!is_writable($dir)) {
+                    @chmod($dir, 0777);
+                }
+                if (!is_writable($dir)) {
+                    $moduleResult['dirs_ok'] = false;
+                    $moduleResult['status'] = ($moduleResult['status'] === 'ERROR') ? 'ERROR' : 'WARNING';
+                    $moduleResult['messages'][] = "Upload directory is not writable: " . basename($dir) . " (" . $dir . ")";
+                }
+            }
+        }
+
+        $results[$name] = $moduleResult;
+    }
+
+    return $results;
+}
+
+

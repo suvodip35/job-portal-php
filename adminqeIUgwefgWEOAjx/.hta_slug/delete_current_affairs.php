@@ -25,6 +25,21 @@ if ($id > 0) {
     }
 }
 
-header('Location: /adminqeIUgwefgWEOAjx/current_affairs.php');
+// Redirect back to the referring page or fallback to current_affairs list
+$redirectUrl = '/adminqeIUgwefgWEOAjx/current_affairs';
+
+if (!empty($_GET['redirect'])) {
+    $redirectUrl = $_GET['redirect'];
+} elseif (!empty($_SERVER['HTTP_REFERER'])) {
+    $referer = $_SERVER['HTTP_REFERER'];
+    $parsedReferer = parse_url($referer);
+    $currentHost = $_SERVER['HTTP_HOST'] ?? '';
+
+    if (empty($parsedReferer['host']) || $parsedReferer['host'] === $currentHost) {
+        $redirectUrl = $referer;
+    }
+}
+
+header("Location: " . $redirectUrl);
 exit;
 ?>
