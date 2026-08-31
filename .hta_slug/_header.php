@@ -338,21 +338,29 @@
         document.cookie = "fcm_subscribed=true; path=/; max-age=31536000; SameSite=Lax";
         updatePushNotificationButtonsState();
 
-        let reg;
+        let reg = null;
         try {
-          reg = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
-          await navigator.serviceWorker.ready;
+          reg = await navigator.serviceWorker.getRegistration('/firebase-messaging-sw.js');
+          if (!reg) {
+            reg = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
+            await navigator.serviceWorker.ready;
+          }
         } catch (error) {
-          console.warn('Service Worker registration issue:', error);
+          console.warn('Service Worker registration notice:', error);
         }
         
         if (typeof firebase !== 'undefined' && firebase.messaging) {
           try {
             const messaging = firebase.messaging();
-            const token = await messaging.getToken({
-              serviceWorkerRegistration: reg,
+            const tokenOptions = {
               vapidKey: 'BOt9XnxPzEX2b8pn0-kGRNqpS1rfby1CEbV-Dc_G87H9Wp5qnd6E_nyDBTHiD_NLoXGyx4Y0RhwbxTNSI9O9dtA'
-            });
+            };
+
+            if (reg && reg.pushManager) {
+              tokenOptions.serviceWorkerRegistration = reg;
+            }
+
+            const token = await messaging.getToken(tokenOptions);
             
             if (token) {
               await fetch('/api/save-fcm-token.php', {
@@ -366,7 +374,7 @@
               });
             }
           } catch (err) {
-            console.warn('FCM Token Retrieval Notice:', err);
+            console.warn('FCM Token Notice:', err);
           }
         }
         alert('Successfully subscribed to job alerts!');
