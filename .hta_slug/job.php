@@ -244,7 +244,7 @@ $shareText = urlencode("Check out this job opportunity: " . $job['job_title'] . 
         
         <div class="flex flex-wrap items-center gap-3 mt-4 text-xs text-gray-600 dark:text-gray-400">
           <span class="flex items-center gap-1 font-medium text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 px-2.5 py-1 rounded-full">
-            <svg class="w-3.5 h-3.5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+            <svg class="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
               <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
             </svg>
             Verified by FromCampus Desk
@@ -355,14 +355,14 @@ $shareText = urlencode("Check out this job opportunity: " . $job['job_title'] . 
         </div>
 
         <!-- Editorial & Verification Note (E-E-A-T) -->
-        <div class="mt-8 p-4 bg-gray-50 dark:bg-gray-800/80 rounded-xl border border-gray-200 dark:border-gray-700 text-xs text-gray-600 dark:text-gray-300">
-          <div class="flex items-start gap-2.5">
+        <div class="mt-8 p-4 bg-indigo-50 dark:bg-indigo-900/30 rounded-xl border border-indigo-100 dark:border-indigo-800/50 text-xs text-indigo-800 dark:text-indigo-200">
+          <div class="flex items-start gap-2">
             <svg class="w-5 h-5 text-indigo-600 dark:text-indigo-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
             </svg>
             <div>
-              <p class="font-semibold text-gray-800 dark:text-gray-200">Official Notice Verification</p>
-              <p class="mt-0.5">
+              <p class="font-semibold text-indigo-900 dark:text-indigo-100">Official Notice Verification</p>
+              <p class="mt-0.5 leading-relaxed">
                 This recruitment notification has been curated and verified by the FromCampus Editorial Team from official government gazettes and recruitment portal updates. Candidates are advised to carefully review the official notification document before submitting applications.
               </p>
             </div>

@@ -79,30 +79,30 @@
   <section class="mb-12">
     <h2 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-6">What We Offer</h2>
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-      <div class="p-5 bg-gray-50 dark:bg-gray-800/60 rounded-xl border border-gray-200 dark:border-gray-700">
-        <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2">Verified Job Alerts</h3>
-        <p class="text-sm text-gray-600 dark:text-gray-400">
+      <div class="p-5 rounded-xl border hover:-translate-y-1 hover:shadow-md transition-all duration-300" style="background-color: #eff6ff; border-color: #dbeafe;">
+        <h3 class="text-lg font-bold mb-2" style="color: #1e3a8a;">Verified Job Alerts</h3>
+        <p class="text-sm opacity-90" style="color: #1e40af;">
           Structured summaries for UPSC, SSC, Railways, State PSCs, Police, ITI, Apprenticeships, and Banking recruitments.
         </p>
       </div>
 
-      <div class="p-5 bg-gray-50 dark:bg-gray-800/60 rounded-xl border border-gray-200 dark:border-gray-700">
-        <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2">Exam Updates</h3>
-        <p class="text-sm text-gray-600 dark:text-gray-400">
+      <div class="p-5 rounded-xl border hover:-translate-y-1 hover:shadow-md transition-all duration-300" style="background-color: #faf5ff; border-color: #f3e8ff;">
+        <h3 class="text-lg font-bold mb-2" style="color: #581c87;">Exam Updates</h3>
+        <p class="text-sm opacity-90" style="color: #6b21a8;">
           Instant alerts on admit cards, exam schedules, answer keys, results, and syllabus revisions.
         </p>
       </div>
 
-      <div class="p-5 bg-gray-50 dark:bg-gray-800/60 rounded-xl border border-gray-200 dark:border-gray-700">
-        <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2">Recommended Books</h3>
-        <p class="text-sm text-gray-600 dark:text-gray-400">
+      <div class="p-5 rounded-xl border hover:-translate-y-1 hover:shadow-md transition-all duration-300" style="background-color: #ecfdf5; border-color: #d1fae5;">
+        <h3 class="text-lg font-bold mb-2" style="color: #064e3b;">Recommended Books</h3>
+        <p class="text-sm opacity-90" style="color: #065f46;">
           Curated collection of competitive exam preparation books with direct access to official editions and authentic publishers.
         </p>
       </div>
 
-      <div class="p-5 bg-gray-50 dark:bg-gray-800/60 rounded-xl border border-gray-200 dark:border-gray-700">
-        <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2">Career Tools</h3>
-        <p class="text-sm text-gray-600 dark:text-gray-400">
+      <div class="p-5 rounded-xl border hover:-translate-y-1 hover:shadow-md transition-all duration-300" style="background-color: #fffbeb; border-color: #fef3c7;">
+        <h3 class="text-lg font-bold mb-2" style="color: #78350f;">Career Tools</h3>
+        <p class="text-sm opacity-90" style="color: #92400e;">
           Free browser-based utilities including document & photo compressors tailored for job application portals.
         </p>
       </div>
@@ -131,11 +131,11 @@
   </section>
 
   <!-- Transparency and Disclaimer Notice -->
-  <section class="mb-12 p-6 bg-amber-50 dark:bg-amber-900/20 rounded-xl border-l-4 border-amber-500">
-    <h3 class="text-lg font-bold text-amber-900 dark:text-amber-200 mb-2">
+  <section class="mb-12 p-6 rounded-xl border-l-4" style="background-color: #fffbeb; border-color: #f59e0b;">
+    <h3 class="text-lg font-bold mb-2" style="color: #78350f;">
       Independent Information Notice
     </h3>
-    <p class="text-sm text-amber-800 dark:text-amber-300 leading-relaxed">
+    <p class="text-sm leading-relaxed" style="color: #92400e;">
       FromCampus is an independent educational and informational news portal. We are <strong>not affiliated, associated, authorized, endorsed by, or in any way officially connected with any government body, ministry, or department</strong>. All government trademarks and logos mentioned belong to their respective authorities. For full details, please review our <a href="/disclaimer" class="underline font-semibold">Disclaimer & DMCA Policy</a>.
     </p>
   </section>
