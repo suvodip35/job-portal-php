@@ -23,7 +23,7 @@
           ],
           "contactPoint" => [
               "@type" => "ContactPoint",
-              "email" => "support@fromcampus.com",
+              "email" => "teamfromcampus@gmail.com",
               "contactType" => "customer service",
               "areaServed" => "IN",
               "availableLanguage" => ["en", "hi", "bn"]

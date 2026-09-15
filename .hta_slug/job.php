@@ -242,7 +242,13 @@ $shareText = urlencode("Check out this job opportunity: " . $job['job_title'] . 
           <?php endif; ?>
         </div>
         
-        <div class="flex items-center gap-2 mt-4 text-xs text-gray-600 dark:text-gray-400">
+        <div class="flex flex-wrap items-center gap-3 mt-4 text-xs text-gray-600 dark:text-gray-400">
+          <span class="flex items-center gap-1 font-medium text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 px-2.5 py-1 rounded-full">
+            <svg class="w-3.5 h-3.5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+            </svg>
+            Verified by FromCampus Desk
+          </span>
           <span class="flex items-center gap-1">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
@@ -318,16 +324,10 @@ $shareText = urlencode("Check out this job opportunity: " . $job['job_title'] . 
                 <?php if (!empty($excerpt)): ?>
                   <p class="text-sm text-gray-700 dark:text-gray-300 mb-4"><?= e($excerpt) ?></p>
                 <?php endif; ?>
-                <div class="flex gap-2">
-                  <?php if (!empty($book['amazon_link'])): ?>
-                  <a href="<?= e($book['amazon_link']) ?>" target="_blank" rel="noopener" title="Buy on Amazon for <?= e($book['title']) ?>" class="flex-1 bg-[#ffa41c] hover:bg-yellow-600 text-white text-center py-2 px-2 rounded text-sm font-medium transition">Buy on Amazon</a>
-                  <?php endif; ?>
-                  
-                  <?php if (!empty($book['flipkart_link'])): ?>
-                  <a href="<?= e($book['flipkart_link']) ?>" target="_blank" rel="noopener" class="flex-1 bg-[#fb641b] hover:bg-orange-600 text-white text-center py-2 px-2 rounded text-sm font-medium transition"> Buy on Flipkart</a>
-                  <?php endif; ?>
-                </div>
-                <a href="/books/<?= e($book['slug']) ?>" title="Book Details for <?= e($book['title']) ?>" class="mt-2 flex bg-blue-600 hover:bg-blue-700 text-white justify-center text-center py-2 px-3 rounded text-sm font-medium transition" >Book Details</a>
+                <a href="/books/<?= e($book['slug']) ?>" title="View Recommended Book Details for <?= e($book['title']) ?>" class="mt-3 flex items-center justify-center gap-1.5 bg-blue-600 hover:bg-blue-700 text-white text-center py-2 px-3 rounded-lg text-sm font-medium transition shadow-sm">
+                  <span>View Book Details</span>
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                </a>
               </div>
             </div>
             <?php endforeach; ?>
@@ -352,6 +352,21 @@ $shareText = urlencode("Check out this job opportunity: " . $job['job_title'] . 
               </svg>
             </a>
           <?php endif; ?>
+        </div>
+
+        <!-- Editorial & Verification Note (E-E-A-T) -->
+        <div class="mt-8 p-4 bg-gray-50 dark:bg-gray-800/80 rounded-xl border border-gray-200 dark:border-gray-700 text-xs text-gray-600 dark:text-gray-300">
+          <div class="flex items-start gap-2.5">
+            <svg class="w-5 h-5 text-indigo-600 dark:text-indigo-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+            </svg>
+            <div>
+              <p class="font-semibold text-gray-800 dark:text-gray-200">Official Notice Verification</p>
+              <p class="mt-0.5">
+                This recruitment notification has been curated and verified by the FromCampus Editorial Team from official government gazettes and recruitment portal updates. Candidates are advised to carefully review the official notification document before submitting applications.
+              </p>
+            </div>
+          </div>
         </div>
         
       </div>

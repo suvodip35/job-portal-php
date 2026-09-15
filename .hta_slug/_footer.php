@@ -1,41 +1,5 @@
 </main>
-<style>
-  .roller-counter {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        cursor: pointer;
-    }
 
-    .digit-wrapper {
-        overflow: hidden;
-        height: 28px; /* adjust as needed */
-        display: inline-block;
-        width: 20px;
-    }
-
-    .digit {
-        display: flex;
-        flex-direction: column;
-        transition: transform 1s ease-in-out;
-    }
-
-    .digit div {
-        height: 28px; 
-        font-size: 22px;
-        color: #4dd2ff;
-        text-shadow: 0 0 6px rgba(77, 210, 255, 0.4);
-        font-weight: bold;
-        text-align: center;
-    }
-
-    /* Hover effect */
-    .roller-counter:hover {
-        transform: scale(1.07);
-        transition: all 0.2s;
-        text-shadow: 0 0 10px rgba(77, 210, 255, 0.9);
-    }
-</style>
 <!-- Fixed Bottom Navigation for Mobile -->
 <div class="md:hidden fixed bottom-0 left-0 right-0 w-full max-w-full bg-gray-100 dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 z-50" style="padding-bottom: env(safe-area-inset-bottom, 0px); box-sizing: border-box; overflow-x: hidden;">
   <div class="flex justify-around items-center w-full max-w-full">
@@ -73,7 +37,7 @@
 </div>
 <footer class="bg-gray-100 dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 mt-12" style="content-visibility: auto; contain-intrinsic-size: 1px 300px;">
   <div class="max-w-6xl mx-auto px-4 py-10">
-    <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-8 text-sm">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 text-sm">
 
       <!-- Company Info -->
       <div>
@@ -118,12 +82,6 @@
           </a>
         </div>
       </div>
-      <div>
-        <h2 class="">Total Visits:</h2>
-        <div class="text-white fw-normal roller-counter" data-count="<?php echo $count ?? 0; ?>" style="min-height: 28px; min-width: 100px; display: inline-flex; align-items: center;">
-                <span id="rollerCounter" style="display: inline-flex; min-height: 28px;"></span>
-            </div>
-      </div>
     </div>
   </div>
 
@@ -134,39 +92,6 @@
     </div>
   </div>
 </footer>
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-
-        const container = document.getElementById("rollerCounter");
-        const target = document.querySelector(".roller-counter").getAttribute("data-count");
-
-        const digits = target.split("");
-
-        digits.forEach(num => {
-            const wrapper = document.createElement("div");
-            wrapper.className = "digit-wrapper";
-
-            const digitColumn = document.createElement("div");
-            digitColumn.className = "digit";
-
-            // 0 to 9 digits for rolling animation
-            for (let i = 0; i <= 9; i++) {
-                const d = document.createElement("div");
-                d.textContent = i;
-                digitColumn.appendChild(d);
-            }
-
-            wrapper.appendChild(digitColumn);
-            container.appendChild(wrapper);
-
-            // Animate to final number
-            setTimeout(() => {
-                digitColumn.style.transform = `translateY(-${num * 28}px)`; 
-            }, 100);
-        });
-
-    });
-</script>
 
 <!-- <script src="<?= BASE_URL ?>assets/script.js"></script> -->
 </body>

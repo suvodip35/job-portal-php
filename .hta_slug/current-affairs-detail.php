@@ -12,7 +12,16 @@ $stmt->execute([$slug]);
 $article = $stmt->fetch();
 
 if (!$article) {
-    echo "<h1>Current Affairs article not found.</h1>";
+    http_response_code(404);
+    $pageTitle = "Article Not Found - " . APP_NAME;
+    require_once('_header.php');
+    ?>
+    <main class="max-w-4xl mx-auto px-4 py-16 text-center">
+        <h1 class="text-3xl font-bold text-gray-800 dark:text-white mb-4">Article Not Found</h1>
+        <p class="text-gray-600 dark:text-gray-400 mb-6">The current affairs article you are looking for may have been moved or updated.</p>
+        <a href="/current-affairs" class="inline-block px-6 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">Back to Current Affairs</a>
+    </main>
+    <?php
     exit;
 }
 

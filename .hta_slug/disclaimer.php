@@ -112,7 +112,7 @@
         Please email your notice with the subject line <strong>"DMCA / Copyright Takedown Request"</strong> to:
       </p>
       <p class="mt-2 text-base font-semibold text-indigo-600 dark:text-indigo-400">
-        <a href="mailto:support@fromcampus.com">support@fromcampus.com</a>
+        <a href="mailto:teamfromcampus@gmail.com">teamfromcampus@gmail.com</a>
       </p>
       <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">
         We review and respond to valid copyright and takedown inquiries within <strong>24 to 48 business hours</strong>.
@@ -124,7 +124,7 @@
       6. Questions or Inquiries
     </h2>
     <p>
-      If you have questions regarding this Disclaimer or any notification published on FromCampus, please feel free to reach out to us via our <a href="/contact" class="text-indigo-600 hover:underline">Contact Form</a> or by emailing <a href="mailto:support@fromcampus.com" class="text-indigo-600 hover:underline">support@fromcampus.com</a>.
+      If you have questions regarding this Disclaimer or any notification published on FromCampus, please feel free to reach out to us via our <a href="/contact" class="text-indigo-600 hover:underline">Contact Form</a> or by emailing <a href="mailto:teamfromcampus@gmail.com" class="text-indigo-600 hover:underline">teamfromcampus@gmail.com</a>.
     </p>
   </div>
 </main>

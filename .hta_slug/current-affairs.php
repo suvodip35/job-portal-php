@@ -35,16 +35,27 @@ if ($pdfOnly === 1) {
 
 $whereSql = "WHERE " . implode(' AND ', $where);
 
-// Count total matching articles
-$countStmt = $pdo->prepare("SELECT COUNT(*) FROM current_affairs $whereSql");
-$countStmt->execute($params);
-$total = (int)$countStmt->fetchColumn();
-$totalPages = max(1, ceil($total / $perPage));
+$total = 0;
+$totalPages = 1;
+$articles = [];
 
-// Fetch Main Articles
-$stmt = $pdo->prepare("SELECT id, title, slug, category, description, event_date, thumbnail, pdf_link, views, created_at FROM current_affairs $whereSql ORDER BY event_date DESC, created_at DESC LIMIT $perPage OFFSET $offset");
-$stmt->execute($params);
-$articles = $stmt->fetchAll();
+try {
+    // Count total matching articles
+    $countStmt = $pdo->prepare("SELECT COUNT(*) FROM current_affairs $whereSql");
+    $countStmt->execute($params);
+    $total = (int)$countStmt->fetchColumn();
+    $totalPages = max(1, ceil($total / $perPage));
+
+    // Fetch Main Articles
+    $stmt = $pdo->prepare("SELECT id, title, slug, category, description, event_date, thumbnail, pdf_link, views, created_at FROM current_affairs $whereSql ORDER BY event_date DESC, created_at DESC LIMIT $perPage OFFSET $offset");
+    $stmt->execute($params);
+    $articles = $stmt->fetchAll();
+} catch (\Throwable $e) {
+    error_log("Current affairs query error: " . $e->getMessage());
+    $total = 0;
+    $totalPages = 1;
+    $articles = [];
+}
 
 // Determine if we show Featured Hero Card (First article on Page 1 when no search query)
 $showFeatured = ($page === 1 && empty($search) && !empty($articles));
