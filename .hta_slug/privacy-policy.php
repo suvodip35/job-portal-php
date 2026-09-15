@@ -48,7 +48,12 @@
     <p>Third-party ad servers or ad networks use technologies like cookies, JavaScript, or Web Beacons that are used in their respective advertisements and links that appear on FromCampus. They automatically receive your IP address when this occurs.</p>
     <p><strong>Note:</strong> FromCampus has no access to or control over these cookies that are used by third-party advertisers.</p>
 
-    <h2 class="text-2xl font-semibold mt-8 text-gray-900 dark:text-white">4. GDPR & CCPA Data Protection Rights</h2>
+    <h2 class="text-2xl font-semibold mt-8 text-gray-900 dark:text-white">4. Affiliate Advertising & Partner Programs (Amazon Associates)</h2>
+    <p>FromCampus participates in affiliate marketing programs, including the Amazon Services LLC Associates Program and Flipkart Affiliate Program. These programs are designed to provide a means for websites to earn advertising fees by advertising and linking to products on partner websites.</p>
+    <p>When you click on an affiliate link on our site and make a purchase, the merchant places a cookie on your device to track the referral, enabling us to earn a small commission at no additional cost to you. These cookies are subject to the privacy policies of the respective merchants.</p>
+    <p><strong>Amazon Associates Disclosure:</strong> <em>As an Amazon Associate, FromCampus earns from qualifying purchases.</em></p>
+
+    <h2 class="text-2xl font-semibold mt-8 text-gray-900 dark:text-white">5. GDPR & CCPA Data Protection Rights</h2>
     <p>We want to make sure you are fully aware of all of your data protection rights. Every user is entitled to the following:</p>
     <ul class="list-disc pl-6 space-y-2">
         <li><strong>The right to access:</strong> You have the right to request copies of your personal data.</li>
@@ -56,10 +61,10 @@
         <li><strong>The right to erasure:</strong> You have the right to request that we erase your personal data, under certain conditions.</li>
     </ul>
 
-    <h2 class="text-2xl font-semibold mt-8 text-gray-900 dark:text-white">5. Children's Information</h2>
+    <h2 class="text-2xl font-semibold mt-8 text-gray-900 dark:text-white">6. Children's Information</h2>
     <p>Another part of our priority is adding protection for children while using the internet. We do not knowingly collect any Personal Identifiable Information from children under the age of 13. If you think your child provided this kind of information on our website, we strongly encourage you to contact us immediately.</p>
 
-    <h2 class="text-2xl font-semibold mt-8 text-gray-900 dark:text-white">6. Consent</h2>
+    <h2 class="text-2xl font-semibold mt-8 text-gray-900 dark:text-white">7. Consent</h2>
     <p>By using our website, you hereby consent to our Privacy Policy and agree to its <a href="/terms" class="text-indigo-600 hover:underline">Terms and Conditions</a>.</p>
 
     <div class="bg-gray-100 dark:bg-gray-800 p-6 rounded-lg mt-10 border-l-4 border-indigo-600">

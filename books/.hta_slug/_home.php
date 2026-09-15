@@ -227,6 +227,13 @@ function getColorClasses($color) {
         <div id="pagination" class="mt-6 flex justify-center">
             <!-- Pagination will be inserted here -->
         </div>
+
+        <!-- Affiliate Disclosure -->
+        <div class="mt-10 p-4 bg-gray-50 dark:bg-gray-800/60 rounded-xl border border-gray-200 dark:border-gray-700 text-center text-xs text-gray-500 dark:text-gray-400">
+            <p>
+                <strong>Affiliate Transparency:</strong> FromCampus is a participant in the Amazon Services LLC Associates Program and Flipkart affiliate advertising programs. When you click on book purchase links and complete a purchase, we may earn an affiliate commission at no additional cost to you. We only recommend books curated for competitive exam preparations.
+            </p>
+        </div>
     </div>
 </div>
 

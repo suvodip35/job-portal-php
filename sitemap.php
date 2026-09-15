@@ -18,6 +18,7 @@ echo '<?xml version="1.0" encoding="UTF-8"?>';
   <url><loc><?= e($base) ?>/about-us</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
   <url><loc><?= e($base) ?>/terms</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
   <url><loc><?= e($base) ?>/privacy-policy</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc><?= e($base) ?>/disclaimer</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
   <url><loc><?= e($base) ?>/contact</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
 
   <!-- Updates Main Page -->
