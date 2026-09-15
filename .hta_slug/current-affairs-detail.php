@@ -414,3 +414,5 @@ function copyToClipboard(button, text) {
   });
 }
 </script>
+
+<?php require_once('_footer.php'); ?>

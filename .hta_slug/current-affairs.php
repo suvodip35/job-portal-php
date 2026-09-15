@@ -122,24 +122,55 @@ require_once('_header.php');
 ?>
 
 <style>
-/* Dedicated Scoped CSS to bypass purged Tailwind restrictions */
+/* Dedicated Scoped CSS to bypass purged Tailwind restrictions & support all devices */
 .ca-pub-wrapper {
-  max-width: 1280px;
+  width: 100%;
+  max-width: 1536px;
   margin: 0 auto;
-  padding: 1.75rem 1rem;
+  padding: 0 0 1.5rem 0;
   color: #f8fafc;
   font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  box-sizing: border-box;
+  overflow-x: hidden;
 }
 
 .ca-pub-layout {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 1.75rem;
+  gap: 1.25rem;
+  width: 100%;
+  box-sizing: border-box;
 }
 
+/* Tablet (768px - 1023px) */
 @media (min-width: 768px) {
   .ca-pub-layout {
-    grid-template-columns: 3fr 9fr;
+    grid-template-columns: 260px 1fr;
+    gap: 1.5rem;
+  }
+}
+
+/* Laptop / Desktop (1024px - 1279px) */
+@media (min-width: 1024px) {
+  .ca-pub-layout {
+    grid-template-columns: 280px 1fr;
+    gap: 1.75rem;
+  }
+}
+
+/* Large Display (1280px - 1535px) */
+@media (min-width: 1280px) {
+  .ca-pub-layout {
+    grid-template-columns: 300px 1fr;
+    gap: 2rem;
+  }
+}
+
+/* Extra Large Display (>= 1536px) */
+@media (min-width: 1536px) {
+  .ca-pub-layout {
+    grid-template-columns: 320px 1fr;
+    gap: 2.25rem;
   }
 }
 
@@ -147,12 +178,16 @@ require_once('_header.php');
 .ca-chips-bar {
   display: flex;
   align-items: center;
-  gap: 0.625rem;
+  gap: 0.5rem;
   overflow-x: auto;
-  padding-bottom: 0.5rem;
+  padding: 0.25rem 0 0.75rem 0;
   margin-bottom: 1.25rem;
   -ms-overflow-style: none;
   scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 .ca-chips-bar::-webkit-scrollbar { display: none; }
 
@@ -160,13 +195,15 @@ require_once('_header.php');
   display: inline-flex;
   align-items: center;
   gap: 0.375rem;
-  padding: 0.5rem 1rem;
+  padding: 0.45rem 0.875rem;
   border-radius: 9999px;
   font-size: 0.75rem;
   font-weight: 700;
   white-space: nowrap;
   text-decoration: none !important;
   transition: all 0.2s ease;
+  flex-shrink: 0;
+  box-sizing: border-box;
 }
 
 .ca-chip-inactive {
@@ -183,12 +220,14 @@ require_once('_header.php');
   background-color: #2563eb;
   color: #ffffff !important;
   box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.4);
+  border: 1px solid #3b82f6;
 }
 
 .ca-chip-pdf-active {
   background-color: #dc2626;
   color: #ffffff !important;
   box-shadow: 0 4px 6px -1px rgba(220, 38, 38, 0.4);
+  border: 1px solid #ef4444;
 }
 
 .ca-chip-pdf-inactive {
@@ -205,20 +244,26 @@ require_once('_header.php');
 .ca-header-row {
   display: flex;
   justify-content: space-between;
-  align-items: flex-end;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
   padding-bottom: 0.875rem;
   margin-bottom: 1.5rem;
   border-bottom: 1px solid #334155;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .ca-header-title {
-  font-size: 1.5rem;
+  font-size: clamp(1.15rem, 3.5vw, 1.5rem);
   font-weight: 800;
   color: #ffffff !important;
   margin: 0;
   display: flex;
   align-items: center;
-  gap: 0.625rem;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  word-break: break-word;
 }
 
 .ca-header-count {
@@ -229,6 +274,7 @@ require_once('_header.php');
   border: 1px solid rgba(59, 130, 246, 0.3);
   padding: 0.2rem 0.625rem;
   border-radius: 9999px;
+  flex-shrink: 0;
 }
 
 /* Featured Hero Spotlight Card */
@@ -242,11 +288,14 @@ require_once('_header.php');
   margin-bottom: 1.75rem;
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
   cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  width: 100%;
+  box-sizing: border-box;
 }
 .ca-featured-card:hover {
   transform: translateY(-2px);
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4);
+  border-color: #475569;
 }
 
 @media (min-width: 1024px) {
@@ -258,32 +307,90 @@ require_once('_header.php');
 .ca-featured-banner {
   position: relative;
   min-height: 200px;
+  aspect-ratio: 16/9;
   padding: 1.25rem;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-}
-
-.ca-featured-body {
-  padding: 1.5rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-/* 3-Column Articles Grid */
-.ca-grid-3col {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 1.5rem;
-}
-
-@media (min-width: 640px) {
-  .ca-grid-3col { grid-template-columns: repeat(2, 1fr); }
+  overflow: hidden;
+  box-sizing: border-box;
 }
 
 @media (min-width: 1024px) {
-  .ca-grid-3col { grid-template-columns: repeat(3, 1fr); }
+  .ca-featured-banner {
+    aspect-ratio: auto;
+    min-height: 100%;
+    height: 100%;
+  }
+}
+
+.ca-featured-body {
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-sizing: border-box;
+}
+
+@media (min-width: 640px) {
+  .ca-featured-body {
+    padding: 1.5rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  .ca-featured-body {
+    padding: 1.75rem;
+  }
+}
+
+/* Articles Grid - Fully Responsive across Mobile, Tablet, Laptop, Large Display */
+.ca-grid-3col {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Large mobile / small tablet without sidebar */
+@media (min-width: 640px) and (max-width: 767px) {
+  .ca-grid-3col {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem;
+  }
+}
+
+/* Tablet with sidebar (768px - 1023px) */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .ca-grid-3col {
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 1.25rem;
+  }
+}
+
+/* Laptop (1024px - 1279px) */
+@media (min-width: 1024px) and (max-width: 1279px) {
+  .ca-grid-3col {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+}
+
+/* Desktop & Wide (1280px - 1535px) */
+@media (min-width: 1280px) and (max-width: 1535px) {
+  .ca-grid-3col {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+}
+
+/* Extra Large Display (>= 1536px) */
+@media (min-width: 1536px) {
+  .ca-grid-3col {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.75rem;
+  }
 }
 
 /* Grid Card Component */
@@ -298,6 +405,8 @@ require_once('_header.php');
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
   cursor: pointer;
   transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .ca-card-item:hover {
@@ -310,11 +419,13 @@ require_once('_header.php');
 .ca-card-banner {
   position: relative;
   min-height: 150px;
-  padding: 1.125rem;
+  aspect-ratio: 16/9;
+  padding: 1rem;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   overflow: hidden;
+  box-sizing: border-box;
 }
 
 .ca-card-top-row {
@@ -324,6 +435,7 @@ require_once('_header.php');
   align-items: center;
   justify-content: space-between;
   gap: 0.5rem;
+  flex-wrap: wrap;
 }
 
 .ca-card-bottom-row {
@@ -335,13 +447,15 @@ require_once('_header.php');
   font-size: 0.75rem;
   color: rgba(255, 255, 255, 0.95);
   font-weight: 500;
-  margin-top: 1.5rem;
+  margin-top: 1.25rem;
+  flex-wrap: wrap;
+  gap: 0.25rem;
 }
 
 /* Badges */
 .ca-badge-category {
   display: inline-block;
-  padding: 0.35rem 0.75rem;
+  padding: 0.35rem 0.65rem;
   border-radius: 0.5rem;
   font-size: 0.65rem;
   font-weight: 900;
@@ -355,7 +469,7 @@ require_once('_header.php');
 
 .ca-badge-readtime {
   display: inline-block;
-  padding: 0.35rem 0.625rem;
+  padding: 0.35rem 0.55rem;
   border-radius: 0.5rem;
   font-size: 0.65rem;
   font-weight: 700;
@@ -376,24 +490,26 @@ require_once('_header.php');
 
 /* Card Body Content */
 .ca-card-body {
-  padding: 1.25rem;
+  padding: 1.125rem;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   flex: 1;
+  box-sizing: border-box;
 }
 
 .ca-card-title {
-  font-size: 1rem;
+  font-size: 0.95rem;
   font-weight: 700;
-  line-height: 1.35;
+  line-height: 1.4;
   color: #ffffff !important;
-  margin-bottom: 0.625rem;
+  margin-bottom: 0.5rem;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-decoration: none !important;
+  word-break: break-word;
 }
 
 .ca-card-item:hover .ca-card-title {
@@ -401,23 +517,26 @@ require_once('_header.php');
 }
 
 .ca-card-snippet {
-  font-size: 0.75rem;
+  font-size: 0.775rem;
   line-height: 1.5;
   color: #cbd5e1;
-  margin-bottom: 1.125rem;
+  margin-bottom: 1rem;
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  word-break: break-word;
 }
 
 /* Card Footer */
 .ca-card-footer {
-  padding-top: 0.875rem;
+  padding-top: 0.75rem;
   border-top: 1px solid #334155;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 0.5rem;
+  flex-wrap: wrap;
 }
 
 .ca-btn-details {
@@ -432,6 +551,7 @@ require_once('_header.php');
   border-radius: 0.5rem;
   text-decoration: none !important;
   transition: background-color 0.15s;
+  box-sizing: border-box;
 }
 .ca-btn-details:hover {
   background-color: #1d4ed8;
@@ -441,6 +561,7 @@ require_once('_header.php');
   font-size: 0.75rem;
   color: #94a3b8;
   font-weight: 600;
+  flex-shrink: 0;
 }
 
 /* Sidebar Styles */
@@ -448,9 +569,10 @@ require_once('_header.php');
   background-color: #1e293b;
   border: 1px solid #334155;
   border-radius: 1rem;
-  padding: 1.25rem;
-  margin-bottom: 1.5rem;
+  padding: 1.125rem;
+  margin-bottom: 1.25rem;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+  box-sizing: border-box;
 }
 
 .ca-side-title {
@@ -461,6 +583,7 @@ require_once('_header.php');
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 0.5rem;
 }
 
 .ca-side-input {
@@ -473,6 +596,24 @@ require_once('_header.php');
   font-size: 0.75rem;
   outline: none;
   margin-bottom: 0.75rem;
+  box-sizing: border-box;
+}
+.ca-side-input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 1px #3b82f6;
+}
+
+/* Pagination container */
+.ca-pagination-bar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.375rem;
+  flex-wrap: wrap;
+  margin-top: 2rem;
+  padding: 0.5rem 0;
+  width: 100%;
+  box-sizing: border-box;
 }
 </style>
 
@@ -564,13 +705,13 @@ require_once('_header.php');
     </aside>
 
     <!-- Main Content Area -->
-    <main>
+    <section class="ca-main-content" style="min-width: 0; width: 100%;">
         
         <!-- Mobile Search Field -->
-        <form method="get" action="/current-affairs" class="block md:hidden" style="margin-bottom: 1.25rem;">
-            <div style="display: flex; gap: 0.5rem;">
-                <input name="search" value="<?= e($search) ?>" placeholder="Search current affairs &amp; exam news..." class="ca-side-input" style="margin-bottom: 0; flex: 1;"/>
-                <button type="submit" class="ca-btn-details" style="padding: 0.6rem 1rem;">
+        <form method="get" action="/current-affairs" class="block md:hidden" style="margin-bottom: 1.25rem; width: 100%; max-width: 100%;">
+            <div style="display: flex; gap: 0.5rem; width: 100%;">
+                <input name="search" value="<?= e($search) ?>" placeholder="Search current affairs &amp; exam news..." class="ca-side-input" style="margin-bottom: 0; flex: 1; min-width: 0;"/>
+                <button type="submit" class="ca-btn-details" style="padding: 0.6rem 1rem; flex-shrink: 0;">
                     Search
                 </button>
             </div>
@@ -763,18 +904,35 @@ require_once('_header.php');
 
             <!-- Pagination Bar -->
             <?php if ($totalPages > 1): ?>
-                <div style="display: flex; justify-content: center; gap: 0.375rem; margin-top: 2rem;">
+                <div class="ca-pagination-bar">
                     <?php if ($page > 1): ?>
                         <a href="/current-affairs?page=<?= $page - 1 ?>&search=<?= urlencode($search) ?>&cat=<?= urlencode($category) ?>&pdf=<?= $pdfOnly ?>" class="ca-chip ca-chip-inactive" style="border-radius: 0.5rem;">
                             ← Prev
                         </a>
                     <?php endif; ?>
 
-                    <?php for ($i = 1; $i <= $totalPages; $i++): ?>
+                    <?php
+                    $startPage = max(1, $page - 2);
+                    $endPage = min($totalPages, $page + 2);
+                    if ($startPage > 1): ?>
+                        <a href="/current-affairs?page=1&search=<?= urlencode($search) ?>&cat=<?= urlencode($category) ?>&pdf=<?= $pdfOnly ?>" class="ca-chip ca-chip-inactive" style="border-radius: 0.5rem;">1</a>
+                        <?php if ($startPage > 2): ?>
+                            <span style="color: #64748b; padding: 0 0.25rem; font-size: 0.75rem;">...</span>
+                        <?php endif; ?>
+                    <?php endif; ?>
+
+                    <?php for ($i = $startPage; $i <= $endPage; $i++): ?>
                         <a href="/current-affairs?page=<?= $i ?>&search=<?= urlencode($search) ?>&cat=<?= urlencode($category) ?>&pdf=<?= $pdfOnly ?>" class="ca-chip <?= $i === $page ? 'ca-chip-active' : 'ca-chip-inactive' ?>" style="border-radius: 0.5rem;">
                             <?= $i ?>
                         </a>
                     <?php endfor; ?>
+
+                    <?php if ($endPage < $totalPages): ?>
+                        <?php if ($endPage < $totalPages - 1): ?>
+                            <span style="color: #64748b; padding: 0 0.25rem; font-size: 0.75rem;">...</span>
+                        <?php endif; ?>
+                        <a href="/current-affairs?page=<?= $totalPages ?>&search=<?= urlencode($search) ?>&cat=<?= urlencode($category) ?>&pdf=<?= $pdfOnly ?>" class="ca-chip ca-chip-inactive" style="border-radius: 0.5rem;"><?= $totalPages ?></a>
+                    <?php endif; ?>
 
                     <?php if ($page < $totalPages): ?>
                         <a href="/current-affairs?page=<?= $page + 1 ?>&search=<?= urlencode($search) ?>&cat=<?= urlencode($category) ?>&pdf=<?= $pdfOnly ?>" class="ca-chip ca-chip-inactive" style="border-radius: 0.5rem;">
@@ -785,7 +943,7 @@ require_once('_header.php');
             <?php endif; ?>
 
         <?php endif; ?>
-    </main>
+    </section>
 
   </div>
 </div>
